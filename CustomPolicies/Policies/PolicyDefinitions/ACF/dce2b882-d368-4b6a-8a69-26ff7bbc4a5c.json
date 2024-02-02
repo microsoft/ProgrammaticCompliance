@@ -1,0 +1,57 @@
+{
+  "id": "/providers/Microsoft.Authorization/policyDefinitions/dce2b882-d368-4b6a-8a69-26ff7bbc4a5c",
+  "name": "dce2b882-d368-4b6a-8a69-26ff7bbc4a5c",
+  "properties": {
+    "description": "Microsoft implements this Security Assessment and Authorization control",
+    "displayName": "Custom - Microsoft Managed Control 1693 - Security Authorization",
+    "metadata": {
+      "version": "1.0.0",
+      "category": "Regulatory Compliance",
+      "additionalMetadataId": "/providers/Microsoft.PolicyInsights/policyMetadata/ACF1693",
+      "standardControlMappings": [
+        "CIS_Azure_2.0.0_2.1.18",
+        "CIS_Azure_2.0.0_25",
+        "CIS_Azure_2.0.0_5.2.1",
+        "CIS_Azure_2.0.0_5.2.2",
+        "CIS_Azure_2.0.0_5.2.3",
+        "CIS_Azure_2.0.0_5.2.4",
+        "CIS_Azure_2.0.0_5.2.5",
+        "CIS_Azure_2.0.0_5.2.6",
+        "CIS_Azure_2.0.0_5.2.7",
+        "CIS_Azure_2.0.0_5.2.8",
+        "CIS_Azure_2.0.0_5.2.9",
+        "CIS_Azure_2.0.0_5.2.10",
+        "CIS_Azure_2.0.0_4.2.1",
+        "CIS_Azure_2.0.0_5.1.6",
+        "CIS_Azure_2.0.0_5.1.7",
+        "CIS_Azure_2.0.0_46",
+        "CIS_Azure_2.0.0_47",
+        "NIST_SP_800-53_R4_SI-4(5)",
+        "PCI_DSS_v4.0_11.5.1",
+        "PCI_DSS_v4.0_11.5.1.1"
+      ]
+    },
+    "mode": "Indexed",
+    "policyType": "Custom",
+    "policyRule": {
+      "if": {
+        "allOf": [
+          {
+            "field": "type",
+            "in": [
+              "Microsoft.Resources/subscriptions",
+              "Microsoft.Resources/subscriptions/resourceGroups"
+            ]
+          },
+          {
+            "value": "false",
+            "equals": "true"
+          }
+        ]
+      },
+      "then": {
+        "effect": "audit"
+      }
+    }
+  }
+}

@@ -1,0 +1,59 @@
+{
+  "id": "/providers/Microsoft.Authorization/policyDefinitions/987c0f73-d869-4073-a539-9d6f0f34ac19",
+  "name": "987c0f73-d869-4073-a539-9d6f0f34ac19",
+  "properties": {
+    "description": "Microsoft implements this Security Assessment and Authorization control",
+    "displayName": "Custom - Microsoft Managed Control 1027 - Security Authorization",
+    "metadata": {
+      "version": "1.0.0",
+      "category": "Regulatory Compliance",
+      "additionalMetadataId": "/providers/Microsoft.PolicyInsights/policyMetadata/ACF1027",
+      "standardControlMappings": [
+        "CIS_Azure_2.0.0_1.15",
+        "CIS_Azure_2.0.0_1.17",
+        "CIS_Azure_2.0.0_59",
+        "CIS_Azure_2.0.0_1.2.1",
+        "CIS_Azure_2.0.0_1.2.2",
+        "CIS_Azure_2.0.0_3.7",
+        "CIS_Azure_2.0.0_4.1.4",
+        "CIS_Azure_2.0.0_9.5",
+        "CIS_Azure_2.0.0_1.4",
+        "CIS_Azure_2.0.0_1.16",
+        "CIS_Azure_2.0.0_33",
+        "CIS_Azure_2.0.0_8.6",
+        "CIS_Azure_2.0.0_8.7",
+        "CIS_Azure_2.0.0_9.1",
+        "CIS_Azure_2.0.0_10.1",
+        "NIST_SP_800-53_R4_AC-3",
+        "PCI_DSS_v4.0_7.2.1",
+        "PCI_DSS_v4.0_7.2.3",
+        "PCI_DSS_v4.0_7.2.6",
+        "PCI_DSS_v4.0_7.3.1",
+        "PCI_DSS_v4.0_7.3.2",
+        "PCI_DSS_v4.0_7.3.3"
+      ]
+    },
+    "mode": "Indexed",
+    "policyType": "Custom",
+    "policyRule": {
+      "if": {
+        "allOf": [
+          {
+            "field": "type",
+            "in": [
+              "Microsoft.Resources/subscriptions",
+              "Microsoft.Resources/subscriptions/resourceGroups"
+            ]
+          },
+          {
+            "value": "false",
+            "equals": "true"
+          }
+        ]
+      },
+      "then": {
+        "effect": "audit"
+      }
+    }
+  }
+}
