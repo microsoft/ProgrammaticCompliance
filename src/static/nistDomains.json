@@ -1,0 +1,102 @@
+[
+  {
+    "value": "AC",
+    "label": "AC: Access Control"
+  },
+  {
+    "value": "AP",
+    "label": "AP: Authority and Purpose"
+  },
+  {
+    "value": "AR",
+    "label": "AR: Accoutnability, Audit, and Risk Management"
+  },
+  {
+    "value": "AT",
+    "label": "AT: Awareness and Training"
+  },
+  {
+    "value": "AU",
+    "label": "AU: Audit and Accountability"
+  },
+  {
+    "value": "CA",
+    "label": "CA: Security Assessment and Authorization"
+  },
+  {
+    "value": "CM",
+    "label": "CM: Configuration Management"
+  },
+  {
+    "value": "CP",
+    "label": "CP: Contingency Planning"
+  },
+  {
+    "value": "DI",
+    "label": "DI: Data Quality and Integrity"
+  },
+  {
+    "value": "DM",
+    "label": "DM: Data Minimization and Retention"
+  },
+  {
+    "value": "IA",
+    "label": "IA: Identification and Authentication"
+  },
+  {
+    "value": "IR",
+    "label": "IR: Incident Response"
+  },
+  {
+    "value": "MA",
+    "label": "MA: Maintenance"
+  },
+  {
+    "value": "MP",
+    "label": "MP: Media Protection"
+  },
+  {
+    "value": "PE",
+    "label": "PE: Physical and Environmental Protection"
+  },
+  {
+    "value": "PL",
+    "label": "PL: Planning"
+  },
+  {
+    "value": "PM",
+    "label": "PM: Program Management"
+  },
+  {
+    "value": "PS",
+    "label": "PS: Personnel Security"
+  },
+  {
+    "value": "RA",
+    "label": "RA: Risk Assessment"
+  },
+  {
+    "value": "SA",
+    "label": "SA: System and Services Acquisition"
+  },
+  {
+    "value": "SC",
+    "label": "SC: System and Communications Protection"
+  },
+  {
+    "value": "SE",
+    "label": "SE: Security"
+  },
+  {
+    "value": "SI",
+    "label": "SI: System and Information Integrity"
+  },
+  {
+    "value": "TR",
+    "label": "TR: Transparency"
+  },
+  {
+    "value": "UL",
+    "label": "UL: Use Limitation"
+  }
+]

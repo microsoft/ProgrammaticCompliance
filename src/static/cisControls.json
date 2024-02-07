@@ -1,0 +1,602 @@
+[
+    {
+        "value": "1.3",
+        "label": "1.3: Ensure that 'Users can create Azure AD Tenants' is set to 'No'"
+    },
+    {
+        "value": "1.4",
+        "label": "1.4: Ensure Access Review is Set Up for External Users in Azure AD Privileged Identity Management"
+    },
+    {
+        "value": "1.5",
+        "label": "1.5: Ensure Guest Users Are Reviewed on a Regular Basis"
+    },
+    {
+        "value": "1.6",
+        "label": "1.6: Ensure That 'Number of methods required to reset' is set to '2'"
+    },
+    {
+        "value": "1.7",
+        "label": "1.7: Ensure that a Custom Bad Password List is set to  'Enforce' for your Organization"
+    },
+    {
+        "value": "1.8",
+        "label": "1.8: Ensure that 'Number of days before users are asked to re-confirm their authentication information' is not set to '0'"
+    },
+    {
+        "value": "1.9",
+        "label": "1.9: Ensure that 'Notify users on password resets?' is set to 'Yes'"
+    },
+    {
+        "value": "1.10",
+        "label": "1.10: Ensure That 'Notify all admins when other admins reset their password?' is set to 'Yes'"
+    },
+    {
+        "value": "1.11",
+        "label": "1.11: Ensure `User consent for applications` is set to `Do not allow user consent`"
+    },
+    {
+        "value": "1.12",
+        "label": "1.12: Ensure 'User consent for applications' Is Set To 'Allow for Verified Publishers'"
+    },
+    {
+        "value": "1.13",
+        "label": "1.13: Ensure that 'Users can add gallery apps to My Apps' is set to 'No'"
+    },
+    {
+        "value": "1.14",
+        "label": "1.14: Ensure That 'Users Can Register Applications' Is Set to 'No'"
+    },
+    {
+        "value": "1.15",
+        "label": "1.15: Ensure That 'Guest users access restrictions' is set to 'Guest user access is restricted to properties and memberships of their own directory objects'"
+    },
+    {
+        "value": "1.16",
+        "label": "1.16: Ensure that 'Guest invite restrictions' is set to 'Only users assigned to specific admin roles can invite guest users'"
+    },
+    {
+        "value": "1.17",
+        "label": "1.17: Ensure That 'Restrict access to Azure AD administration portal' is Set to 'Yes'"
+    },
+    {
+        "value": "1.18",
+        "label": "1.18: Ensure that 'Restrict user ability to access groups features in the Access Pane' is Set to 'Yes'"
+    },
+    {
+        "value": "1.19",
+        "label": "1.19: Ensure that 'Users can create security groups in Azure portals, API or PowerShell' is set to 'No'"
+    },
+    {
+        "value": "1.20",
+        "label": "1.20: Ensure that 'Owners can manage group membership requests in the Access Panel' is set to 'No'"
+    },
+    {
+        "value": "1.21",
+        "label": "1.21: Ensure that 'Users can create Microsoft 365 groups in Azure portals, API or PowerShell' is set to 'No'"
+    },
+    {
+        "value": "1.22",
+        "label": "1.22: Ensure that 'Require Multi-Factor Authentication to register or join devices with Azure AD' is set to 'Yes'"
+    },
+    {
+        "value": "1.23",
+        "label": "1.23: Ensure That No Custom Subscription Administrator Roles Exist"
+    },
+    {
+        "value": "1.24",
+        "label": "1.24: Ensure a Custom Role is Assigned Permissions for Administering Resource Locks"
+    },
+    {
+        "value": "1.25",
+        "label": "1.25: Ensure That 'Subscription Entering AAD Directory' and 'Subscription Leaving AAD Directory' Is Set To 'Permit No One'"
+    },
+    {
+        "value": "1.1.1",
+        "label": "1.1.1: Ensure Security Defaults is enabled on Azure Active Directory"
+    },
+    {
+        "value": "1.1.2",
+        "label": "1.1.2: Ensure that 'Multi-Factor Auth Status' is 'Enabled' for all Privileged Users"
+    },
+    {
+        "value": "1.1.3",
+        "label": "1.1.3: Ensure that 'Multi-Factor Auth Status' is 'Enabled' for all Non-Privileged Users"
+    },
+    {
+        "value": "1.1.4",
+        "label": "1.1.4: Ensure that 'Allow users to remember multi-factor authentication on devices they trust' is Disabled"
+    },
+    {
+        "value": "1.2.1",
+        "label": "1.2.1: Ensure Trusted Locations Are Defined"
+    },
+    {
+        "value": "1.2.2",
+        "label": "1.2.2: Ensure that an exclusionary Geographic Access Policy is considered"
+    },
+    {
+        "value": "1.2.3",
+        "label": "1.2.3: Ensure that A Multi-factor Authentication Policy Exists for Administrative Groups"
+    },
+    {
+        "value": "1.2.4",
+        "label": "1.2.4: Ensure that A Multi-factor Authentication Policy Exists for All Users"
+    },
+    {
+        "value": "1.2.5",
+        "label": "1.2.5: Ensure Multi-factor Authentication is Required for Risky Sign-ins"
+    },
+    {
+        "value": "2.1.1",
+        "label": "2.1.1: Ensure That Microsoft Defender for Servers Is Set to 'On'"
+    },
+    {
+        "value": "2.1.2",
+        "label": "2.1.2: Ensure That Microsoft Defender for App Services Is Set To 'On'"
+    },
+    {
+        "value": "2.1.3",
+        "label": "2.1.3: Ensure That Microsoft Defender for Databases Is Set To 'On'"
+    },
+    {
+        "value": "2.1.4",
+        "label": "2.1.4: Ensure That Microsoft Defender for Azure SQL Databases Is Set To 'On'"
+    },
+    {
+        "value": "2.1.5",
+        "label": "2.1.5: Ensure That Microsoft Defender for SQL Servers on Machines Is Set To 'On'"
+    },
+    {
+        "value": "2.1.6",
+        "label": "2.1.6: Ensure That Microsoft Defender for Open-Source Relational Databases Is Set To 'On'"
+    },
+    {
+        "value": "2.1.7",
+        "label": "2.1.7: Ensure That Microsoft Defender for Storage Is Set To 'On'"
+    },
+    {
+        "value": "2.1.8",
+        "label": "2.1.8: Ensure That Microsoft Defender for Containers Is Set To 'On'"
+    },
+    {
+        "value": "2.1.9",
+        "label": "2.1.9: Ensure That Microsoft Defender for Azure Cosmos DB Is Set To 'On'"
+    },
+    {
+        "value": "2.1.10",
+        "label": "2.1.10: Ensure That Microsoft Defender for Key Vault Is Set To 'On'"
+    },
+    {
+        "value": "2.1.11",
+        "label": "2.1.11: Ensure That Microsoft Defender for DNS Is Set To 'On'"
+    },
+    {
+        "value": "2.1.12",
+        "label": "2.1.12: Ensure That Microsoft Defender for Resource Manager Is Set To 'On'"
+    },
+    {
+        "value": "2.1.13",
+        "label": "2.1.13: Ensure that Microsoft Defender Recommendation for 'Apply system updates' status is 'Completed'"
+    },
+    {
+        "value": "2.1.14",
+        "label": "2.1.14: Ensure Any of the ASC Default Policy Settings are Not Set to 'Disabled'"
+    },
+    {
+        "value": "2.1.15",
+        "label": "2.1.15: Ensure that Auto provisioning of 'Log Analytics agent for Azure VMs' is Set to 'On'"
+    },
+    {
+        "value": "2.1.16",
+        "label": "2.1.16: Ensure that Auto provisioning of 'Vulnerability assessment for machines' is Set to 'On'"
+    },
+    {
+        "value": "2.1.17",
+        "label": "2.1.17: Ensure that Auto provisioning of 'Log Analytics agent for Azure VMs' is Set to 'On'"
+    },
+    {
+        "value": "2.1.18",
+        "label": "2.1.18: Ensure That 'All users with the following roles' is set to 'Owner'"
+    },
+    {
+        "value": "2.1.19",
+        "label": "2.1.19: Ensure 'Additional email addresses' is Configured with a Security Contact Email"
+    },
+    {
+        "value": "2.1.20",
+        "label": "2.1.20: Ensure That 'Notify about alerts with the following severity' is Set to 'High'"
+    },
+    {
+        "value": "2.1.21",
+        "label": "2.1.21: Ensure that Microsoft Defender for Cloud Apps integration with Microsoft Defender for Cloud is Selected"
+    },
+    {
+        "value": "2.1.22",
+        "label": "2.1.22: Ensure that Microsoft Defender for Endpoint integration with Microsoft Defender for Cloud is selected"
+    },
+    {
+        "value": "2.2.1",
+        "label": "2.2.1: Ensure That Microsoft Defender for IoT Hub Is Set To 'On'"
+    },
+    {
+        "value": "3.1",
+        "label": "3.1: Ensure that 'Secure transfer required' is set to 'Enabled'"
+    },
+    {
+        "value": "3.2",
+        "label": "3.2: Ensure that ‘Enable Infrastructure Encryption’ for Each Storage Account in Azure Storage is Set to ‘enabled’"
+    },
+    {
+        "value": "3.3",
+        "label": "3.3: Ensure that 'Enable key rotation reminders' is enabled for each Storage Account"
+    },
+    {
+        "value": "3.4",
+        "label": "3.4: Ensure that Storage Account Access Keys are Periodically Regenerated"
+    },
+    {
+        "value": "3.5",
+        "label": "3.5: Ensure Storage Logging is Enabled for Queue Service for 'Read', 'Write', and 'Delete' requests"
+    },
+    {
+        "value": "3.6",
+        "label": "3.6: Ensure that Shared Access Signature Tokens Expire Within an Hour"
+    },
+    {
+        "value": "3.7",
+        "label": "3.7: Ensure that 'Public access level' is disabled for storage accounts with blob containers"
+    },
+    {
+        "value": "3.8",
+        "label": "3.8: Ensure Default Network Access Rule for Storage Accounts is Set to Deny"
+    },
+    {
+        "value": "3.9",
+        "label": "3.9: Ensure 'Allow Azure services on the trusted services list to access this storage account' is Enabled for Storage Account Access"
+    },
+    {
+        "value": "3.10",
+        "label": "3.10: Ensure Private Endpoints are used to access Storage Accounts"
+    },
+    {
+        "value": "3.11",
+        "label": "3.11: Ensure Soft Delete is Enabled for Azure Containers and Blob Storage"
+    },
+    {
+        "value": "3.12",
+        "label": "3.12: Ensure Storage for Critical Data are Encrypted with Customer Managed Keys"
+    },
+    {
+        "value": "3.13",
+        "label": "3.13: Ensure Storage logging is Enabled for Blob Service for 'Read', 'Write', and 'Delete' requests"
+    },
+    {
+        "value": "3.14",
+        "label": "3.14: Ensure Storage Logging is Enabled for Table Service for 'Read', 'Write', and 'Delete' Requests"
+    },
+    {
+        "value": "3.15",
+        "label": "3.15: Ensure the Minimum TLS version for storage accounts is set to Version 1.2"
+    },
+    {
+        "value": "4.1.1",
+        "label": "4.1.1: Ensure that 'Auditing' is set to 'On'"
+    },
+    {
+        "value": "4.1.2",
+        "label": "4.1.2: Ensure no Azure SQL Databases allow ingress from 0.0.0.0/0 (ANY IP)"
+    },
+    {
+        "value": "4.1.3",
+        "label": "4.1.3: Ensure SQL server's Transparent Data Encryption (TDE) protector is encrypted with Customer-managed key"
+    },
+    {
+        "value": "4.1.4",
+        "label": "4.1.4: Ensure that Azure Active Directory Admin is Configured for SQL Servers"
+    },
+    {
+        "value": "4.1.5",
+        "label": "4.1.5: Ensure that 'Data encryption' is set to 'On' on a SQL Database"
+    },
+    {
+        "value": "4.1.6",
+        "label": "4.1.6: Ensure that 'Auditing' Retention is 'greater than 90 days'"
+    },
+    {
+        "value": "4.2.1",
+        "label": "4.2.1: Ensure that Microsoft Defender for SQL is set to 'On' for critical SQL Servers"
+    },
+    {
+        "value": "4.2.2",
+        "label": "4.2.2: Ensure that Vulnerability Assessment (VA) is enabled on a SQL server by setting a Storage Account"
+    },
+    {
+        "value": "4.2.3",
+        "label": "4.2.3: Ensure that Vulnerability Assessment (VA) setting 'Periodic recurring scans' is set to 'on' for each SQL server"
+    },
+    {
+        "value": "4.2.4",
+        "label": "4.2.4: Ensure that Vulnerability Assessment (VA) setting 'Send scan reports to' is configured for a SQL server"
+    },
+    {
+        "value": "4.2.5",
+        "label": "4.2.5: Ensure that Vulnerability Assessment (VA) setting 'Also send email notifications to admins and subscription owners' is set for each SQL Server"
+    },
+    {
+        "value": "4.3.1",
+        "label": "4.3.1: Ensure 'Enforce SSL connection' is set to 'ENABLED' for PostgreSQL Database Server"
+    },
+    {
+        "value": "4.3.2",
+        "label": "4.3.2: Ensure Server Parameter 'log_checkpoints' is set to 'ON' for PostgreSQL Database Server"
+    },
+    {
+        "value": "4.3.3",
+        "label": "4.3.3: Ensure server parameter 'log_connections' is set to 'ON' for PostgreSQL Database Server"
+    },
+    {
+        "value": "4.3.4",
+        "label": "4.3.4: Ensure server parameter 'log_disconnections' is set to 'ON' for PostgreSQL Database Server"
+    },
+    {
+        "value": "4.3.5",
+        "label": "4.3.5: Ensure server parameter 'connection_throttling' is set to 'ON' for PostgreSQL Database Server"
+    },
+    {
+        "value": "4.3.6",
+        "label": "4.3.6: Ensure Server Parameter 'log_retention_days' is greater than 3 days for PostgreSQL Database Server"
+    },
+    {
+        "value": "4.3.7",
+        "label": "4.3.7: Ensure 'Allow access to Azure services' for PostgreSQL Database Server is disabled"
+    },
+    {
+        "value": "4.3.8",
+        "label": "4.3.8: Ensure 'Infrastructure double encryption' for PostgreSQL Database Server is 'Enabled'"
+    },
+    {
+        "value": "4.4.1",
+        "label": "4.4.1: Ensure 'Enforce SSL connection' is set to 'Enabled' for Standard MySQL Database Server"
+    },
+    {
+        "value": "4.4.2",
+        "label": "4.4.2: Ensure 'TLS Version' is set to 'TLSV1.2' for MySQL flexible Database Server"
+    },
+    {
+        "value": "4.4.3",
+        "label": "4.4.3: Ensure server parameter 'audit_log_enabled' is set to 'ON' for MySQL Database Server"
+    },
+    {
+        "value": "4.4.4",
+        "label": "4.4.4: Ensure server parameter 'audit_log_events' has 'CONNECTION' set for MySQL Database Server"
+    },
+    {
+        "value": "4.5.1",
+        "label": "4.5.1: Ensure That 'Firewalls & Networks' Is Limited to Use Selected Networks Instead of All Networks"
+    },
+    {
+        "value": "4.5.2",
+        "label": "4.5.2: Ensure That Private Endpoints Are Used Where Possible"
+    },
+    {
+        "value": "4.5.3",
+        "label": "4.5.3: Use Azure Active Directory (AAD) Client Authentication and Azure RBAC where possible."
+    },
+    {
+        "value": "5.4",
+        "label": "5.4: Ensure that Azure Monitor Resource Logging is Enabled for All Services that Support it"
+    },
+    {
+        "value": "5.5",
+        "label": "5.5: Ensure that SKU Basic/Consumption is not used on artifacts that need to be monitored (Particularly for Production Workloads)"
+    },
+    {
+        "value": "5.1.1",
+        "label": "5.1.1: Ensure that a 'Diagnostic Setting' exists"
+    },
+    {
+        "value": "5.1.2",
+        "label": "5.1.2: Ensure Diagnostic Setting captures appropriate categories"
+    },
+    {
+        "value": "5.1.3",
+        "label": "5.1.3: Ensure the Storage Container Storing the Activity Logs is not Publicly Accessible"
+    },
+    {
+        "value": "5.1.4",
+        "label": "5.1.4: Ensure the storage account containing the container with activity logs is encrypted with Customer Managed Key"
+    },
+    {
+        "value": "5.1.5",
+        "label": "5.1.5: Ensure that logging for Azure Key Vault is 'Enabled'"
+    },
+    {
+        "value": "5.1.6",
+        "label": "5.1.6: Ensure that Network Security Group Flow logs are captured and sent to Log Analytics'"
+    },
+    {
+        "value": "5.1.7",
+        "label": "5.1.7: Ensure that logging for Azure AppService 'HTTP logs' is enabled"
+    },
+    {
+        "value": "5.2.1",
+        "label": "5.2.1: Ensure that Activity Log Alert exists for Create Policy Assignment"
+    },
+    {
+        "value": "5.2.2",
+        "label": "5.2.2: Ensure that Activity Log Alert exists for Delete Policy Assignment"
+    },
+    {
+        "value": "5.2.3",
+        "label": "5.2.3: Ensure that Activity Log Alert exists for Create or Update Network Security Group"
+    },
+    {
+        "value": "5.2.4",
+        "label": "5.2.4: Ensure that Activity Log Alert exists for Delete Network Security Group"
+    },
+    {
+        "value": "5.2.5",
+        "label": "5.2.5: Ensure that Activity Log Alert exists for Create or Update Security Solution"
+    },
+    {
+        "value": "5.2.6",
+        "label": "5.2.6: Ensure that Activity Log Alert exists for Delete Security Solution"
+    },
+    {
+        "value": "5.2.7",
+        "label": "5.2.7: Ensure that Activity Log Alert exists for Create or Update SQL Server Firewall Rule"
+    },
+    {
+        "value": "5.2.8",
+        "label": "5.2.8: Ensure that Activity Log Alert exists for Delete SQL Server Firewall Rule"
+    },
+    {
+        "value": "5.2.9",
+        "label": "5.2.9: Ensure that Activity Log Alert exists for Create or Update Public IP Address rule"
+    },
+    {
+        "value": "5.2.10",
+        "label": "5.2.10: Ensure that Activity Log Alert exists for Delete Public IP Address rule"
+    },
+    {
+        "value": "5.3.1",
+        "label": "5.3.1: Ensure Application Insights are Configured"
+    },
+    {
+        "value": "6.1",
+        "label": "6.1: Ensure that RDP access from the Internet is evaluated and restricted"
+    },
+    {
+        "value": "6.2",
+        "label": "6.2: Ensure that SSH access from the Internet is evaluated and restricted"
+    },
+    {
+        "value": "6.3",
+        "label": "6.3: Ensure that UDP access from the Internet is evaluated and restricted"
+    },
+    {
+        "value": "6.4",
+        "label": "6.4: Ensure that HTTP(S) access from the Internet is evaluated and restricted"
+    },
+    {
+        "value": "6.5",
+        "label": "6.5: Ensure that Network Security Group Flow Log retention period is 'greater than 90 days'"
+    },
+    {
+        "value": "6.6",
+        "label": "6.6: Ensure that Network Watcher is 'Enabled'"
+    },
+    {
+        "value": "6.7",
+        "label": "6.7: Ensure that Public IP addresses are Evaluated on a Periodic Basis"
+    },
+    {
+        "value": "7.1",
+        "label": "7.1: Ensure an Azure Bastion Host Exists"
+    },
+    {
+        "value": "7.2",
+        "label": "7.2: Ensure Virtual Machines are utilizing Managed Disks"
+    },
+    {
+        "value": "7.3",
+        "label": "7.3: Ensure that 'OS and Data' disks are encrypted with Customer Managed Key (CMK)"
+    },
+    {
+        "value": "7.4",
+        "label": "7.4: Ensure that 'Unattached disks' are encrypted with 'Customer Managed Key' (CMK)"
+    },
+    {
+        "value": "7.5",
+        "label": "7.5: Ensure that Only Approved Extensions Are Installed"
+    },
+    {
+        "value": "7.6",
+        "label": "7.6: Ensure that Endpoint Protection for all Virtual Machines is installed"
+    },
+    {
+        "value": "7.7",
+        "label": "7.7: [Legacy] Ensure that VHDs are Encrypted"
+    },
+    {
+        "value": "8.1",
+        "label": "8.1: Ensure that the Expiration Date is set for all Keys in RBAC Key Vaults"
+    },
+    {
+        "value": "8.2",
+        "label": "8.2: Ensure that the Expiration Date is set for all Keys in Non-RBAC Key Vaults."
+    },
+    {
+        "value": "8.3",
+        "label": "8.3: Ensure that the Expiration Date is set for all Secrets in RBAC Key Vaults"
+    },
+    {
+        "value": "8.4",
+        "label": "8.4: Ensure that the Expiration Date is set for all Secrets in Non-RBAC Key Vaults"
+    },
+    {
+        "value": "8.5",
+        "label": "8.5: Ensure the Key Vault is Recoverable"
+    },
+    {
+        "value": "8.6",
+        "label": "8.6: Enable Role Based Access Control for Azure Key Vault"
+    },
+    {
+        "value": "8.7",
+        "label": "8.7: Ensure that Private Endpoints are Used for Azure Key Vault"
+    },
+    {
+        "value": "8.8",
+        "label": "8.8: Ensure Automatic Key Rotation is Enabled Within Azure Key Vault for the Supported Services"
+    },
+    {
+        "value": "9.1",
+        "label": "9.1: Ensure App Service Authentication is set up for apps in Azure App Service"
+    },
+    {
+        "value": "9.2",
+        "label": "9.2: Ensure Web App Redirects All HTTP traffic to HTTPS in Azure App Service"
+    },
+    {
+        "value": "9.3",
+        "label": "9.3: Ensure Web App is using the latest version of TLS encryption"
+    },
+    {
+        "value": "9.4",
+        "label": "9.4: Ensure the web app has 'Client Certificates (Incoming client certificates)' set to 'On'"
+    },
+    {
+        "value": "9.5",
+        "label": "9.5: Ensure that Register with Azure Active Directory is enabled on App Service"
+    },
+    {
+        "value": "9.6",
+        "label": "9.6: Ensure That 'PHP version' is the Latest, If Used to Run the Web App"
+    },
+    {
+        "value": "9.7",
+        "label": "9.7: Ensure that 'Python version' is the Latest Stable Version, if Used to Run the Web App"
+    },
+    {
+        "value": "9.8",
+        "label": "9.8: Ensure that 'Java version' is the latest, if used to run the Web App"
+    },
+    {
+        "value": "9.9",
+        "label": "9.9: Ensure that 'HTTP Version' is the Latest, if Used to Run the Web App"
+    },
+    {
+        "value": "9.10",
+        "label": "9.10: Ensure FTP deployments are Disabled"
+    },
+    {
+        "value": "9.11",
+        "label": "9.11: Ensure Azure Key Vaults are Used to Store Secrets"
+    },
+    {
+        "value": "10.1",
+        "label": "10.1: Ensure that Resource Locks are set for Mission-Critical Azure Resources"
+    }
+]
