@@ -1,0 +1,70 @@
+{
+  "id": "/providers/Microsoft.Authorization/policyDefinitions/3b72a759-a829-44ba-8b27-2ba5adfdcfe8",
+  "name": "3b72a759-a829-44ba-8b27-2ba5adfdcfe8",
+  "properties": {
+    "description": "Description Custom Manual - MCSB Baseline item PA-7 for Azure DNS",
+    "displayName": "MCSB Baseline item PA-7 for Azure DNS",
+    "metadata": {
+      "offeringName": "Azure DNS",
+      "offeringId": "234d0f7d-6d95-4cba-97b5-c8ccb93d8a6a",
+      "mcsb": {
+        "mcsbId": "PA-7",
+        "features": [
+          {
+            "featureId": "AZURE_RBAC_DATAPLANE_SUPPORTED",
+            "featureName": "Azure RBAC for Data Plane",
+            "featureDescription": "Azure Role-Based Access Control (Azure RBAC) can be used to managed access to service's data plane actions.",
+            "featureSupport": "True",
+            "featureGuidance": "Use Azure role-based access control (Azure RBAC) to manage Azure resource access through built-in role assignments. Azure RBAC roles can be assigned to users, groups, service principals, and managed identities.",
+            "featureReference": "https://docs.microsoft.com/azure/dns/dns-protect-private-zones-recordsets#azure-role-based-access-control",
+            "enabledByDefault": "False",
+            "customerActionsDescription": "Follow just enough administration (least privilege) principle"
+          }
+        ],
+        "automatedPolicyAvailability": [],
+        "frameworkControls": [
+          "CIS_Azure_2.0.0_1.24",
+          "CIS_Azure_2.0.0_4.5.3",
+          "NIST_SP_800-53_R4_AC-6",
+          "NIST_SP_800-53_R4_AC-2",
+          "NIST_SP_800-53_R4_AC-3",
+          "PCI_DSS_v4.0_7.2.5",
+          "PCI_DSS_v4.0_7.2.2",
+          "PCI_DSS_v4.0_7.2.1",
+          "PCI_DSS_v4.0_8.2.7",
+          "PCI_DSS_v4.0_7.3.3",
+          "PCI_DSS_v4.0_7.3.2",
+          "PCI_DSS_v4.0_7.3.1",
+          "PCI_DSS_v4.0_7.2.6"
+        ]
+      },
+      "version": "1.0.0",
+      "category": "Regulatory Compliance"
+    },
+    "mode": "All",
+    "policyType": "Custom",
+    "policyRule": {
+      "if": {
+        "allOf": [
+          {
+            "field": "type",
+            "in": [
+              "Microsoft.Resources/subscriptions",
+              "Microsoft.Resources/subscriptions/resourceGroups"
+            ]
+          },
+          {
+            "value": "false",
+            "equals": "true"
+          }
+        ]
+      },
+      "then": {
+        "effect": "Manual",
+        "details": {
+          "defaultState": "Unknown"
+        }
+      }
+    }
+  }
+}

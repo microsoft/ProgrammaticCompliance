@@ -1,0 +1,75 @@
+{
+  "id": "/providers/Microsoft.Authorization/policyDefinitions/3bffeaed-69be-44e2-b95c-34e2eb96cd43",
+  "name": "3bffeaed-69be-44e2-b95c-34e2eb96cd43",
+  "properties": {
+    "description": "Description Custom Manual - MCSB Baseline item IM-3 for Azure Policy",
+    "displayName": "MCSB Baseline item IM-3 for Azure Policy",
+    "metadata": {
+      "offeringName": "Azure Policy",
+      "offeringId": "58a4e830-6a7c-4fd7-810e-69bcf8f2bd3b",
+      "mcsb": {
+        "mcsbId": "IM-3",
+        "features": [
+          {
+            "featureId": "MANAGED_IDENTITIES",
+            "featureName": "Managed Identities",
+            "featureDescription": "Data plane actions support authentication using managed identities.",
+            "featureSupport": "True",
+            "featureGuidance": "Each Azure Policy assignment can be associated with only one managed identity. However, the managed identity can be assigned multiple roles. Configuration occurs in two steps: first create either a system-assigned or user-assigned managed identity, then grant it the necessary roles.",
+            "featureReference": "https://docs.microsoft.com/azure/governance/policy/how-to/remediate-resources?tabs=azure-portal#how-remediation-security-works",
+            "enabledByDefault": "False",
+            "customerActionsDescription": "Manage application identities securely and automatically"
+          },
+          {
+            "featureId": "SERVICE_PRINCIPAL",
+            "featureName": "Service Principals",
+            "featureDescription": "Data plane supports authentication using service principals.",
+            "featureSupport": "Not Applicable",
+            "featureGuidance": "This feature is not applicable to secure this service.",
+            "featureReference": "Not Applicable",
+            "enabledByDefault": "Not Applicable",
+            "customerActionsDescription": "Manage application identities securely and automatically"
+          }
+        ],
+        "automatedPolicyAvailability": [],
+        "frameworkControls": [
+          "NIST_SP_800-53_R4_IA-9",
+          "NIST_SP_800-53_R4_IA-5",
+          "NIST_SP_800-53_R4_IA-4",
+          "NIST_SP_800-53_R4_AC-3",
+          "NIST_SP_800-53_R4_AC-2",
+          "PCI_DSS_v4.0_8.6.2",
+          "PCI_DSS_v4.0_8.6.3",
+          "PCI_DSS_v4.0_8.6.1"
+        ]
+      },
+      "version": "1.0.0",
+      "category": "Regulatory Compliance"
+    },
+    "mode": "All",
+    "policyType": "Custom",
+    "policyRule": {
+      "if": {
+        "allOf": [
+          {
+            "field": "type",
+            "in": [
+              "Microsoft.Resources/subscriptions",
+              "Microsoft.Resources/subscriptions/resourceGroups"
+            ]
+          },
+          {
+            "value": "false",
+            "equals": "true"
+          }
+        ]
+      },
+      "then": {
+        "effect": "Manual",
+        "details": {
+          "defaultState": "Unknown"
+        }
+      }
+    }
+  }
+}

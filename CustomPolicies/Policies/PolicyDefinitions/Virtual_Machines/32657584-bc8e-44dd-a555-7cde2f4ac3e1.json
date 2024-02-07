@@ -1,0 +1,109 @@
+{
+  "id": "/providers/Microsoft.Authorization/policyDefinitions/32657584-bc8e-44dd-a555-7cde2f4ac3e1",
+  "name": "32657584-bc8e-44dd-a555-7cde2f4ac3e1",
+  "properties": {
+    "description": "Description Custom Manual - MCSB Baseline item NS-1 for Virtual Machines",
+    "displayName": "MCSB Baseline item NS-1 for Virtual Machines",
+    "metadata": {
+      "offeringName": "Virtual Machines",
+      "offeringId": "07649cbd-2ee4-4992-898b-f5f16bad1b36",
+      "mcsb": {
+        "mcsbId": "NS-1",
+        "features": [
+          {
+            "featureId": "NSG_SUPPORTED",
+            "featureName": "Network Security Group Support",
+            "featureDescription": "Service network traffic respects Network Security Groups rule assignment on its subnets.",
+            "featureSupport": "True",
+            "featureGuidance": "Use network security groups (NSG) to restrict or monitor traffic by port, protocol, source IP address, or destination IP address. Create NSG rules to restrict your service's open ports (such as preventing management ports from being accessed from untrusted networks). Be aware that by default, NSGs deny all inbound traffic but allow traffic from virtual network and Azure Load Balancers.\r\n\r\nWhen you create an Azure virtual machine (VM), you must create a virtual network or use an existing virtual network and configure the VM with a subnet. Ensure that all deployed subnets have a Network Security Group applied with network access controls specific to your applications trusted ports and sources.",
+            "featureReference": "https://learn.microsoft.com/azure/virtual-network/network-overview#network-security-groups",
+            "enabledByDefault": "False",
+            "customerActionsDescription": "Establish network segmentation boundaries "
+          },
+          {
+            "featureId": "VNET_INTEGRATION",
+            "featureName": "Virtual Network Integration",
+            "featureDescription": "Service supports deployment into customer's private Virtual Network (VNet).",
+            "featureSupport": "True",
+            "featureGuidance": "No additional configurations are required as this is enabled on a default deployment.",
+            "featureReference": "https://learn.microsoft.com/azure/virtual-network/network-overview",
+            "enabledByDefault": "True",
+            "customerActionsDescription": "Establish network segmentation boundaries "
+          }
+        ],
+        "automatedPolicyAvailability": [
+          {
+            "policyId": "f6de0be7-9a8a-4b8a-b349-43cf02d22f7c",
+            "policyName": "Internet-facing virtual machines should be protected with network security groups",
+            "policyDescription": "Protect your virtual machines from potential threats by restricting access to them with network security groups (NSG). Learn more about controlling traffic with NSGs at https://aka.ms/nsg-doc",
+            "policyCategory": "Security Center"
+          },
+          {
+            "policyId": "bb91dfba-c30d-4263-9add-9c2384e659a6",
+            "policyName": "Non-internet-facing virtual machines should be protected with network security groups",
+            "policyDescription": "Protect your non-internet-facing virtual machines from potential threats by restricting access with network security groups (NSG). Learn more about controlling traffic with NSGs at https://aka.ms/nsg-doc",
+            "policyCategory": "Security Center"
+          },
+          {
+            "policyId": "9daedab3-fb2d-461e-b861-71790eead4f6",
+            "policyName": "All network ports should be restricted on network security groups associated to your virtual machine",
+            "policyDescription": "Azure Security Center has identified some of your network security groups' inbound rules to be too permissive. Inbound rules should not allow access from 'Any' or 'Internet' ranges. This can potentially enable attackers to target your resources.",
+            "policyCategory": "Security Center"
+          },
+          {
+            "policyId": "08e6af2d-db70-460a-bfe9-d5bd474ba9d6",
+            "policyName": "Adaptive network hardening recommendations should be applied on internet facing virtual machines",
+            "policyDescription": "Azure Security Center analyzes the traffic patterns of Internet facing virtual machines and provides Network Security Group rule recommendations that reduce the potential attack surface",
+            "policyCategory": "Security Center"
+          }
+        ],
+        "frameworkControls": [
+          "CIS_Azure_2.0.0_6.7",
+          "CIS_Azure_2.0.0_6.4",
+          "CIS_Azure_2.0.0_6.3",
+          "CIS_Azure_2.0.0_6.2",
+          "CIS_Azure_2.0.0_6.1",
+          "CIS_Azure_2.0.0_4.3.7",
+          "NIST_SP_800-53_R4_SC-7",
+          "NIST_SP_800-53_R4_SC-2",
+          "NIST_SP_800-53_R4_AC-4",
+          "PCI_DSS_v4.0_1.4.5",
+          "PCI_DSS_v4.0_1.4.4",
+          "PCI_DSS_v4.0_1.4.3",
+          "PCI_DSS_v4.0_1.4.2",
+          "PCI_DSS_v4.0_1.4.1",
+          "PCI_DSS_v4.0_1.3.2",
+          "PCI_DSS_v4.0_1.3.1",
+          "PCI_DSS_v4.0_1.2.6"
+        ]
+      },
+      "version": "1.0.0",
+      "category": "Regulatory Compliance"
+    },
+    "mode": "All",
+    "policyType": "Custom",
+    "policyRule": {
+      "if": {
+        "allOf": [
+          {
+            "field": "type",
+            "in": [
+              "Microsoft.Resources/subscriptions",
+              "Microsoft.Resources/subscriptions/resourceGroups"
+            ]
+          },
+          {
+            "value": "false",
+            "equals": "true"
+          }
+        ]
+      },
+      "then": {
+        "effect": "Manual",
+        "details": {
+          "defaultState": "Unknown"
+        }
+      }
+    }
+  }
+}

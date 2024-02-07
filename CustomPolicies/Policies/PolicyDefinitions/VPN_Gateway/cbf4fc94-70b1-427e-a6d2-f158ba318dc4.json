@@ -1,0 +1,84 @@
+{
+  "id": "/providers/Microsoft.Authorization/policyDefinitions/cbf4fc94-70b1-427e-a6d2-f158ba318dc4",
+  "name": "cbf4fc94-70b1-427e-a6d2-f158ba318dc4",
+  "properties": {
+    "description": "Description Custom Manual - MCSB Baseline item IM-1 for VPN Gateway",
+    "displayName": "MCSB Baseline item IM-1 for VPN Gateway",
+    "metadata": {
+      "offeringName": "VPN Gateway",
+      "offeringId": "98b54928-31d4-4f37-868c-4e90e79bd682",
+      "mcsb": {
+        "mcsbId": "IM-1",
+        "features": [
+          {
+            "featureId": "AAD_AUTH_FOR_DATA_PLANE_ACCESS",
+            "featureName": "Azure AD Authentication Required for Data Plane Access",
+            "featureDescription": "Service supports using Azure AD authentication for data plane access.",
+            "featureSupport": "True",
+            "featureGuidance": "Use Azure Active Directory (Azure AD) as the default authentication method to control your data plane access.",
+            "featureReference": "https://docs.microsoft.com/azure/vpn-gateway/openvpn-azure-ad-tenant",
+            "enabledByDefault": "False",
+            "customerActionsDescription": "Use centralized identity and authentication system"
+          },
+          {
+            "featureId": "LOCAL_AUTH_METHODS_FOR_DATA_PLANE_ACCESS",
+            "featureName": "Local Authentication Methods for Data Plane Access",
+            "featureDescription": "Local authentications methods supported for data plane access, such as a local username and password.",
+            "featureSupport": "Not Applicable",
+            "featureGuidance": "This feature is not applicable to secure this service.",
+            "featureReference": "Not Applicable",
+            "enabledByDefault": "Not Applicable",
+            "customerActionsDescription": "Use centralized identity and authentication system"
+          }
+        ],
+        "automatedPolicyAvailability": [
+          {
+            "policyId": "21a6bc25-125e-4d13-b82d-2e19b7208ab7",
+            "policyName": "VPN gateways should use only Azure Active Directory (Azure AD) authentication for point-to-site users",
+            "policyDescription": "Disabling local authentication methods improves security by ensuring that VPN Gateways use only Azure Active Directory identities for authentication. Learn more about Azure AD authentication at https://docs.microsoft.com/azure/vpn-gateway/openvpn-azure-ad-tenant",
+            "policyCategory": "Network"
+          }
+        ],
+        "frameworkControls": [
+          "CIS_Azure_2.0.0_9.5",
+          "CIS_Azure_2.0.0_4.5.3",
+          "CIS_Azure_2.0.0_4.1.4",
+          "NIST_SP_800-53_R4_IA-8",
+          "NIST_SP_800-53_R4_IA-2",
+          "NIST_SP_800-53_R4_AC-3",
+          "NIST_SP_800-53_R4_AC-2",
+          "PCI_DSS_v4.0_8.2.1",
+          "PCI_DSS_v4.0_7.3.2",
+          "PCI_DSS_v4.0_7.3.1"
+        ]
+      },
+      "version": "1.0.0",
+      "category": "Regulatory Compliance"
+    },
+    "mode": "All",
+    "policyType": "Custom",
+    "policyRule": {
+      "if": {
+        "allOf": [
+          {
+            "field": "type",
+            "in": [
+              "Microsoft.Resources/subscriptions",
+              "Microsoft.Resources/subscriptions/resourceGroups"
+            ]
+          },
+          {
+            "value": "false",
+            "equals": "true"
+          }
+        ]
+      },
+      "then": {
+        "effect": "Manual",
+        "details": {
+          "defaultState": "Unknown"
+        }
+      }
+    }
+  }
+}

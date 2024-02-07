@@ -1,0 +1,61 @@
+{
+  "id": "/providers/Microsoft.Authorization/policyDefinitions/21161127-3f61-42f7-9eb4-06e0c7df7de5",
+  "name": "21161127-3f61-42f7-9eb4-06e0c7df7de5",
+  "properties": {
+    "description": "Description Custom Manual - MCSB Baseline item PA-8 for Azure Advisor",
+    "displayName": "MCSB Baseline item PA-8 for Azure Advisor",
+    "metadata": {
+      "offeringName": "Azure Advisor",
+      "offeringId": "c3c3299d-ee34-4610-844d-3782d691a7fe",
+      "mcsb": {
+        "mcsbId": "PA-8",
+        "features": [
+          {
+            "featureId": "CUSTOMER_LOCKBOX_SUPPORTED",
+            "featureName": "Customer Lockbox",
+            "featureDescription": "Customer Lockbox can be used for Microsoft support access.",
+            "featureSupport": "Not Applicable",
+            "featureGuidance": "This feature is not applicable to secure this service.",
+            "featureReference": "Not Applicable",
+            "enabledByDefault": "Not Applicable",
+            "customerActionsDescription": "Determine access process for cloud provider support\n\n"
+          }
+        ],
+        "automatedPolicyAvailability": [],
+        "frameworkControls": [
+          "CIS_Azure_2.0.0_1.20",
+          "NIST_SP_800-53_R4_AC-4",
+          "NIST_SP_800-53_R4_AC-3",
+          "NIST_SP_800-53_R4_AC-2"
+        ]
+      },
+      "version": "1.0.0",
+      "category": "Regulatory Compliance"
+    },
+    "mode": "All",
+    "policyType": "Custom",
+    "policyRule": {
+      "if": {
+        "allOf": [
+          {
+            "field": "type",
+            "in": [
+              "Microsoft.Resources/subscriptions",
+              "Microsoft.Resources/subscriptions/resourceGroups"
+            ]
+          },
+          {
+            "value": "false",
+            "equals": "true"
+          }
+        ]
+      },
+      "then": {
+        "effect": "Manual",
+        "details": {
+          "defaultState": "Unknown"
+        }
+      }
+    }
+  }
+}

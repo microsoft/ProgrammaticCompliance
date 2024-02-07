@@ -1,0 +1,66 @@
+{
+  "id": "/providers/Microsoft.Authorization/policyDefinitions/5bf869ad-49d8-493d-b07f-b62e08d5497d",
+  "name": "5bf869ad-49d8-493d-b07f-b62e08d5497d",
+  "properties": {
+    "description": "Description Custom Manual - MCSB Baseline item DP-3 for Azure Remote Rendering",
+    "displayName": "MCSB Baseline item DP-3 for Azure Remote Rendering",
+    "metadata": {
+      "offeringName": "Azure Remote Rendering",
+      "offeringId": "dafd48ec-e4d7-4536-8e00-7ac1a3aa02d9",
+      "mcsb": {
+        "mcsbId": "DP-3",
+        "features": [
+          {
+            "featureId": "DATA_IN_TRANSIT_ENCRYPTION",
+            "featureName": "Data in Transit Encryption",
+            "featureDescription": "Service supports data in-transit encryption for data plane.",
+            "featureSupport": "True",
+            "featureGuidance": "No additional configurations are required as this is enabled on a default deployment.",
+            "featureReference": "Not Applicable",
+            "enabledByDefault": "True",
+            "customerActionsDescription": "Encrypt sensitive data in transit"
+          }
+        ],
+        "automatedPolicyAvailability": [],
+        "frameworkControls": [
+          "CIS_Azure_2.0.0_9.3",
+          "CIS_Azure_2.0.0_9.2",
+          "CIS_Azure_2.0.0_4.4.1",
+          "CIS_Azure_2.0.0_3.15",
+          "CIS_Azure_2.0.0_2.1.5",
+          "NIST_SP_800-53_R4_SC-8",
+          "PCI_DSS_v4.0_4.2.2",
+          "PCI_DSS_v4.0_4.2.1.2",
+          "PCI_DSS_v4.0_2.2.7"
+        ]
+      },
+      "version": "1.0.0",
+      "category": "Regulatory Compliance"
+    },
+    "mode": "All",
+    "policyType": "Custom",
+    "policyRule": {
+      "if": {
+        "allOf": [
+          {
+            "field": "type",
+            "in": [
+              "Microsoft.Resources/subscriptions",
+              "Microsoft.Resources/subscriptions/resourceGroups"
+            ]
+          },
+          {
+            "value": "false",
+            "equals": "true"
+          }
+        ]
+      },
+      "then": {
+        "effect": "Manual",
+        "details": {
+          "defaultState": "Unknown"
+        }
+      }
+    }
+  }
+}

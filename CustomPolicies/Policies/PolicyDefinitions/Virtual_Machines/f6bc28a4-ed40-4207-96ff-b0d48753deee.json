@@ -1,0 +1,70 @@
+{
+  "id": "/providers/Microsoft.Authorization/policyDefinitions/f6bc28a4-ed40-4207-96ff-b0d48753deee",
+  "name": "f6bc28a4-ed40-4207-96ff-b0d48753deee",
+  "properties": {
+    "description": "Description Custom Manual - MCSB Baseline item PA-7 for Virtual Machines",
+    "displayName": "MCSB Baseline item PA-7 for Virtual Machines",
+    "metadata": {
+      "offeringName": "Virtual Machines",
+      "offeringId": "07649cbd-2ee4-4992-898b-f5f16bad1b36",
+      "mcsb": {
+        "mcsbId": "PA-7",
+        "features": [
+          {
+            "featureId": "AZURE_RBAC_DATAPLANE_SUPPORTED",
+            "featureName": "Azure RBAC for Data Plane",
+            "featureDescription": "Azure Role-Based Access Control (Azure RBAC) can be used to managed access to service's data plane actions.",
+            "featureSupport": "True",
+            "featureGuidance": "With RBAC, specify who can log in to a VM as a regular user or with administrator privileges. When users join your team, you can update the Azure RBAC policy for the VM to grant access as appropriate. When employees leave your organization and their user accounts are disabled or removed from Azure AD, they no longer have access to your resources.",
+            "featureReference": "https://learn.microsoft.com/azure/active-directory/devices/howto-vm-sign-in-azure-ad-linux",
+            "enabledByDefault": "False",
+            "customerActionsDescription": "Follow just enough administration (least privilege) principle"
+          }
+        ],
+        "automatedPolicyAvailability": [],
+        "frameworkControls": [
+          "CIS_Azure_2.0.0_4.5.3",
+          "CIS_Azure_2.0.0_1.24",
+          "NIST_SP_800-53_R4_AC-3",
+          "NIST_SP_800-53_R4_AC-2",
+          "NIST_SP_800-53_R4_AC-6",
+          "PCI_DSS_v4.0_8.2.7",
+          "PCI_DSS_v4.0_7.3.3",
+          "PCI_DSS_v4.0_7.3.2",
+          "PCI_DSS_v4.0_7.3.1",
+          "PCI_DSS_v4.0_7.2.6",
+          "PCI_DSS_v4.0_7.2.5",
+          "PCI_DSS_v4.0_7.2.2",
+          "PCI_DSS_v4.0_7.2.1"
+        ]
+      },
+      "version": "1.0.0",
+      "category": "Regulatory Compliance"
+    },
+    "mode": "All",
+    "policyType": "Custom",
+    "policyRule": {
+      "if": {
+        "allOf": [
+          {
+            "field": "type",
+            "in": [
+              "Microsoft.Resources/subscriptions",
+              "Microsoft.Resources/subscriptions/resourceGroups"
+            ]
+          },
+          {
+            "value": "false",
+            "equals": "true"
+          }
+        ]
+      },
+      "then": {
+        "effect": "Manual",
+        "details": {
+          "defaultState": "Unknown"
+        }
+      }
+    }
+  }
+}

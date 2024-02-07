@@ -1,0 +1,68 @@
+{
+  "id": "/providers/Microsoft.Authorization/policyDefinitions/96753f1d-13b7-4f96-8107-085472494723",
+  "name": "96753f1d-13b7-4f96-8107-085472494723",
+  "properties": {
+    "description": "Description Custom Manual - MCSB Baseline item PV-5 for Azure NAT Gateway",
+    "displayName": "MCSB Baseline item PV-5 for Azure NAT Gateway",
+    "metadata": {
+      "offeringName": "Azure NAT Gateway",
+      "offeringId": "91684203-36aa-48b0-9b43-87fb7890d169",
+      "mcsb": {
+        "mcsbId": "PV-5",
+        "features": [
+          {
+            "featureId": "VULNERABILITY_ASSESSMENT_USING_MICROSOFT_DEFENDER",
+            "featureName": "Vulnerability Assessment using Microsoft Defender",
+            "featureDescription": "Service can be scanned for vulnerability scan using Microsoft Defender for Cloud or other Microsoft Defender services embedded vulnerability assessment capability (including Microsoft Defender for server, container registry, App Service, SQL, and DNS).",
+            "featureSupport": "Not Applicable",
+            "featureGuidance": "This feature is not applicable to secure this service.",
+            "featureReference": "Not Applicable",
+            "enabledByDefault": "Not Applicable",
+            "customerActionsDescription": "Perform vulnerability assessments"
+          }
+        ],
+        "automatedPolicyAvailability": [],
+        "frameworkControls": [
+          "CIS_Azure_2.0.0_2.1.16",
+          "NIST_SP_800-53_R4_RA-5",
+          "NIST_SP_800-53_R4_RA-3",
+          "PCI_DSS_v4.0_11.3.2",
+          "PCI_DSS_v4.0_11.3.1",
+          "PCI_DSS_v4.0_6.4.2",
+          "PCI_DSS_v4.0_6.4.1",
+          "PCI_DSS_v4.0_6.3.3",
+          "PCI_DSS_v4.0_6.3.2",
+          "PCI_DSS_v4.0_6.3.1",
+          "PCI_DSS_v4.0_2.2.1"
+        ]
+      },
+      "version": "1.0.0",
+      "category": "Regulatory Compliance"
+    },
+    "mode": "All",
+    "policyType": "Custom",
+    "policyRule": {
+      "if": {
+        "allOf": [
+          {
+            "field": "type",
+            "in": [
+              "Microsoft.Resources/subscriptions",
+              "Microsoft.Resources/subscriptions/resourceGroups"
+            ]
+          },
+          {
+            "value": "false",
+            "equals": "true"
+          }
+        ]
+      },
+      "then": {
+        "effect": "Manual",
+        "details": {
+          "defaultState": "Unknown"
+        }
+      }
+    }
+  }
+}

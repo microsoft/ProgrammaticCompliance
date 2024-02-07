@@ -1,0 +1,61 @@
+{
+  "id": "/providers/Microsoft.Authorization/policyDefinitions/54aa7673-69c2-476b-81e4-1dcfbb38e582",
+  "name": "54aa7673-69c2-476b-81e4-1dcfbb38e582",
+  "properties": {
+    "description": "Description Custom Manual - MCSB Baseline item IM-8 for Key Vault",
+    "displayName": "MCSB Baseline item IM-8 for Key Vault",
+    "metadata": {
+      "offeringName": "Key Vault",
+      "offeringId": "8e93a1fd-5378-4ec7-a1e7-135f74745054",
+      "mcsb": {
+        "mcsbId": "IM-8",
+        "features": [
+          {
+            "featureId": "AKV_SUPPORT_FOR_CREDENTIAL_AND_SECRETS",
+            "featureName": "Service Credential and Secrets Support Integration and Storage in Azure Key Vault",
+            "featureDescription": "Data plane supports native use of Azure Key Vault for credential and secrets store.",
+            "featureSupport": "True",
+            "featureGuidance": "Ensure that secrets and credentials are stored in secure locations such as Azure Key Vault, instead of embedding them into code or configuration files.",
+            "featureReference": "https://docs.microsoft.com/azure/key-vault/secrets/about-secrets",
+            "enabledByDefault": "False",
+            "customerActionsDescription": "Restrict the exposure of credential and secrets"
+          }
+        ],
+        "automatedPolicyAvailability": [],
+        "frameworkControls": [
+          "CIS_Azure_2.0.0_3.3",
+          "NIST_SP_800-53_R4_IA-5",
+          "PCI_DSS_v4.0_3.6.1",
+          "PCI_DSS_v4.0_8.6.2"
+        ]
+      },
+      "version": "1.0.0",
+      "category": "Regulatory Compliance"
+    },
+    "mode": "All",
+    "policyType": "Custom",
+    "policyRule": {
+      "if": {
+        "allOf": [
+          {
+            "field": "type",
+            "in": [
+              "Microsoft.Resources/subscriptions",
+              "Microsoft.Resources/subscriptions/resourceGroups"
+            ]
+          },
+          {
+            "value": "false",
+            "equals": "true"
+          }
+        ]
+      },
+      "then": {
+        "effect": "Manual",
+        "details": {
+          "defaultState": "Unknown"
+        }
+      }
+    }
+  }
+}

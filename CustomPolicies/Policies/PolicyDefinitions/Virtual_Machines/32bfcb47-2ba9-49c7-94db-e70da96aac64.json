@@ -1,0 +1,71 @@
+{
+  "id": "/providers/Microsoft.Authorization/policyDefinitions/32bfcb47-2ba9-49c7-94db-e70da96aac64",
+  "name": "32bfcb47-2ba9-49c7-94db-e70da96aac64",
+  "properties": {
+    "description": "Description Custom Manual - MCSB Baseline item AM-2 for Virtual Machines",
+    "displayName": "MCSB Baseline item AM-2 for Virtual Machines",
+    "metadata": {
+      "offeringName": "Virtual Machines",
+      "offeringId": "07649cbd-2ee4-4992-898b-f5f16bad1b36",
+      "mcsb": {
+        "mcsbId": "AM-2",
+        "features": [
+          {
+            "featureId": "AZURE_POLICY_SUPPORTED",
+            "featureName": "Azure Policy Support",
+            "featureDescription": "Service configurations can be monitored and enforced via Azure Policy.",
+            "featureSupport": "True",
+            "featureGuidance": "Azure Policy can be used to define the desired behavior for your organization's Windows VMs and Linux VMs. By using policies, an organization can enforce various conventions and rules throughout the enterprise and define and implement standard security configurations for Azure Virtual Machines. Enforcement of the desired behavior can help mitigate risk while contributing to the success of the organization.",
+            "featureReference": "https://learn.microsoft.com/azure/virtual-machines/policy-reference",
+            "enabledByDefault": "False",
+            "customerActionsDescription": "Use only approved services\n"
+          }
+        ],
+        "automatedPolicyAvailability": [
+          {
+            "policyId": "1d84d5fb-01f6-4d12-ba4f-4a26081d403d",
+            "policyName": "Virtual machines should be migrated to new Azure Resource Manager resources",
+            "policyDescription": "Use new Azure Resource Manager for your virtual machines to provide security enhancements such as: stronger access control (RBAC), better auditing, Azure Resource Manager based deployment and governance, access to managed identities, access to key vault for secrets, Azure AD-based authentication and support for tags and resource groups for easier security management",
+            "policyCategory": "Compute"
+          }
+        ],
+        "frameworkControls": [
+          "CIS_Azure_2.0.0_7.5",
+          "CIS_Azure_2.0.0_5.5",
+          "NIST_SP_800-53_R4_PM-5",
+          "NIST_SP_800-53_R4_CM-8",
+          "PCI_DSS_v4.0_2.2.6",
+          "PCI_DSS_v4.0_2.2.5",
+          "PCI_DSS_v4.0_2.2.4"
+        ]
+      },
+      "version": "1.0.0",
+      "category": "Regulatory Compliance"
+    },
+    "mode": "All",
+    "policyType": "Custom",
+    "policyRule": {
+      "if": {
+        "allOf": [
+          {
+            "field": "type",
+            "in": [
+              "Microsoft.Resources/subscriptions",
+              "Microsoft.Resources/subscriptions/resourceGroups"
+            ]
+          },
+          {
+            "value": "false",
+            "equals": "true"
+          }
+        ]
+      },
+      "then": {
+        "effect": "Manual",
+        "details": {
+          "defaultState": "Unknown"
+        }
+      }
+    }
+  }
+}

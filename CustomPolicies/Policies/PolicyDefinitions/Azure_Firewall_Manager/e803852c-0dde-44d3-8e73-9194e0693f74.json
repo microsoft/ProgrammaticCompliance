@@ -1,0 +1,75 @@
+{
+  "id": "/providers/Microsoft.Authorization/policyDefinitions/e803852c-0dde-44d3-8e73-9194e0693f74",
+  "name": "e803852c-0dde-44d3-8e73-9194e0693f74",
+  "properties": {
+    "description": "Description Custom Manual - MCSB Baseline item IM-3 for Azure Firewall Manager",
+    "displayName": "MCSB Baseline item IM-3 for Azure Firewall Manager",
+    "metadata": {
+      "offeringName": "Azure Firewall Manager",
+      "offeringId": "7fd4d979-0023-4321-871e-1b7a88832596",
+      "mcsb": {
+        "mcsbId": "IM-3",
+        "features": [
+          {
+            "featureId": "MANAGED_IDENTITIES",
+            "featureName": "Managed Identities",
+            "featureDescription": "Data plane actions support authentication using managed identities.",
+            "featureSupport": "Not Applicable",
+            "featureGuidance": "This feature is not applicable to secure this service.",
+            "featureReference": "Not Applicable",
+            "enabledByDefault": "Not Applicable",
+            "customerActionsDescription": "Manage application identities securely and automatically"
+          },
+          {
+            "featureId": "SERVICE_PRINCIPAL",
+            "featureName": "Service Principals",
+            "featureDescription": "Data plane supports authentication using service principals.",
+            "featureSupport": "Not Applicable",
+            "featureGuidance": "This feature is not applicable to secure this service.",
+            "featureReference": "Not Applicable",
+            "enabledByDefault": "Not Applicable",
+            "customerActionsDescription": "Manage application identities securely and automatically"
+          }
+        ],
+        "automatedPolicyAvailability": [],
+        "frameworkControls": [
+          "NIST_SP_800-53_R4_AC-3",
+          "NIST_SP_800-53_R4_AC-2",
+          "NIST_SP_800-53_R4_IA-5",
+          "NIST_SP_800-53_R4_IA-9",
+          "NIST_SP_800-53_R4_IA-4",
+          "PCI_DSS_v4.0_8.6.3",
+          "PCI_DSS_v4.0_8.6.2",
+          "PCI_DSS_v4.0_8.6.1"
+        ]
+      },
+      "version": "1.0.0",
+      "category": "Regulatory Compliance"
+    },
+    "mode": "All",
+    "policyType": "Custom",
+    "policyRule": {
+      "if": {
+        "allOf": [
+          {
+            "field": "type",
+            "in": [
+              "Microsoft.Resources/subscriptions",
+              "Microsoft.Resources/subscriptions/resourceGroups"
+            ]
+          },
+          {
+            "value": "false",
+            "equals": "true"
+          }
+        ]
+      },
+      "then": {
+        "effect": "Manual",
+        "details": {
+          "defaultState": "Unknown"
+        }
+      }
+    }
+  }
+}

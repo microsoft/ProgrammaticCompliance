@@ -1,0 +1,70 @@
+{
+  "id": "/providers/Microsoft.Authorization/policyDefinitions/4df15a3e-5e65-46e5-8ee9-60b0d29d03d1",
+  "name": "4df15a3e-5e65-46e5-8ee9-60b0d29d03d1",
+  "properties": {
+    "description": "Description Custom Manual - MCSB Baseline item BR-1 for Azure Private Link",
+    "displayName": "MCSB Baseline item BR-1 for Azure Private Link",
+    "metadata": {
+      "offeringName": "Azure Private Link",
+      "offeringId": "19513df5-695c-47cc-813d-0a426bddcbc4",
+      "mcsb": {
+        "mcsbId": "BR-1",
+        "features": [
+          {
+            "featureId": "AZURE_BACKUP_SUPPORT",
+            "featureName": "Azure Backup",
+            "featureDescription": "The service can be backed up by the Azure Backup service.",
+            "featureSupport": "Not Applicable",
+            "featureGuidance": "This feature is not applicable to secure this service.",
+            "featureReference": "Not Applicable",
+            "enabledByDefault": "Not Applicable",
+            "customerActionsDescription": "Ensure regular automated backups"
+          },
+          {
+            "featureId": "NATIVE_BACKUP",
+            "featureName": "Service Native Backup Capability",
+            "featureDescription": "Service supports its own native backup capability (if not using Azure Backup).",
+            "featureSupport": "Not Applicable",
+            "featureGuidance": "This feature is not applicable to secure this service.",
+            "featureReference": "Not Applicable",
+            "enabledByDefault": "Not Applicable",
+            "customerActionsDescription": "Ensure regular automated backups"
+          }
+        ],
+        "automatedPolicyAvailability": [],
+        "frameworkControls": [
+          "NIST_SP_800-53_R4_CP-9",
+          "NIST_SP_800-53_R4_CP-4",
+          "NIST_SP_800-53_R4_CP-2"
+        ]
+      },
+      "version": "1.0.0",
+      "category": "Regulatory Compliance"
+    },
+    "mode": "All",
+    "policyType": "Custom",
+    "policyRule": {
+      "if": {
+        "allOf": [
+          {
+            "field": "type",
+            "in": [
+              "Microsoft.Resources/subscriptions",
+              "Microsoft.Resources/subscriptions/resourceGroups"
+            ]
+          },
+          {
+            "value": "false",
+            "equals": "true"
+          }
+        ]
+      },
+      "then": {
+        "effect": "Manual",
+        "details": {
+          "defaultState": "Unknown"
+        }
+      }
+    }
+  }
+}

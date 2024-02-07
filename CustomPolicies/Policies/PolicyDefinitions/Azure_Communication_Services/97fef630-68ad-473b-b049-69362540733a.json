@@ -1,0 +1,59 @@
+{
+  "id": "/providers/Microsoft.Authorization/policyDefinitions/97fef630-68ad-473b-b049-69362540733a",
+  "name": "97fef630-68ad-473b-b049-69362540733a",
+  "properties": {
+    "description": "Description Custom Manual - MCSB Baseline item DP-1 for Azure Communication Services",
+    "displayName": "MCSB Baseline item DP-1 for Azure Communication Services",
+    "metadata": {
+      "offeringName": "Azure Communication Services",
+      "offeringId": "700cd4ae-3e10-4280-92e9-11d971d6eeda",
+      "mcsb": {
+        "mcsbId": "DP-1",
+        "features": [
+          {
+            "featureId": "SENSITIVE_DATA_DISCOVERY_AND_CLASSIFICATION",
+            "featureName": "Sensitive Data Discovery and Classification",
+            "featureDescription": "Tools (such as Azure Purview or Azure Information Protection) can be used for data discovery and classification in the service.",
+            "featureSupport": "False",
+            "featureGuidance": "This feature is not supported to secure this service.",
+            "featureReference": "Not Applicable",
+            "enabledByDefault": "Not Applicable",
+            "customerActionsDescription": "Discover, classify, and label sensitive data\n\n"
+          }
+        ],
+        "automatedPolicyAvailability": [],
+        "frameworkControls": [
+          "NIST_SP_800-53_R4_SC-28",
+          "NIST_SP_800-53_R4_RA-2"
+        ]
+      },
+      "version": "1.0.0",
+      "category": "Regulatory Compliance"
+    },
+    "mode": "All",
+    "policyType": "Custom",
+    "policyRule": {
+      "if": {
+        "allOf": [
+          {
+            "field": "type",
+            "in": [
+              "Microsoft.Resources/subscriptions",
+              "Microsoft.Resources/subscriptions/resourceGroups"
+            ]
+          },
+          {
+            "value": "false",
+            "equals": "true"
+          }
+        ]
+      },
+      "then": {
+        "effect": "Manual",
+        "details": {
+          "defaultState": "Unknown"
+        }
+      }
+    }
+  }
+}

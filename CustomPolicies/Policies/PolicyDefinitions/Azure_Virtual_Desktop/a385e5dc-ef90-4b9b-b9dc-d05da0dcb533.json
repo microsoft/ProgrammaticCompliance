@@ -1,0 +1,76 @@
+{
+  "id": "/providers/Microsoft.Authorization/policyDefinitions/a385e5dc-ef90-4b9b-b9dc-d05da0dcb533",
+  "name": "a385e5dc-ef90-4b9b-b9dc-d05da0dcb533",
+  "properties": {
+    "description": "Description Custom Manual - MCSB Baseline item PA-1 for Azure Virtual Desktop",
+    "displayName": "MCSB Baseline item PA-1 for Azure Virtual Desktop",
+    "metadata": {
+      "offeringName": "Azure Virtual Desktop",
+      "offeringId": "1132b618-fefe-40a0-9256-e685ff575ac7",
+      "mcsb": {
+        "mcsbId": "PA-1",
+        "features": [
+          {
+            "featureId": "LOCAL_ADMIN_ACCOUNT",
+            "featureName": "Local Admin Accounts",
+            "featureDescription": "Service has the concept of a local administrative account.",
+            "featureSupport": "True",
+            "featureGuidance": "If not required for routine administrative operations, disable or restrict any local admin accounts for only emergency use.",
+            "featureReference": "Not Applicable",
+            "enabledByDefault": "False",
+            "customerActionsDescription": "Separate and limit highly privileged/administrative users"
+          }
+        ],
+        "automatedPolicyAvailability": [],
+        "frameworkControls": [
+          "CIS_Azure_2.0.0_1.20",
+          "CIS_Azure_2.0.0_1.24",
+          "CIS_Azure_2.0.0_3.3",
+          "CIS_Azure_2.0.0_3.4",
+          "CIS_Azure_2.0.0_1.23",
+          "CIS_Azure_2.0.0_1.21",
+          "CIS_Azure_2.0.0_1.19",
+          "CIS_Azure_2.0.0_1.18",
+          "CIS_Azure_2.0.0_1.17",
+          "CIS_Azure_2.0.0_1.14",
+          "CIS_Azure_2.0.0_1.13",
+          "CIS_Azure_2.0.0_1.12",
+          "CIS_Azure_2.0.0_1.11",
+          "CIS_Azure_2.0.0_1.10",
+          "NIST_SP_800-53_R4_AC-6",
+          "NIST_SP_800-53_R4_AC-2",
+          "PCI_DSS_v4.0_7.2.5",
+          "PCI_DSS_v4.0_7.2.2",
+          "PCI_DSS_v4.0_7.2.1"
+        ]
+      },
+      "version": "1.0.0",
+      "category": "Regulatory Compliance"
+    },
+    "mode": "All",
+    "policyType": "Custom",
+    "policyRule": {
+      "if": {
+        "allOf": [
+          {
+            "field": "type",
+            "in": [
+              "Microsoft.Resources/subscriptions",
+              "Microsoft.Resources/subscriptions/resourceGroups"
+            ]
+          },
+          {
+            "value": "false",
+            "equals": "true"
+          }
+        ]
+      },
+      "then": {
+        "effect": "Manual",
+        "details": {
+          "defaultState": "Unknown"
+        }
+      }
+    }
+  }
+}

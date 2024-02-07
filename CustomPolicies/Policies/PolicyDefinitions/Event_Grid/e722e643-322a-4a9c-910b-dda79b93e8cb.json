@@ -1,0 +1,97 @@
+{
+  "id": "/providers/Microsoft.Authorization/policyDefinitions/e722e643-322a-4a9c-910b-dda79b93e8cb",
+  "name": "e722e643-322a-4a9c-910b-dda79b93e8cb",
+  "properties": {
+    "description": "Description Custom Manual - MCSB Baseline item PV-3 for Event Grid",
+    "displayName": "MCSB Baseline item PV-3 for Event Grid",
+    "metadata": {
+      "offeringName": "Event Grid",
+      "offeringId": "7ad61078-dbb8-4ae6-90ce-bb9f414a3a34",
+      "mcsb": {
+        "mcsbId": "PV-3",
+        "features": [
+          {
+            "featureId": "AZURE_AUTOMATION_STATE_CONFIGURATION",
+            "featureName": "Azure Automation State Configuration",
+            "featureDescription": "Azure Automation State Configuration can be used to maintain the security configuration of the operating system.",
+            "featureSupport": "Not Applicable",
+            "featureGuidance": "This feature is not applicable to secure this service.",
+            "featureReference": "Not Applicable",
+            "enabledByDefault": "Not Applicable",
+            "customerActionsDescription": "Define and establish secure configurations for compute resources"
+          },
+          {
+            "featureId": "AZURE_POLICY_GUEST_CONFIGURATION_AGENT",
+            "featureName": "Azure Policy Guest Configuration Agent",
+            "featureDescription": "Azure Policy guest configuration agent can be installed or deployed as an extension to compute resources.",
+            "featureSupport": "Not Applicable",
+            "featureGuidance": "This feature is not applicable to secure this service.",
+            "featureReference": "Not Applicable",
+            "enabledByDefault": "Not Applicable",
+            "customerActionsDescription": "Define and establish secure configurations for compute resources"
+          },
+          {
+            "featureId": "CUSTOM_CONTAINER_IMAGE_SUPPORTED",
+            "featureName": "Custom Containers Images",
+            "featureDescription": "Service supports using user-supplied container images or pre-built images from the marketplace with certain baseline configurations pre-applied.",
+            "featureSupport": "Not Applicable",
+            "featureGuidance": "This feature is not applicable to secure this service.",
+            "featureReference": "Not Applicable",
+            "enabledByDefault": "Not Applicable",
+            "customerActionsDescription": "Define and establish secure configurations for compute resources"
+          },
+          {
+            "featureId": "CUSTOM_MACHINE_OR_CONTAINER_IMAGE_SUPPORTED",
+            "featureName": "Custom VM Images",
+            "featureDescription": "Service supports using user-supplied VM images or pre-built images from the marketplace with certain baseline configurations pre-applied.",
+            "featureSupport": "Not Applicable",
+            "featureGuidance": "This feature is not applicable to secure this service.",
+            "featureReference": "Not Applicable",
+            "enabledByDefault": "Not Applicable",
+            "customerActionsDescription": "Define and establish secure configurations for compute resources"
+          }
+        ],
+        "automatedPolicyAvailability": [],
+        "frameworkControls": [
+          "CIS_Azure_2.0.0_9.9",
+          "CIS_Azure_2.0.0_9.8",
+          "CIS_Azure_2.0.0_9.7",
+          "CIS_Azure_2.0.0_9.6",
+          "NIST_SP_800-53_R4_CM-6",
+          "NIST_SP_800-53_R4_CM-2",
+          "PCI_DSS_v4.0_2.2.6",
+          "PCI_DSS_v4.0_2.2.5",
+          "PCI_DSS_v4.0_2.2.4",
+          "PCI_DSS_v4.0_2.2.1"
+        ]
+      },
+      "version": "1.0.0",
+      "category": "Regulatory Compliance"
+    },
+    "mode": "All",
+    "policyType": "Custom",
+    "policyRule": {
+      "if": {
+        "allOf": [
+          {
+            "field": "type",
+            "in": [
+              "Microsoft.Resources/subscriptions",
+              "Microsoft.Resources/subscriptions/resourceGroups"
+            ]
+          },
+          {
+            "value": "false",
+            "equals": "true"
+          }
+        ]
+      },
+      "then": {
+        "effect": "Manual",
+        "details": {
+          "defaultState": "Unknown"
+        }
+      }
+    }
+  }
+}

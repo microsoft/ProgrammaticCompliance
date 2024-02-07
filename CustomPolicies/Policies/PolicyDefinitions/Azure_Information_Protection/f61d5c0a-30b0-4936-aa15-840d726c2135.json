@@ -1,0 +1,62 @@
+{
+  "id": "/providers/Microsoft.Authorization/policyDefinitions/f61d5c0a-30b0-4936-aa15-840d726c2135",
+  "name": "f61d5c0a-30b0-4936-aa15-840d726c2135",
+  "properties": {
+    "description": "Description Custom Manual - MCSB Baseline item ES-1 for Azure Information Protection",
+    "displayName": "MCSB Baseline item ES-1 for Azure Information Protection",
+    "metadata": {
+      "offeringName": "Azure Information Protection",
+      "offeringId": "f1e480a3-ad36-4c47-b8f7-f1f3120cc65e",
+      "mcsb": {
+        "mcsbId": "ES-1",
+        "features": [
+          {
+            "featureId": "EDR_SOLUTION",
+            "featureName": "EDR Solution",
+            "featureDescription": "Endpoint Detection and Response (EDR) feature such as Azure Defender for servers can be deployed into the endpoint.",
+            "featureSupport": "Not Applicable",
+            "featureGuidance": "This feature is not applicable to secure this service.",
+            "featureReference": "Not Applicable",
+            "enabledByDefault": "Not Applicable",
+            "customerActionsDescription": "Use Endpoint Detection and Response (EDR)"
+          }
+        ],
+        "automatedPolicyAvailability": [],
+        "frameworkControls": [
+          "NIST_SP_800-53_R4_SI-2",
+          "NIST_SP_800-53_R4_SI-3",
+          "NIST_SP_800-53_R4_SI-16",
+          "NIST_SP_800-53_R4_SC-3",
+          "PCI_DSS_v4.0_1.5.1"
+        ]
+      },
+      "version": "1.0.0",
+      "category": "Regulatory Compliance"
+    },
+    "mode": "All",
+    "policyType": "Custom",
+    "policyRule": {
+      "if": {
+        "allOf": [
+          {
+            "field": "type",
+            "in": [
+              "Microsoft.Resources/subscriptions",
+              "Microsoft.Resources/subscriptions/resourceGroups"
+            ]
+          },
+          {
+            "value": "false",
+            "equals": "true"
+          }
+        ]
+      },
+      "then": {
+        "effect": "Manual",
+        "details": {
+          "defaultState": "Unknown"
+        }
+      }
+    }
+  }
+}

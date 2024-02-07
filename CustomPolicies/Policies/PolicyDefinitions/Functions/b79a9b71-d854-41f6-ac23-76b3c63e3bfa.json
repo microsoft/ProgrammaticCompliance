@@ -1,0 +1,61 @@
+{
+  "id": "/providers/Microsoft.Authorization/policyDefinitions/b79a9b71-d854-41f6-ac23-76b3c63e3bfa",
+  "name": "b79a9b71-d854-41f6-ac23-76b3c63e3bfa",
+  "properties": {
+    "description": "Description Custom Manual - MCSB Baseline item DP-7 for Functions",
+    "displayName": "MCSB Baseline item DP-7 for Functions",
+    "metadata": {
+      "offeringName": "Functions",
+      "offeringId": "416a6682-973a-4dc0-9f3c-bfc3360a9db4",
+      "mcsb": {
+        "mcsbId": "DP-7",
+        "features": [
+          {
+            "featureId": "CERTIFICATE_MANAGEMENT_IN_AZURE_KEY_VAULT",
+            "featureName": "Certificate Management in Azure Key Vault",
+            "featureDescription": "The service supports Azure Key Vault integration for any customer certificates.",
+            "featureSupport": "True",
+            "featureGuidance": "Use Azure Key Vault to create and control the certificate lifecycle, including creation, importing, rotation, revocation, storage, and purging of the certificate. Ensure the certificate generation follows defined standards without using any insecure properties, such as: insufficient key size, overly long validity period, insecure cryptography. Setup automatic rotation of the certificate in Azure Key Vault and the Azure service (if supported) based on a defined schedule or when there is a certificate expiration. If automatic rotation is not supported in the application, ensure they are still rotated using manual methods in Azure Key Vault and the application.",
+            "featureReference": "https://docs.microsoft.com/azure/app-service/configure-ssl-certificate",
+            "enabledByDefault": "False",
+            "customerActionsDescription": "Use a secure certificate management process"
+          }
+        ],
+        "automatedPolicyAvailability": [],
+        "frameworkControls": [
+          "NIST_SP_800-53_R4_IA-5",
+          "NIST_SP_800-53_R4_SC-12",
+          "NIST_SP_800-53_R4_SC-17",
+          "PCI_DSS_v4.0_4.2.1"
+        ]
+      },
+      "version": "1.0.0",
+      "category": "Regulatory Compliance"
+    },
+    "mode": "All",
+    "policyType": "Custom",
+    "policyRule": {
+      "if": {
+        "allOf": [
+          {
+            "field": "type",
+            "in": [
+              "Microsoft.Resources/subscriptions",
+              "Microsoft.Resources/subscriptions/resourceGroups"
+            ]
+          },
+          {
+            "value": "false",
+            "equals": "true"
+          }
+        ]
+      },
+      "then": {
+        "effect": "Manual",
+        "details": {
+          "defaultState": "Unknown"
+        }
+      }
+    }
+  }
+}

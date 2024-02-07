@@ -1,0 +1,66 @@
+{
+  "id": "/providers/Microsoft.Authorization/policyDefinitions/06a9d185-72ca-43d7-9242-5faefb23c5b4",
+  "name": "06a9d185-72ca-43d7-9242-5faefb23c5b4",
+  "properties": {
+    "description": "Description Custom Manual - MCSB Baseline item IM-7 for Azure Database for MySQL - Flexible Server",
+    "displayName": "MCSB Baseline item IM-7 for Azure Database for MySQL - Flexible Server",
+    "metadata": {
+      "offeringName": "Azure Database for MySQL - Flexible Server",
+      "offeringId": "ffe65641-80b4-4930-8cd4-704eb755936e",
+      "mcsb": {
+        "mcsbId": "IM-7",
+        "features": [
+          {
+            "featureId": "CONDITIONAL_ACCESS",
+            "featureName": "Conditional Access for Data Plane",
+            "featureDescription": "Data plane access can be controlled using Azure AD Conditional Access Policies.",
+            "featureSupport": "True",
+            "featureGuidance": "Define the applicable conditions and criteria for Azure Active Directory (Azure AD) conditional access in the workload. Consider common use cases such as blocking or granting access from specific locations, blocking risky sign-in behavior, or requiring organization-managed devices for specific applications.",
+            "featureReference": "https://learn.microsoft.com/azure/mysql/flexible-server/concepts-azure-ad-authentication",
+            "enabledByDefault": "False",
+            "customerActionsDescription": "Restrict resource access based on  conditions"
+          }
+        ],
+        "automatedPolicyAvailability": [],
+        "frameworkControls": [
+          "CIS_Azure_2.0.0_1.2.6",
+          "CIS_Azure_2.0.0_1.2.5",
+          "CIS_Azure_2.0.0_1.2.4",
+          "CIS_Azure_2.0.0_1.2.3",
+          "CIS_Azure_2.0.0_1.2.2",
+          "CIS_Azure_2.0.0_1.2.1",
+          "NIST_SP_800-53_R4_AC-6",
+          "NIST_SP_800-53_R4_AC-2",
+          "NIST_SP_800-53_R4_AC-3"
+        ]
+      },
+      "version": "1.0.0",
+      "category": "Regulatory Compliance"
+    },
+    "mode": "All",
+    "policyType": "Custom",
+    "policyRule": {
+      "if": {
+        "allOf": [
+          {
+            "field": "type",
+            "in": [
+              "Microsoft.Resources/subscriptions",
+              "Microsoft.Resources/subscriptions/resourceGroups"
+            ]
+          },
+          {
+            "value": "false",
+            "equals": "true"
+          }
+        ]
+      },
+      "then": {
+        "effect": "Manual",
+        "details": {
+          "defaultState": "Unknown"
+        }
+      }
+    }
+  }
+}

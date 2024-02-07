@@ -1,0 +1,69 @@
+{
+  "id": "/providers/Microsoft.Authorization/policyDefinitions/eea03374-568a-4022-b97c-38e910bea55a",
+  "name": "eea03374-568a-4022-b97c-38e910bea55a",
+  "properties": {
+    "description": "Description Custom Manual - MCSB Baseline item DP-2 for Azure Database for MariaDB",
+    "displayName": "MCSB Baseline item DP-2 for Azure Database for MariaDB",
+    "metadata": {
+      "offeringName": "Azure Database for MariaDB",
+      "offeringId": "d6a4439d-c8c7-4d30-83c1-963a4cc6acb4",
+      "mcsb": {
+        "mcsbId": "DP-2",
+        "features": [
+          {
+            "featureId": "DATA_LEAKAGE/LOSS_PREVENTION",
+            "featureName": "Data Leakage/Loss Prevention",
+            "featureDescription": "Service supports DLP solution to monitor sensitive data movement (in customer's content).",
+            "featureSupport": "False",
+            "featureGuidance": "This feature is not supported to secure this service.",
+            "featureReference": "Not Applicable",
+            "enabledByDefault": "Not Applicable",
+            "customerActionsDescription": "Monitor anomalies and threats targeting sensitive data"
+          }
+        ],
+        "automatedPolicyAvailability": [
+          {
+            "policyId": "0a9fbe0d-c5c4-4da8-87d8-f4fd77338835",
+            "policyName": "Azure Defender for open-source relational databases should be enabled",
+            "policyDescription": "Azure Defender for open-source relational databases detects anomalous activities indicating unusual and potentially harmful attempts to access or exploit databases. Learn more about the capabilities of Azure Defender for open-source relational databases at https://aka.ms/AzDforOpenSourceDBsDocu. Important: Enabling this plan will result in charges for protecting your open-source relational databases. Learn about the pricing on Security Center's pricing page: https://aka.ms/pricing-security-center",
+            "policyCategory": "Security Center"
+          }
+        ],
+        "frameworkControls": [
+          "CIS_Azure_2.0.0_4.2.1",
+          "CIS_Azure_2.0.0_2.1.6",
+          "CIS_Azure_2.0.0_2.1.4",
+          "NIST_SP_800-53_R4_AC-4",
+          "NIST_SP_800-53_R4_SI-4"
+        ]
+      },
+      "version": "1.0.0",
+      "category": "Regulatory Compliance"
+    },
+    "mode": "All",
+    "policyType": "Custom",
+    "policyRule": {
+      "if": {
+        "allOf": [
+          {
+            "field": "type",
+            "in": [
+              "Microsoft.Resources/subscriptions",
+              "Microsoft.Resources/subscriptions/resourceGroups"
+            ]
+          },
+          {
+            "value": "false",
+            "equals": "true"
+          }
+        ]
+      },
+      "then": {
+        "effect": "Manual",
+        "details": {
+          "defaultState": "Unknown"
+        }
+      }
+    }
+  }
+}

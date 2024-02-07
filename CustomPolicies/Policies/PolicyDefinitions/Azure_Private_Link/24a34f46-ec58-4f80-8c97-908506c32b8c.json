@@ -1,0 +1,61 @@
+{
+  "id": "/providers/Microsoft.Authorization/policyDefinitions/24a34f46-ec58-4f80-8c97-908506c32b8c",
+  "name": "24a34f46-ec58-4f80-8c97-908506c32b8c",
+  "properties": {
+    "description": "Description Custom Manual - MCSB Baseline item PA-8 for Azure Private Link",
+    "displayName": "MCSB Baseline item PA-8 for Azure Private Link",
+    "metadata": {
+      "offeringName": "Azure Private Link",
+      "offeringId": "19513df5-695c-47cc-813d-0a426bddcbc4",
+      "mcsb": {
+        "mcsbId": "PA-8",
+        "features": [
+          {
+            "featureId": "CUSTOMER_LOCKBOX_SUPPORTED",
+            "featureName": "Customer Lockbox",
+            "featureDescription": "Customer Lockbox can be used for Microsoft support access.",
+            "featureSupport": "Not Applicable",
+            "featureGuidance": "This feature is not applicable to secure this service.",
+            "featureReference": "Not Applicable",
+            "enabledByDefault": "Not Applicable",
+            "customerActionsDescription": "Determine access process for cloud provider support\n\n"
+          }
+        ],
+        "automatedPolicyAvailability": [],
+        "frameworkControls": [
+          "CIS_Azure_2.0.0_1.20",
+          "NIST_SP_800-53_R4_AC-4",
+          "NIST_SP_800-53_R4_AC-3",
+          "NIST_SP_800-53_R4_AC-2"
+        ]
+      },
+      "version": "1.0.0",
+      "category": "Regulatory Compliance"
+    },
+    "mode": "All",
+    "policyType": "Custom",
+    "policyRule": {
+      "if": {
+        "allOf": [
+          {
+            "field": "type",
+            "in": [
+              "Microsoft.Resources/subscriptions",
+              "Microsoft.Resources/subscriptions/resourceGroups"
+            ]
+          },
+          {
+            "value": "false",
+            "equals": "true"
+          }
+        ]
+      },
+      "then": {
+        "effect": "Manual",
+        "details": {
+          "defaultState": "Unknown"
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,77 @@
+{
+  "id": "/providers/Microsoft.Authorization/policyDefinitions/e1b3a499-666c-4dd9-bbf2-8fb65d51c2ac",
+  "name": "e1b3a499-666c-4dd9-bbf2-8fb65d51c2ac",
+  "properties": {
+    "description": "Description Custom Manual - MCSB Baseline item IM-1 for Universal Print",
+    "displayName": "MCSB Baseline item IM-1 for Universal Print",
+    "metadata": {
+      "offeringName": "Universal Print",
+      "offeringId": "9ed6243f-ef2e-4279-9d3f-6621708eb5f2",
+      "mcsb": {
+        "mcsbId": "IM-1",
+        "features": [
+          {
+            "featureId": "AAD_AUTH_FOR_DATA_PLANE_ACCESS",
+            "featureName": "Azure AD Authentication Required for Data Plane Access",
+            "featureDescription": "Service supports using Azure AD authentication for data plane access.",
+            "featureSupport": "True",
+            "featureGuidance": "No additional configurations are required as this is enabled on a default deployment.",
+            "featureReference": "Not Applicable",
+            "enabledByDefault": "True",
+            "customerActionsDescription": "Use centralized identity and authentication system"
+          },
+          {
+            "featureId": "LOCAL_AUTH_METHODS_FOR_DATA_PLANE_ACCESS",
+            "featureName": "Local Authentication Methods for Data Plane Access",
+            "featureDescription": "Local authentications methods supported for data plane access, such as a local username and password.",
+            "featureSupport": "False",
+            "featureGuidance": "This feature is not supported to secure this service.",
+            "featureReference": "Not Applicable",
+            "enabledByDefault": "Not Applicable",
+            "customerActionsDescription": "Use centralized identity and authentication system"
+          }
+        ],
+        "automatedPolicyAvailability": [],
+        "frameworkControls": [
+          "CIS_Azure_2.0.0_9.5",
+          "CIS_Azure_2.0.0_4.5.3",
+          "CIS_Azure_2.0.0_4.1.4",
+          "NIST_SP_800-53_R4_AC-2",
+          "NIST_SP_800-53_R4_AC-3",
+          "NIST_SP_800-53_R4_IA-8",
+          "NIST_SP_800-53_R4_IA-2",
+          "PCI_DSS_v4.0_8.2.1",
+          "PCI_DSS_v4.0_7.3.2",
+          "PCI_DSS_v4.0_7.3.1"
+        ]
+      },
+      "version": "1.0.0",
+      "category": "Regulatory Compliance"
+    },
+    "mode": "All",
+    "policyType": "Custom",
+    "policyRule": {
+      "if": {
+        "allOf": [
+          {
+            "field": "type",
+            "in": [
+              "Microsoft.Resources/subscriptions",
+              "Microsoft.Resources/subscriptions/resourceGroups"
+            ]
+          },
+          {
+            "value": "false",
+            "equals": "true"
+          }
+        ]
+      },
+      "then": {
+        "effect": "Manual",
+        "details": {
+          "defaultState": "Unknown"
+        }
+      }
+    }
+  }
+}

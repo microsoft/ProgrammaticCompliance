@@ -1,0 +1,80 @@
+{
+  "id": "/providers/Microsoft.Authorization/policyDefinitions/3c00866c-9195-4cd0-8973-6db058fb055b",
+  "name": "3c00866c-9195-4cd0-8973-6db058fb055b",
+  "properties": {
+    "description": "Description Custom Manual - MCSB Baseline item PV-6 for Virtual Machine Scale Sets",
+    "displayName": "MCSB Baseline item PV-6 for Virtual Machine Scale Sets",
+    "metadata": {
+      "offeringName": "Virtual Machine Scale Sets",
+      "offeringId": "d08cdbcb-2f75-4d31-9f0f-6d9d2913f214",
+      "mcsb": {
+        "mcsbId": "PV-6",
+        "features": [
+          {
+            "featureId": "AZURE_AUTOMATION_UPDATE_MANAGEMENT",
+            "featureName": "Azure Automation Update Management",
+            "featureDescription": "Service can use Azure Automation Update Management to deploy patches and updates automatically.",
+            "featureSupport": "False",
+            "featureGuidance": "This feature is not supported to secure this service.",
+            "featureReference": "Not Applicable",
+            "enabledByDefault": "Not Applicable",
+            "customerActionsDescription": "Rapidly and automatically remediate vulnerabilities"
+          }
+        ],
+        "automatedPolicyAvailability": [
+          {
+            "policyId": "3c735d8a-a4ba-4a3a-b7cf-db7754cf57f4",
+            "policyName": "Vulnerabilities in security configuration on your virtual machine scale sets should be remediated",
+            "policyDescription": "Audit the OS vulnerabilities on your virtual machine scale sets to protect them from attacks.",
+            "policyCategory": "Security Center"
+          },
+          {
+            "policyId": "c3f317a7-a95c-4547-b7e7-11017ebdf2fe",
+            "policyName": "System updates on virtual machine scale sets should be installed",
+            "policyDescription": "Audit whether there are any missing system security updates and critical updates that should be installed to ensure that your Windows and Linux virtual machine scale sets are secure.",
+            "policyCategory": "Security Center"
+          }
+        ],
+        "frameworkControls": [
+          "CIS_Azure_2.0.0_4.2.5",
+          "CIS_Azure_2.0.0_4.2.4",
+          "CIS_Azure_2.0.0_4.2.3",
+          "CIS_Azure_2.0.0_4.2.2",
+          "NIST_SP_800-53_R4_SI-2",
+          "NIST_SP_800-53_R4_RA-5",
+          "NIST_SP_800-53_R4_RA-3",
+          "PCI_DSS_v4.0_11.3.2",
+          "PCI_DSS_v4.0_11.3.1",
+          "PCI_DSS_v4.0_2.2.1"
+        ]
+      },
+      "version": "1.0.0",
+      "category": "Regulatory Compliance"
+    },
+    "mode": "All",
+    "policyType": "Custom",
+    "policyRule": {
+      "if": {
+        "allOf": [
+          {
+            "field": "type",
+            "in": [
+              "Microsoft.Resources/subscriptions",
+              "Microsoft.Resources/subscriptions/resourceGroups"
+            ]
+          },
+          {
+            "value": "false",
+            "equals": "true"
+          }
+        ]
+      },
+      "then": {
+        "effect": "Manual",
+        "details": {
+          "defaultState": "Unknown"
+        }
+      }
+    }
+  }
+}

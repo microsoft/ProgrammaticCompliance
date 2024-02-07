@@ -1,0 +1,62 @@
+{
+  "id": "/providers/Microsoft.Authorization/policyDefinitions/91f97f5c-1e70-49ae-9395-60b3725cb51a",
+  "name": "91f97f5c-1e70-49ae-9395-60b3725cb51a",
+  "properties": {
+    "description": "Description Custom Manual - MCSB Baseline item ES-3 for Azure Database for MariaDB",
+    "displayName": "MCSB Baseline item ES-3 for Azure Database for MariaDB",
+    "metadata": {
+      "offeringName": "Azure Database for MariaDB",
+      "offeringId": "d6a4439d-c8c7-4d30-83c1-963a4cc6acb4",
+      "mcsb": {
+        "mcsbId": "ES-3",
+        "features": [
+          {
+            "featureId": "ANTI_MALWARE_SOLUTION_HEALTH_MONITORING",
+            "featureName": "Anti-Malware Solution Health Monitoring",
+            "featureDescription": "Anti-malware solution provides health status monitoring for platform, engine, and automatic signature updates.",
+            "featureSupport": "Not Applicable",
+            "featureGuidance": "This feature is not applicable to secure this service.",
+            "featureReference": "Not Applicable",
+            "enabledByDefault": "Not Applicable",
+            "customerActionsDescription": "Ensure anti-malware software and signatures are updated"
+          }
+        ],
+        "automatedPolicyAvailability": [],
+        "frameworkControls": [
+          "CIS_Azure_2.0.0_2.1.22",
+          "NIST_SP_800-53_R4_SI-3",
+          "NIST_SP_800-53_R4_SI-2",
+          "PCI_DSS_v4.0_5.3.1",
+          "PCI_DSS_v4.0_1.5.1"
+        ]
+      },
+      "version": "1.0.0",
+      "category": "Regulatory Compliance"
+    },
+    "mode": "All",
+    "policyType": "Custom",
+    "policyRule": {
+      "if": {
+        "allOf": [
+          {
+            "field": "type",
+            "in": [
+              "Microsoft.Resources/subscriptions",
+              "Microsoft.Resources/subscriptions/resourceGroups"
+            ]
+          },
+          {
+            "value": "false",
+            "equals": "true"
+          }
+        ]
+      },
+      "then": {
+        "effect": "Manual",
+        "details": {
+          "defaultState": "Unknown"
+        }
+      }
+    }
+  }
+}

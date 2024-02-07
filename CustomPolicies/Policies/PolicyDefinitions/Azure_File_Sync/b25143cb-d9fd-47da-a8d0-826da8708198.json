@@ -1,0 +1,64 @@
+{
+  "id": "/providers/Microsoft.Authorization/policyDefinitions/b25143cb-d9fd-47da-a8d0-826da8708198",
+  "name": "b25143cb-d9fd-47da-a8d0-826da8708198",
+  "properties": {
+    "description": "Description Custom Manual - MCSB Baseline item AM-2 for Azure File Sync",
+    "displayName": "MCSB Baseline item AM-2 for Azure File Sync",
+    "metadata": {
+      "offeringName": "Azure File Sync",
+      "offeringId": "e91ca6fb-5337-4ce4-9592-ce9af900c96c",
+      "mcsb": {
+        "mcsbId": "AM-2",
+        "features": [
+          {
+            "featureId": "AZURE_POLICY_SUPPORTED",
+            "featureName": "Azure Policy Support",
+            "featureDescription": "Service configurations can be monitored and enforced via Azure Policy.",
+            "featureSupport": "True",
+            "featureGuidance": "Azure Policy helps enforce organization standards and assess compliance against those standards at scale. Azure Files and Azure File Sync expose several useful audit and remediation network policies that help you monitor and automate your deployment.",
+            "featureReference": "https://docs.microsoft.com/azure/storage/file-sync/file-sync-networking-endpoints?tabs=azure-portal#azure-policy",
+            "enabledByDefault": "False",
+            "customerActionsDescription": "Use only approved services\n"
+          }
+        ],
+        "automatedPolicyAvailability": [],
+        "frameworkControls": [
+          "CIS_Azure_2.0.0_7.5",
+          "CIS_Azure_2.0.0_5.5",
+          "NIST_SP_800-53_R4_PM-5",
+          "NIST_SP_800-53_R4_CM-8",
+          "PCI_DSS_v4.0_2.2.6",
+          "PCI_DSS_v4.0_2.2.5",
+          "PCI_DSS_v4.0_2.2.4"
+        ]
+      },
+      "version": "1.0.0",
+      "category": "Regulatory Compliance"
+    },
+    "mode": "All",
+    "policyType": "Custom",
+    "policyRule": {
+      "if": {
+        "allOf": [
+          {
+            "field": "type",
+            "in": [
+              "Microsoft.Resources/subscriptions",
+              "Microsoft.Resources/subscriptions/resourceGroups"
+            ]
+          },
+          {
+            "value": "false",
+            "equals": "true"
+          }
+        ]
+      },
+      "then": {
+        "effect": "Manual",
+        "details": {
+          "defaultState": "Unknown"
+        }
+      }
+    }
+  }
+}

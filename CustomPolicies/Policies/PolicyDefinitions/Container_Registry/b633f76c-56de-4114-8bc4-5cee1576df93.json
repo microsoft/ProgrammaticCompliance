@@ -1,0 +1,66 @@
+{
+  "id": "/providers/Microsoft.Authorization/policyDefinitions/b633f76c-56de-4114-8bc4-5cee1576df93",
+  "name": "b633f76c-56de-4114-8bc4-5cee1576df93",
+  "properties": {
+    "description": "Description Custom Manual - MCSB Baseline item DP-3 for Container Registry",
+    "displayName": "MCSB Baseline item DP-3 for Container Registry",
+    "metadata": {
+      "offeringName": "Container Registry",
+      "offeringId": "e3ca8f4d-b86b-41eb-aa82-070498477c56",
+      "mcsb": {
+        "mcsbId": "DP-3",
+        "features": [
+          {
+            "featureId": "DATA_IN_TRANSIT_ENCRYPTION",
+            "featureName": "Data in Transit Encryption",
+            "featureDescription": "Service supports data in-transit encryption for data plane.",
+            "featureSupport": "True",
+            "featureGuidance": "No additional configurations are required as this is enabled on a default deployment.",
+            "featureReference": "https://docs.microsoft.com/azure/container-registry/container-registry-faq#how-to-enable-tls-1-2-",
+            "enabledByDefault": "True",
+            "customerActionsDescription": "Encrypt sensitive data in transit"
+          }
+        ],
+        "automatedPolicyAvailability": [],
+        "frameworkControls": [
+          "CIS_Azure_2.0.0_2.1.5",
+          "CIS_Azure_2.0.0_9.3",
+          "CIS_Azure_2.0.0_9.2",
+          "CIS_Azure_2.0.0_4.4.1",
+          "CIS_Azure_2.0.0_3.15",
+          "NIST_SP_800-53_R4_SC-8",
+          "PCI_DSS_v4.0_4.2.2",
+          "PCI_DSS_v4.0_4.2.1.2",
+          "PCI_DSS_v4.0_2.2.7"
+        ]
+      },
+      "version": "1.0.0",
+      "category": "Regulatory Compliance"
+    },
+    "mode": "All",
+    "policyType": "Custom",
+    "policyRule": {
+      "if": {
+        "allOf": [
+          {
+            "field": "type",
+            "in": [
+              "Microsoft.Resources/subscriptions",
+              "Microsoft.Resources/subscriptions/resourceGroups"
+            ]
+          },
+          {
+            "value": "false",
+            "equals": "true"
+          }
+        ]
+      },
+      "then": {
+        "effect": "Manual",
+        "details": {
+          "defaultState": "Unknown"
+        }
+      }
+    }
+  }
+}

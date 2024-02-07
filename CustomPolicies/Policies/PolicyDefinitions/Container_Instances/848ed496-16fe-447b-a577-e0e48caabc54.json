@@ -1,0 +1,70 @@
+{
+  "id": "/providers/Microsoft.Authorization/policyDefinitions/848ed496-16fe-447b-a577-e0e48caabc54",
+  "name": "848ed496-16fe-447b-a577-e0e48caabc54",
+  "properties": {
+    "description": "Description Custom Manual - MCSB Baseline item PA-7 for Container Instances",
+    "displayName": "MCSB Baseline item PA-7 for Container Instances",
+    "metadata": {
+      "offeringName": "Container Instances",
+      "offeringId": "c20a59e6-ace2-4996-b367-6741189dda66",
+      "mcsb": {
+        "mcsbId": "PA-7",
+        "features": [
+          {
+            "featureId": "AZURE_RBAC_DATAPLANE_SUPPORTED",
+            "featureName": "Azure RBAC for Data Plane",
+            "featureDescription": "Azure Role-Based Access Control (Azure RBAC) can be used to managed access to service's data plane actions.",
+            "featureSupport": "True",
+            "featureGuidance": "If using a cloud-based private registry like Azure Container Registry with Azure Container Instances, use Azure role-based access control (Azure RBAC) manage access to data and resources in an Azure container registry.",
+            "featureReference": "https://docs.microsoft.com/azure/container-instances/container-instances-image-security#security-recommendations-for-azure-container-instances",
+            "enabledByDefault": "False",
+            "customerActionsDescription": "Follow just enough administration (least privilege) principle"
+          }
+        ],
+        "automatedPolicyAvailability": [],
+        "frameworkControls": [
+          "CIS_Azure_2.0.0_1.24",
+          "CIS_Azure_2.0.0_4.5.3",
+          "NIST_SP_800-53_R4_AC-6",
+          "NIST_SP_800-53_R4_AC-3",
+          "NIST_SP_800-53_R4_AC-2",
+          "PCI_DSS_v4.0_7.2.5",
+          "PCI_DSS_v4.0_7.2.2",
+          "PCI_DSS_v4.0_7.2.1",
+          "PCI_DSS_v4.0_8.2.7",
+          "PCI_DSS_v4.0_7.3.3",
+          "PCI_DSS_v4.0_7.3.2",
+          "PCI_DSS_v4.0_7.3.1",
+          "PCI_DSS_v4.0_7.2.6"
+        ]
+      },
+      "version": "1.0.0",
+      "category": "Regulatory Compliance"
+    },
+    "mode": "All",
+    "policyType": "Custom",
+    "policyRule": {
+      "if": {
+        "allOf": [
+          {
+            "field": "type",
+            "in": [
+              "Microsoft.Resources/subscriptions",
+              "Microsoft.Resources/subscriptions/resourceGroups"
+            ]
+          },
+          {
+            "value": "false",
+            "equals": "true"
+          }
+        ]
+      },
+      "then": {
+        "effect": "Manual",
+        "details": {
+          "defaultState": "Unknown"
+        }
+      }
+    }
+  }
+}

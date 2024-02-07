@@ -1,0 +1,92 @@
+{
+  "id": "/providers/Microsoft.Authorization/policyDefinitions/0a3a4f5e-1175-4597-9ec9-7d4b3362b8b0",
+  "name": "0a3a4f5e-1175-4597-9ec9-7d4b3362b8b0",
+  "properties": {
+    "description": "Description Custom Manual - MCSB Baseline item PV-6 for Virtual Machines",
+    "displayName": "MCSB Baseline item PV-6 for Virtual Machines",
+    "metadata": {
+      "offeringName": "Virtual Machines",
+      "offeringId": "07649cbd-2ee4-4992-898b-f5f16bad1b36",
+      "mcsb": {
+        "mcsbId": "PV-6",
+        "features": [
+          {
+            "featureId": "AZURE_AUTOMATION_UPDATE_MANAGEMENT",
+            "featureName": "Azure Automation Update Management",
+            "featureDescription": "Service can use Azure Automation Update Management to deploy patches and updates automatically.",
+            "featureSupport": "True",
+            "featureGuidance": "Use Azure Automation Update Management or a third-party solution to ensure that the most recent security updates are installed on your Linux VMs.",
+            "featureReference": "https://learn.microsoft.com/azure/automation/update-management/manage-updates-for-vm",
+            "enabledByDefault": "False",
+            "customerActionsDescription": "Rapidly and automatically remediate vulnerabilities"
+          }
+        ],
+        "automatedPolicyAvailability": [
+          {
+            "policyId": "86b3d65f-7626-441e-b690-81a8b71cff60",
+            "policyName": "System updates should be installed on your machines",
+            "policyDescription": "Missing security system updates on your servers will be monitored by Azure Security Center as recommendations",
+            "policyCategory": "Security Center"
+          },
+          {
+            "policyId": "f85bf3e0-d513-442e-89c3-1784ad63382b",
+            "policyName": "[Preview]: System updates should be installed on your machines (powered by Update Center)",
+            "policyDescription": "Your machines are missing system, security, and critical updates. Software updates often include critical patches to security holes. Such holes are frequently exploited in malware attacks so it's vital to keep your software updated. To install all outstanding patches and secure your machines, follow the remediation steps.",
+            "policyCategory": "Security Center"
+          },
+          {
+            "policyId": "e1e5fd5d-3e4c-4ce1-8661-7d1873ae6b15",
+            "policyName": "Vulnerabilities in security configuration on your machines should be remediated",
+            "policyDescription": "Servers which do not satisfy the configured baseline will be monitored by Azure Security Center as recommendations",
+            "policyCategory": "Security Center"
+          },
+          {
+            "policyId": "e8cbc669-f12d-49eb-93e7-9273119e9933",
+            "policyName": "Vulnerabilities in container security configurations should be remediated",
+            "policyDescription": "Audit vulnerabilities in security configuration on machines with Docker installed and display as recommendations in Azure Security Center.",
+            "policyCategory": "Security Center"
+          }
+        ],
+        "frameworkControls": [
+          "CIS_Azure_2.0.0_4.2.5",
+          "CIS_Azure_2.0.0_4.2.4",
+          "CIS_Azure_2.0.0_4.2.3",
+          "CIS_Azure_2.0.0_4.2.2",
+          "NIST_SP_800-53_R4_SI-2",
+          "NIST_SP_800-53_R4_RA-5",
+          "NIST_SP_800-53_R4_RA-3",
+          "PCI_DSS_v4.0_11.3.2",
+          "PCI_DSS_v4.0_11.3.1",
+          "PCI_DSS_v4.0_2.2.1"
+        ]
+      },
+      "version": "1.0.0",
+      "category": "Regulatory Compliance"
+    },
+    "mode": "All",
+    "policyType": "Custom",
+    "policyRule": {
+      "if": {
+        "allOf": [
+          {
+            "field": "type",
+            "in": [
+              "Microsoft.Resources/subscriptions",
+              "Microsoft.Resources/subscriptions/resourceGroups"
+            ]
+          },
+          {
+            "value": "false",
+            "equals": "true"
+          }
+        ]
+      },
+      "then": {
+        "effect": "Manual",
+        "details": {
+          "defaultState": "Unknown"
+        }
+      }
+    }
+  }
+}

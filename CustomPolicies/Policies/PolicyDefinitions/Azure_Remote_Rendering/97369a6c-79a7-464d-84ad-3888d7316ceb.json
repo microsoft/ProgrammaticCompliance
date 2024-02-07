@@ -1,0 +1,67 @@
+{
+  "id": "/providers/Microsoft.Authorization/policyDefinitions/97369a6c-79a7-464d-84ad-3888d7316ceb",
+  "name": "97369a6c-79a7-464d-84ad-3888d7316ceb",
+  "properties": {
+    "description": "Description Custom Manual - MCSB Baseline item PV-6 for Azure Remote Rendering",
+    "displayName": "MCSB Baseline item PV-6 for Azure Remote Rendering",
+    "metadata": {
+      "offeringName": "Azure Remote Rendering",
+      "offeringId": "dafd48ec-e4d7-4536-8e00-7ac1a3aa02d9",
+      "mcsb": {
+        "mcsbId": "PV-6",
+        "features": [
+          {
+            "featureId": "AZURE_AUTOMATION_UPDATE_MANAGEMENT",
+            "featureName": "Azure Automation Update Management",
+            "featureDescription": "Service can use Azure Automation Update Management to deploy patches and updates automatically.",
+            "featureSupport": "Not Applicable",
+            "featureGuidance": "This feature is not applicable to secure this service.",
+            "featureReference": "Not Applicable",
+            "enabledByDefault": "Not Applicable",
+            "customerActionsDescription": "Rapidly and automatically remediate vulnerabilities"
+          }
+        ],
+        "automatedPolicyAvailability": [],
+        "frameworkControls": [
+          "CIS_Azure_2.0.0_4.2.5",
+          "CIS_Azure_2.0.0_4.2.4",
+          "CIS_Azure_2.0.0_4.2.3",
+          "CIS_Azure_2.0.0_4.2.2",
+          "NIST_SP_800-53_R4_RA-5",
+          "NIST_SP_800-53_R4_RA-3",
+          "NIST_SP_800-53_R4_SI-2",
+          "PCI_DSS_v4.0_11.3.2",
+          "PCI_DSS_v4.0_11.3.1",
+          "PCI_DSS_v4.0_2.2.1"
+        ]
+      },
+      "version": "1.0.0",
+      "category": "Regulatory Compliance"
+    },
+    "mode": "All",
+    "policyType": "Custom",
+    "policyRule": {
+      "if": {
+        "allOf": [
+          {
+            "field": "type",
+            "in": [
+              "Microsoft.Resources/subscriptions",
+              "Microsoft.Resources/subscriptions/resourceGroups"
+            ]
+          },
+          {
+            "value": "false",
+            "equals": "true"
+          }
+        ]
+      },
+      "then": {
+        "effect": "Manual",
+        "details": {
+          "defaultState": "Unknown"
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,71 @@
+{
+  "id": "/providers/Microsoft.Authorization/policyDefinitions/9332f18f-62da-4b7b-920f-a08895390425",
+  "name": "9332f18f-62da-4b7b-920f-a08895390425",
+  "properties": {
+    "description": "Description Custom Manual - MCSB Baseline item AM-2 for Storage",
+    "displayName": "MCSB Baseline item AM-2 for Storage",
+    "metadata": {
+      "offeringName": "Storage",
+      "offeringId": "c6b94711-f1f5-4e7e-9c89-c17ed4190969",
+      "mcsb": {
+        "mcsbId": "AM-2",
+        "features": [
+          {
+            "featureId": "AZURE_POLICY_SUPPORTED",
+            "featureName": "Azure Policy Support",
+            "featureDescription": "Service configurations can be monitored and enforced via Azure Policy.",
+            "featureSupport": "True",
+            "featureGuidance": "Define and implement standard security configurations for network resources associated with your Azure Storage Account with Azure Policy. Use Azure Policy aliases in the \"Microsoft.Storage\" and \"Microsoft.Network\" namespaces to create custom policies to audit or enforce the network configuration of your Storage account resources.\r\n\r\nYou may also make use of built-in policy definitions related to Storage account, such as: Storage Accounts should use a virtual network service endpoint",
+            "featureReference": "https://docs.microsoft.com/azure/storage/common/policy-reference#microsoftstorage",
+            "enabledByDefault": "False",
+            "customerActionsDescription": "Use only approved services\n"
+          }
+        ],
+        "automatedPolicyAvailability": [
+          {
+            "policyId": "37e0d2fe-28a5-43d6-a273-67d37d1f5606",
+            "policyName": "Storage accounts should be migrated to new Azure Resource Manager resources",
+            "policyDescription": "Use new Azure Resource Manager for your storage accounts to provide security enhancements such as: stronger access control (RBAC), better auditing, Azure Resource Manager based deployment and governance, access to managed identities, access to key vault for secrets, Azure AD-based authentication and support for tags and resource groups for easier security management",
+            "policyCategory": "Storage"
+          }
+        ],
+        "frameworkControls": [
+          "CIS_Azure_2.0.0_7.5",
+          "CIS_Azure_2.0.0_5.5",
+          "NIST_SP_800-53_R4_PM-5",
+          "NIST_SP_800-53_R4_CM-8",
+          "PCI_DSS_v4.0_2.2.6",
+          "PCI_DSS_v4.0_2.2.5",
+          "PCI_DSS_v4.0_2.2.4"
+        ]
+      },
+      "version": "1.0.0",
+      "category": "Regulatory Compliance"
+    },
+    "mode": "All",
+    "policyType": "Custom",
+    "policyRule": {
+      "if": {
+        "allOf": [
+          {
+            "field": "type",
+            "in": [
+              "Microsoft.Resources/subscriptions",
+              "Microsoft.Resources/subscriptions/resourceGroups"
+            ]
+          },
+          {
+            "value": "false",
+            "equals": "true"
+          }
+        ]
+      },
+      "then": {
+        "effect": "Manual",
+        "details": {
+          "defaultState": "Unknown"
+        }
+      }
+    }
+  }
+}

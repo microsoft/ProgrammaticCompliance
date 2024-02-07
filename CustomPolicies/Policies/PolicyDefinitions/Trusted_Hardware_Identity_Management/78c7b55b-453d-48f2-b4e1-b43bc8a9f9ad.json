@@ -1,0 +1,66 @@
+{
+  "id": "/providers/Microsoft.Authorization/policyDefinitions/78c7b55b-453d-48f2-b4e1-b43bc8a9f9ad",
+  "name": "78c7b55b-453d-48f2-b4e1-b43bc8a9f9ad",
+  "properties": {
+    "description": "Description Custom Manual - MCSB Baseline item IM-7 for Trusted Hardware Identity Management",
+    "displayName": "MCSB Baseline item IM-7 for Trusted Hardware Identity Management",
+    "metadata": {
+      "offeringName": "Trusted Hardware Identity Management",
+      "offeringId": "4e54ef63-2d9a-4742-83f8-08f5ff4ef7f4",
+      "mcsb": {
+        "mcsbId": "IM-7",
+        "features": [
+          {
+            "featureId": "CONDITIONAL_ACCESS",
+            "featureName": "Conditional Access for Data Plane",
+            "featureDescription": "Data plane access can be controlled using Azure AD Conditional Access Policies.",
+            "featureSupport": "Not Applicable",
+            "featureGuidance": "This feature is not applicable to secure this service.",
+            "featureReference": "Not Applicable",
+            "enabledByDefault": "Not Applicable",
+            "customerActionsDescription": "Restrict resource access based on  conditions"
+          }
+        ],
+        "automatedPolicyAvailability": [],
+        "frameworkControls": [
+          "CIS_Azure_2.0.0_1.2.6",
+          "CIS_Azure_2.0.0_1.2.5",
+          "CIS_Azure_2.0.0_1.2.4",
+          "CIS_Azure_2.0.0_1.2.3",
+          "CIS_Azure_2.0.0_1.2.2",
+          "CIS_Azure_2.0.0_1.2.1",
+          "NIST_SP_800-53_R4_AC-3",
+          "NIST_SP_800-53_R4_AC-2",
+          "NIST_SP_800-53_R4_AC-6"
+        ]
+      },
+      "version": "1.0.0",
+      "category": "Regulatory Compliance"
+    },
+    "mode": "All",
+    "policyType": "Custom",
+    "policyRule": {
+      "if": {
+        "allOf": [
+          {
+            "field": "type",
+            "in": [
+              "Microsoft.Resources/subscriptions",
+              "Microsoft.Resources/subscriptions/resourceGroups"
+            ]
+          },
+          {
+            "value": "false",
+            "equals": "true"
+          }
+        ]
+      },
+      "then": {
+        "effect": "Manual",
+        "details": {
+          "defaultState": "Unknown"
+        }
+      }
+    }
+  }
+}

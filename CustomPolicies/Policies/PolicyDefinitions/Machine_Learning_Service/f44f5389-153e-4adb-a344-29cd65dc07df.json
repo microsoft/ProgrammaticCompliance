@@ -1,0 +1,75 @@
+{
+  "id": "/providers/Microsoft.Authorization/policyDefinitions/f44f5389-153e-4adb-a344-29cd65dc07df",
+  "name": "f44f5389-153e-4adb-a344-29cd65dc07df",
+  "properties": {
+    "description": "Description Custom Manual - MCSB Baseline item IM-3 for Machine Learning Service",
+    "displayName": "MCSB Baseline item IM-3 for Machine Learning Service",
+    "metadata": {
+      "offeringName": "Machine Learning Service",
+      "offeringId": "72b76e95-fad8-45b8-9888-a61255034d11",
+      "mcsb": {
+        "mcsbId": "IM-3",
+        "features": [
+          {
+            "featureId": "MANAGED_IDENTITIES",
+            "featureName": "Managed Identities",
+            "featureDescription": "Data plane actions support authentication using managed identities.",
+            "featureSupport": "True",
+            "featureGuidance": "Use Azure managed identities instead of service principals when possible, which can authenticate to Azure services and resources that support Azure Active Directory (Azure AD) authentication. Managed identity credentials are fully managed, rotated, and protected by the platform, avoiding hard-coded credentials in source code or configuration files.",
+            "featureReference": "https://learn.microsoft.com/azure/machine-learning/how-to-use-managed-identities",
+            "enabledByDefault": "False",
+            "customerActionsDescription": "Manage application identities securely and automatically"
+          },
+          {
+            "featureId": "SERVICE_PRINCIPAL",
+            "featureName": "Service Principals",
+            "featureDescription": "Data plane supports authentication using service principals.",
+            "featureSupport": "True",
+            "featureGuidance": "There is no current Microsoft guidance for this feature configuration. Please review and determine if your organization wants to configure this security feature.",
+            "featureReference": "https://learn.microsoft.com/azure/machine-learning/how-to-identity-based-service-authentication",
+            "enabledByDefault": "False",
+            "customerActionsDescription": "Manage application identities securely and automatically"
+          }
+        ],
+        "automatedPolicyAvailability": [],
+        "frameworkControls": [
+          "NIST_SP_800-53_R4_AC-3",
+          "NIST_SP_800-53_R4_AC-2",
+          "NIST_SP_800-53_R4_IA-5",
+          "NIST_SP_800-53_R4_IA-9",
+          "NIST_SP_800-53_R4_IA-4",
+          "PCI_DSS_v4.0_8.6.3",
+          "PCI_DSS_v4.0_8.6.2",
+          "PCI_DSS_v4.0_8.6.1"
+        ]
+      },
+      "version": "1.0.0",
+      "category": "Regulatory Compliance"
+    },
+    "mode": "All",
+    "policyType": "Custom",
+    "policyRule": {
+      "if": {
+        "allOf": [
+          {
+            "field": "type",
+            "in": [
+              "Microsoft.Resources/subscriptions",
+              "Microsoft.Resources/subscriptions/resourceGroups"
+            ]
+          },
+          {
+            "value": "false",
+            "equals": "true"
+          }
+        ]
+      },
+      "then": {
+        "effect": "Manual",
+        "details": {
+          "defaultState": "Unknown"
+        }
+      }
+    }
+  }
+}
