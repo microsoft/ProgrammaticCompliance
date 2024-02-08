@@ -24,7 +24,7 @@ $CustomPoliciesDefinitionsAlreadyInstalledSetCount = $CustomPoliciesDefinitionsA
 $PoliciesToInstallCount -= $CustomPoliciesDefinitionsAlreadyInstalledSetCount
 
 Write-Host "There are $PoliciesToInstallCount policy definitions to create"
-Start-Sleep -Seconds 10
+Start-Sleep -Seconds 5
 Write-Host "===== Creating the policies definitions ====="
 
 $ManagementGroupIdIndex = 0
@@ -87,6 +87,7 @@ $InitiativesAlreadyInstalledSetMeasure = $InitiativesAlreadyInstalledSet | Measu
 $InitiativesAlreadyInstalledSetCount = $InitiativesAlreadyInstalledSetMeasure.Count
 $InitiativesToCreateCount = $InitiativesCount - $InitiativesAlreadyInstalledSetCount
 Write-Host "There are $InitiativesToCreateCount initiatives to create"
+Start-Sleep 5
 $SuccessfullyCreatedInitiativesCount = 0
 $InitiativeIndex = 0
 while ($InitiativeIndex -lt $InitiativesCount) {
