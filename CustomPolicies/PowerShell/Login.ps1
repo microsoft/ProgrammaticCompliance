@@ -3,4 +3,3 @@ $SecurePassword = ConvertTo-SecureString -String $ApplicationSecret -AsPlainText
 $Credential = New-Object -TypeName System.Management.Automation.PSCredential -ArgumentList $ApplicationId, $SecurePassword
 Connect-AzAccount -ServicePrincipal -TenantId $TenantId -Credential $Credential
 Get-AzContext
-armclient spn $TenantId $ApplicationId

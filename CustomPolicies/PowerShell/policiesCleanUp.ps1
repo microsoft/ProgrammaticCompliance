@@ -1,4 +1,12 @@
-param ([string[]] $ManagementGroupIds)
+param ([String] $TenantId, [String] $ApplicationId, [string[]] $ManagementGroupIds)
+
+Write-Host "Login with armclient and obtain the token credentials"
+if ($ApplicationId.Length -eq 0) {
+    armclient login
+}
+else {
+    armclient spn $TenantId $ApplicationId
+}
 
 Write-Host "===== Deletion of the custom initiatives and the policies definitions ====="
 

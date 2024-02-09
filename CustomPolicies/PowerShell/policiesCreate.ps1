@@ -1,4 +1,4 @@
-param ([string[]] $ManagementGroupIds)
+param ([String] $TenantId, [String] $ApplicationId, [string[]] $ManagementGroupIds)
 
 $CurrentErrorActionPreference = $ErrorActionPreference
 
@@ -25,6 +25,15 @@ $PoliciesToInstallCount -= $CustomPoliciesDefinitionsAlreadyInstalledSetCount
 
 Write-Host "There are $PoliciesToInstallCount policy definitions to create"
 Start-Sleep -Seconds 5
+
+Write-Host "Login with armclient and obtain the token credentials"
+if ($ApplicationId.Length -eq 0) {
+    armclient login
+}
+else {
+    armclient spn $TenantId $ApplicationId
+}
+
 Write-Host "===== Creating the policies definitions ====="
 
 $ManagementGroupIdIndex = 0
