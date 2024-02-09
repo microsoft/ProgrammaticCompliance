@@ -113,7 +113,7 @@ while ($InitiativeIndex -lt $InitiativesCount) {
     if ($LASTEXITCODE -ne 0) {
         Write-Error -Message "Cannot create $InitiativeName in $ManagementGroupId. Investigating..." -ErrorAction Continue
         if ($ManagementGroupIdIndex -lt $ManagementGroupIds.Count) {
-            $InitiativesAlreadyInstalledInMgmtGroup = Get-AzSetPolicyDefinition -ManagementGroupName $ManagementGroupId -Custom
+            $InitiativesAlreadyInstalledInMgmtGroup = Get-AzPolicySetDefinition -ManagementGroupName $ManagementGroupId -Custom
             $InitiativesAlreadyInstalledInMgmtGroupNames = $InitiativesAlreadyInstalledInMgmtGroup.Name
             $NamesCount = $InitiativesAlreadyInstalledInMgmtGroupNames.Count
             if ($NamesCount -eq 500) {
