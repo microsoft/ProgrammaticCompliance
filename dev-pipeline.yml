@@ -1,0 +1,12 @@
+trigger:
+- develop
+
+- script: |
+    npm install
+  displayName: 'npm install'
+
+- script: |
+    npm run build
+  displayName: 'npm build'
+
+  - task: ComponentGovernanceComponentDetection@0
