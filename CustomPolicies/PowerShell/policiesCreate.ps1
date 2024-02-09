@@ -2,6 +2,7 @@ param ([String] $TenantId, [String] $ApplicationId, [string[]] $ManagementGroupI
 
 $CurrentErrorActionPreference = $ErrorActionPreference
 
+Write-Host "=== Determining how many policies to install ==="
 $CustomPoliciesDefinitionsAlreadyInstalledSet = @()
 foreach ($ManagementGroupId in $ManagementGroupIds) {
     $CustomPoliciesDefinitionsAlreadyInstalledInMgmtGroup = Get-AzPolicyDefinition -ManagementGroupName $ManagementGroupId -Custom
@@ -9,7 +10,6 @@ foreach ($ManagementGroupId in $ManagementGroupIds) {
     $CustomPoliciesDefinitionsAlreadyInstalledSet += $CustomPoliciesDefinitionsAlreadyInstalledNamesInMgmtGroup
 }
 
-Write-Output "=== Determining how many policies to install ==="
 $ErrorActionPreference = 'Stop'
 Set-Location -Path ../Policies
 $PoliciesToInstallCount = 0
@@ -82,60 +82,5 @@ foreach ($Offering in $Offerings) {
     }
 }
 
-$InitiativesAlreadyInstalledSet = @()
-foreach ($ManagementGroupId in $ManagementGroupIds) {
-    $InitiativesAlreadyInstalledInMgmtGroup = Get-AzPolicySetDefinition -ManagementGroupName $ManagementGroupId -Custom
-    $InitiativesAlreadyInstalledNamesInMgmtGroup = $InitiativesAlreadyInstalledInMgmtGroup.Name
-    $InitiativesAlreadyInstalledSet += $InitiativesAlreadyInstalledNamesInMgmtGroup
-}
-Write-Host "===== Creating/Updating the initiatives ====="
-$InitiativesFiles = Get-ChildItem ./Initiatives
-$InitiativesMeasure = $InitiativesFiles | Measure-Object
-$InitiativesCount = $InitiativesMeasure.Count
-$InitiativesAlreadyInstalledSetMeasure = $InitiativesAlreadyInstalledSet | Measure-Object
-$InitiativesAlreadyInstalledSetCount = $InitiativesAlreadyInstalledSetMeasure.Count
-$InitiativesToCreateCount = $InitiativesCount - $InitiativesAlreadyInstalledSetCount
-Write-Host "There are $InitiativesToCreateCount initiatives to create"
-Start-Sleep 5
-$SuccessfullyCreatedInitiativesCount = 0
-$InitiativeIndex = 0
-while ($InitiativeIndex -lt $InitiativesCount) {
-    $InitiativeFile = $InitiativesFiles[$InitiativeIndex]
-    $InitiativeName = $InitiativeFile.BaseName
-    if ($InitiativesAlreadyInstalledSet -contains $InitiativeName) {
-        $InitiativeIndex++
-        continue
-    }
-    $ManagementGroupId = $ManagementGroupIds[$ManagementGroupIdIndex]
-    armclient PUT `
-        "/providers/Microsoft.Management/managementGroups/${ManagementGroupId}/providers/Microsoft.Authorization/policySetDefinitions/${InitiativeName}?api-version=2023-04-01" `
-        $InitiativeFile
-    if ($LASTEXITCODE -ne 0) {
-        Write-Error -Message "Cannot create $InitiativeName in $ManagementGroupId. Investigating..." -ErrorAction Continue
-        if ($ManagementGroupIdIndex -lt $ManagementGroupIds.Count) {
-            $InitiativesAlreadyInstalledInMgmtGroup = Get-AzPolicySetDefinition -ManagementGroupName $ManagementGroupId -Custom
-            $InitiativesAlreadyInstalledInMgmtGroupNames = $InitiativesAlreadyInstalledInMgmtGroup.Name
-            $NamesCount = $InitiativesAlreadyInstalledInMgmtGroupNames.Count
-            if ($NamesCount -eq 500) {
-                Write-Host "The management group $ManagementGroupId already has 500 policies definitions. Checking next management group...."
-                $ManagementGroupIdIndex++
-            }
-            else {
-                Write-Error -Message @"
-                    `nThe script was able to install $SuccessfullyCreatedInitiativesCount out of $InitiativesToCreateCount initiatives
-                    Please rerun the script to finish the creation of the rest of the policy definitions
-"@ -ErrorAction Stop
-            }
-        }
-        else {
-            Write-Error -Message "`nThe list of management groups are exhausted. Consider adding more management groups" -ErrorAction Stop
-        }      
-    }
-    else {
-        $SuccessfullyCreatedInitiativesCount++
-        $InitiativeIndex++
-    }
-}
-
-Write-Host "===== ALL INITIATIVES AND POLICY DEFINITIONS HAVE BEEN CREATED/UPDATED ====="
+Write-Host "===== ALL POLICY DEFINITIONS HAVE BEEN CREATED/UPDATED ====="
 $ErrorActionPreference = $CurrentErrorActionPreference
