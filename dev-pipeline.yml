@@ -1,12 +1,19 @@
 trigger:
-- develop
+  - develop
 
-- script: |
-    npm install
-  displayName: 'npm install'
+jobs:
+  - job: Build
+    displayName: 'Build'
+    pool:
+      vmImage: 'ubuntu-latest'
 
-- script: |
-    npm run build
-  displayName: 'npm build'
+    steps:
+      - script: |
+          npm install
+        displayName: 'npm install'
 
-  - task: ComponentGovernanceComponentDetection@0
+      - script: |
+          npm run build
+        displayName: 'npm build'
+
+      - task: ComponentGovernanceComponentDetection@0
