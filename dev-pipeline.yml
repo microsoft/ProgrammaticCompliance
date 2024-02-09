@@ -1,19 +1,39 @@
 trigger:
-  - develop
+- develop
 
-jobs:
-  - job: Build
-    displayName: 'Build'
-    pool:
-      vmImage: 'ubuntu-latest'
+pool:
+  vmImage: 'ubuntu-latest'
 
-    steps:
-      - script: |
-          npm install
-        displayName: 'npm install'
+steps:
+- task: UseNode@1
+  inputs:
+    version: '18.17.x'
+  displayName: 'Install Node.js'
 
-      - script: |
-          npm run build
-        displayName: 'npm build'
+- script: |
+    npm install
+  displayName: 'npm install'
 
-      - task: ComponentGovernanceComponentDetection@0
+- script: |
+    npm run build
+  displayName: 'npm build'
+- task: Npm@1
+  inputs:
+     command: 'install'
+
+- task: CopyFiles@2
+  inputs:
+    sourceFolder: '$(Build.SourcesDirectory)'
+    contents: |
+       src/*
+       public/*
+    targetFolder: '$(Build.ArtifactStagingDirectory)'
+  displayName: 'Copy project files'
+
+- task: PublishPipelineArtifact@1
+  inputs:
+    artifactName: e2e-server
+    targetPath: '$(Build.ArtifactStagingDirectory)'
+    publishLocation: 'pipeline'
+  displayName: 'Publish npm artifact'
+- task: ComponentGovernanceComponentDetection@0
