@@ -1,0 +1,58 @@
+.dropdown-container {
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-start;
+  flex-wrap: wrap;
+}
+
+.select-dropdown {
+  gap: 3px;
+  flex: 1;
+  flex-grow: 1;
+  max-width: 230px;
+  min-width: 230px;
+  border-radius: var(--Medium, 4px);
+}
+
+.clear-button {
+  color: #0078D4;
+  padding: 0px 0px;
+}
+
+.clear-button:hover {
+  color: black;
+}
+
+.clear-button-container {
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+}
+
+@media only screen and (max-width: 768px) {
+  .dropdown-container {
+    flex-wrap: wrap;
+  }
+
+  .select-dropdown {
+    width: 100%;
+    margin-bottom: 8px;
+  }
+}
+
+.exportButton {
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-end;
+  align-items: center;
+  width: auto;
+  margin-left: auto;
+  margin-bottom: 12px;
+}
+
+@media only screen and (max-width: 768px) {
+  .exportButton {
+    flex-direction: column;
+    align-items: flex-end;
+  }
+}

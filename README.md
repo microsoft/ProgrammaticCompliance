@@ -1,33 +1,80 @@
-# Project
+# Setup instructions ☀️
+This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 
-> This repo has been populated by an initial template to help get you started. Please
-> make sure to update the content to build a great experience for community-building.
+## System requirements 🖥️
+* Download and install Node.js, which includes npm, from the [official website](https://nodejs.org/) for your operating system. Use the LTS to avoid any fresh issues with the current version.
+* To verify that Node.js and npm are installed correctly, open a terminal and run the following commands to check their versions:
+```
+node -v
+npm -v
+```
+***Note from Julia:** I'm using v18.17.1 and 9.8.1 respectively.* 
 
-As the maintainer of this project, please make a few updates:
+## Cloning Git respository 🦾
+* Access the project repository ([here](https://github.com/TestOrgMSFT/Programmatic_Compliance/tree/jul-fetchAPI)) to make sure you have access.
+* Navigate to a directory via terminal that you wish to save this project in and clone the repo into it:
+```
+git clone https://github.com/TestOrgMSFT/Programmatic_Compliance.git
+```
+* Navigate into the newly cloned directory:
+ ```
+ cd Programmatic_Compliance
+ ```
+ * Then, run the following commands to fetch the correct remote branch:
+```
+git fetch
+git switch jul-fetchAPI
+```
+* Verify that you are on the working branch by running `git branch` and checking that the `jul-fetchAPI` branch is highlighted or selected in some way.
 
-- Improving this README.MD file to provide a great experience
-- Updating SUPPORT.MD with content about this project's support experience
-- Understanding the security reporting process in SECURITY.MD
-- Remove this section from the README
+## Installing (or Updating) dependencies 🔄
+Install project dependencies and wait for them to complete:
 
-## Contributing
+```
+npm install
+```
+***Note from Julia:** Ignore errors/warnings generated here. Trying to fix them with the suggested commands may change the versions of some dependencies and break their relationship. Learned this part from personal experience, and the process of undoing the versioning is unnecessarily confusing...I will fix these later once we lock down a design framework.*
 
-This project welcomes contributions and suggestions.  Most contributions require you to agree to a
-Contributor License Agreement (CLA) declaring that you have the right to, and actually do, grant us
-the rights to use your contribution. For details, visit https://cla.opensource.microsoft.com.
+## (To override auth) Parameters for API access 👾
+We will now manually override the authentication flow in case you are unable to use a Microsoft domain-joined browser.
+* Navigate to /src/components/Filtering in your code editor of choice and navigate to the `FilterBar.js` file. Find this section:
 
-When you submit a pull request, a CLA bot will automatically determine whether you need to provide
-a CLA and decorate the PR appropriately (e.g., status check, comment). Simply follow the instructions
-provided by the bot. You will only need to do this once across all repos using our CLA.
+```
+ let KEY = 'cc003c0178774095828768551275b0f8'
+ let TOKEN = `Bearer ${authToken}`
+```
+* Generate the bearer token. Open terminal, and run:
+```
+az login
+az account get-access-token --resource api://01540a6b-6e38-40b8-b67f-1d9d78dfc691 --query accessToken
+```
+This will return a long string starting with "ey".
 
-This project has adopted the [Microsoft Open Source Code of Conduct](https://opensource.microsoft.com/codeofconduct/).
-For more information see the [Code of Conduct FAQ](https://opensource.microsoft.com/codeofconduct/faq/) or
-contact [opencode@microsoft.com](mailto:opencode@microsoft.com) with any additional questions or comments.
+* Copy the key and replace the second line with:
+```
+let TOKEN = 'Bearer {AUTH TOKEN HERE}'
+```
+***Note from Julia:** Be sure to keep the "Bearer" portion of the template intact, and just append the auth key afterward with a space inbetween. e.g. "let TOKEN = 'Bearer eyHelloThereIamYourToken!0123456789'*
 
-## Trademarks
+* Navigate to the `index.js` file and delete the `<MsalProvider>` tag, as well as the closing tag `</MsalProvider>`. This will disable the auth mechanism from starting.
 
-This project may contain trademarks or logos for projects, products, or services. Authorized use of Microsoft 
-trademarks or logos is subject to and must follow 
-[Microsoft's Trademark & Brand Guidelines](https://www.microsoft.com/en-us/legal/intellectualproperty/trademarks/usage/general).
-Use of Microsoft trademarks or logos in modified versions of this project must not cause confusion or imply Microsoft sponsorship.
-Any use of third-party trademarks or logos are subject to those third-party's policies.
+Save changes made to both files, and now you're ready to skip authentication!
+
+## Launching development server 🚀
+Installation is complete! 
+
+Navigate to the project directory in terminal when all changes have been made. Then, run
+```
+npm start
+```
+to open the site at [http://localhost:3000](http://localhost:3000). Manually navigate to this URL to view it in your browser if it doesn't open automatically. 
+
+***Note from Julia:** The first load takes longer to permeate, so the screen may stay blank for a bit.*
+
+## Authenticating 🔐
+After the page loads, you will be redirected to a Microsoft sign-on page. This will only work using your `@microsoft` account, so log in with that one.  
+
+Congrats! 🎉 You're in!
+
+## Troubleshooting 🆘
+If the site fails to load, contact Julia with error logs. Copy & paste the terminal output if there are errors there. If not, "Inspect" the webpage in your browser, navigate to the "Output" tab, and screenshot that.
