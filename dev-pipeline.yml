@@ -1,39 +1,50 @@
 trigger:
 - develop
 
-pool:
-  vmImage: 'ubuntu-latest'
+stages:
+- stage: Build
+  jobs:
+  - job: Build
 
-steps:
-- task: UseNode@1
-  inputs:
-    version: '18.17.x'
-  displayName: 'Install Node.js'
+    pool:
+      vmImage: 'ubuntu-latest'
 
-- script: |
-    npm install
-  displayName: 'npm install'
+    steps:
+    - task: UseNode@1
+      inputs:
+        version: '18.17.x'
+      displayName: 'Install Node.js'
 
-- script: |
-    npm run build
-  displayName: 'npm build'
-- task: Npm@1
-  inputs:
-     command: 'install'
+    - script: |
+        npm install
+      displayName: 'npm install'
 
-- task: CopyFiles@2
-  inputs:
-    sourceFolder: '$(Build.SourcesDirectory)'
-    contents: |
-       src/*
-       public/*
-    targetFolder: '$(Build.ArtifactStagingDirectory)'
-  displayName: 'Copy project files'
+    - script: |
+        npm run build
+      displayName: 'npm build'
+    - task: Npm@1
+      inputs:
+        command: 'install'
 
-- task: PublishPipelineArtifact@1
-  inputs:
-    artifactName: e2e-server
-    targetPath: '$(Build.ArtifactStagingDirectory)'
-    publishLocation: 'pipeline'
-  displayName: 'Publish npm artifact'
-- task: ComponentGovernanceComponentDetection@0
+    - task: CopyFiles@2
+      inputs:
+        sourceFolder: '$(Build.SourcesDirectory)'
+        contents: |
+          src/*
+          public/*
+        targetFolder: '$(Build.ArtifactStagingDirectory)'
+      displayName: 'Copy project files'
+
+    - task: PublishPipelineArtifact@1
+      inputs:
+        artifactName: e2e-server
+        targetPath: '$(Build.ArtifactStagingDirectory)'
+        publishLocation: 'pipeline'
+      displayName: 'Publish npm artifact'
+    - task: ComponentGovernanceComponentDetection@0
+
+- stage: Deploy
+  jobs:
+  - job: Deploy
+    pool:
+      vmImage: 'ubuntu-latest'
