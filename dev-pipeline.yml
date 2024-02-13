@@ -46,7 +46,20 @@ stages:
     - task: Guardian@1
       inputs:
         break: true
+    
+    - task: TSAUpload@2
+      inputs:
+        GdnPublishTsaConfigFile: '$(Build.SourcesDirectory)/.gdn/.gdntsa'
+        GdnPublishTsaExportedResultsPublishable: true
 
+    - task: PublishSecurityAnalysisLogs@3
+      inputs:
+        ArtifactName: 'CodeAnalysisLogs'
+        ArtifactType: 'Container'
+        PublishProcessedResults: true
+        AllTools: true
+        ToolLogsNotFoundAction: 'Standard'
+    
 - stage: Deploy
   jobs:
   - job: Deploy
