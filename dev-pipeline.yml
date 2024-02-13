@@ -43,6 +43,10 @@ stages:
       displayName: 'Publish npm artifact'
     - task: ComponentGovernanceComponentDetection@0
 
+    - task: Guardian@1
+      inputs:
+        break: true
+
 - stage: Deploy
   jobs:
   - job: Deploy
