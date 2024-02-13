@@ -1,0 +1,10 @@
+{
+    "codebaseName": "Programmatic-Compliance",
+    "notificationAliases": [
+        "wangjulia@microsoft.com"
+    ],
+    "instanceUrl": "https://msazure.visualstudio.com/",
+    "projectName": "One",
+    "areaPath": "One\\MCIGET-ISV\\MCIGET-ISV-US\\ComplianceforISVs",
+    "allTools": true
+}
