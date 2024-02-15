@@ -1,0 +1,66 @@
+{
+  "id": "/providers/Microsoft.Authorization/policyDefinitions/1f0e456f-b242-45d3-9950-237f3a8ced5c",
+  "name": "1f0e456f-b242-45d3-9950-237f3a8ced5c",
+  "properties": {
+    "description": "Description Custom Manual - MCSB Baseline item DP-3 for Virtual Machines",
+    "displayName": "MCSB Baseline item DP-3 for Virtual Machines",
+    "metadata": {
+      "offeringName": "Virtual Machines",
+      "offeringId": "07649cbd-2ee4-4992-898b-f5f16bad1b36",
+      "mcsb": {
+        "mcsbId": "DP-3",
+        "features": [
+          {
+            "featureId": "DATA_IN_TRANSIT_ENCRYPTION",
+            "featureName": "Data in Transit Encryption",
+            "featureDescription": "Service supports data in-transit encryption for data plane.",
+            "featureSupport": "True",
+            "featureGuidance": "Enable secure transfer in services where there is a native data in transit encryption feature built in. Enforce HTTPS on any web applications and services and ensure TLS v1.2 or later is used. Legacy versions such as SSL 3.0, TLS v1.0 should be disabled. For remote management of Virtual Machines, use SSH (for Linux) or RDP/TLS (for Windows) instead of an unencrypted protocol.",
+            "featureReference": "https://learn.microsoft.com/azure/security/fundamentals/encryption-overview#in-transit-encryption-in-vms",
+            "enabledByDefault": "False",
+            "customerActionsDescription": "Encrypt sensitive data in transit"
+          }
+        ],
+        "automatedPolicyAvailability": [],
+        "frameworkControls": [
+          "CIS_Azure_2.0.0_2.1.5",
+          "CIS_Azure_2.0.0_9.3",
+          "CIS_Azure_2.0.0_9.2",
+          "CIS_Azure_2.0.0_4.4.1",
+          "CIS_Azure_2.0.0_3.15",
+          "NIST_SP_800-53_R4_SC-8",
+          "PCI_DSS_v4.0_4.2.2",
+          "PCI_DSS_v4.0_4.2.1.2",
+          "PCI_DSS_v4.0_2.2.7"
+        ]
+      },
+      "version": "1.0.0",
+      "category": "Regulatory Compliance"
+    },
+    "mode": "All",
+    "policyType": "Custom",
+    "policyRule": {
+      "if": {
+        "allOf": [
+          {
+            "field": "type",
+            "in": [
+              "Microsoft.Resources/subscriptions",
+              "Microsoft.Resources/subscriptions/resourceGroups"
+            ]
+          },
+          {
+            "value": "false",
+            "equals": "true"
+          }
+        ]
+      },
+      "then": {
+        "effect": "Manual",
+        "details": {
+          "defaultState": "Unknown"
+        }
+      }
+    }
+  }
+}

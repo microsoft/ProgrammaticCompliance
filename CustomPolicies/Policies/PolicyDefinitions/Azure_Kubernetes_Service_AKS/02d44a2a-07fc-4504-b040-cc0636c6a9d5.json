@@ -1,0 +1,73 @@
+{
+  "id": "/providers/Microsoft.Authorization/policyDefinitions/02d44a2a-07fc-4504-b040-cc0636c6a9d5",
+  "name": "02d44a2a-07fc-4504-b040-cc0636c6a9d5",
+  "properties": {
+    "description": "Description Custom Manual - MCSB Baseline item DP-3 for Azure Kubernetes Service (AKS)",
+    "displayName": "MCSB Baseline item DP-3 for Azure Kubernetes Service (AKS)",
+    "metadata": {
+      "offeringName": "Azure Kubernetes Service (AKS)",
+      "offeringId": "1f30fa84-8aae-4c27-92cf-f77bfdaf5958",
+      "mcsb": {
+        "mcsbId": "DP-3",
+        "features": [
+          {
+            "featureId": "DATA_IN_TRANSIT_ENCRYPTION",
+            "featureName": "Data in Transit Encryption",
+            "featureDescription": "Service supports data in-transit encryption for data plane.",
+            "featureSupport": "True",
+            "featureGuidance": "Enable secure transfer in services where there is a native data in transit encryption feature built in. Enforce HTTPS on any web applications and services and ensure TLS v1.2 or later is used. Legacy versions such as SSL 3.0, TLS v1.0 should be disabled. For remote management of Virtual Machines, use SSH (for Linux) or RDP/TLS (for Windows) instead of an unencrypted protocol.",
+            "featureReference": "https://docs.microsoft.com/azure/aks/ingress-tls?tabs=azure-cli",
+            "enabledByDefault": "False",
+            "customerActionsDescription": "Encrypt sensitive data in transit"
+          }
+        ],
+        "automatedPolicyAvailability": [
+          {
+            "policyId": "1a5b4dca-0b6f-4cf5-907c-56316bc1bf3d",
+            "policyName": "Kubernetes clusters should be accessible only over HTTPS",
+            "policyDescription": "Use of HTTPS ensures authentication and protects data in transit from network layer eavesdropping attacks. This capability is currently generally available for Kubernetes Service (AKS), and in preview for Azure Arc enabled Kubernetes. For more info, visit https://aka.ms/kubepolicydoc",
+            "policyCategory": "Kubernetes"
+          }
+        ],
+        "frameworkControls": [
+          "CIS_Azure_2.0.0_2.1.5",
+          "CIS_Azure_2.0.0_9.3",
+          "CIS_Azure_2.0.0_9.2",
+          "CIS_Azure_2.0.0_4.4.1",
+          "CIS_Azure_2.0.0_3.15",
+          "NIST_SP_800-53_R4_SC-8",
+          "PCI_DSS_v4.0_4.2.2",
+          "PCI_DSS_v4.0_4.2.1.2",
+          "PCI_DSS_v4.0_2.2.7"
+        ]
+      },
+      "version": "1.0.0",
+      "category": "Regulatory Compliance"
+    },
+    "mode": "All",
+    "policyType": "Custom",
+    "policyRule": {
+      "if": {
+        "allOf": [
+          {
+            "field": "type",
+            "in": [
+              "Microsoft.Resources/subscriptions",
+              "Microsoft.Resources/subscriptions/resourceGroups"
+            ]
+          },
+          {
+            "value": "false",
+            "equals": "true"
+          }
+        ]
+      },
+      "then": {
+        "effect": "Manual",
+        "details": {
+          "defaultState": "Unknown"
+        }
+      }
+    }
+  }
+}

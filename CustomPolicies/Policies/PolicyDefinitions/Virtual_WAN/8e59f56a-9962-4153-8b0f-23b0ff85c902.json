@@ -1,0 +1,61 @@
+{
+  "id": "/providers/Microsoft.Authorization/policyDefinitions/8e59f56a-9962-4153-8b0f-23b0ff85c902",
+  "name": "8e59f56a-9962-4153-8b0f-23b0ff85c902",
+  "properties": {
+    "description": "Description Custom Manual - MCSB Baseline item IM-8 for Virtual WAN",
+    "displayName": "MCSB Baseline item IM-8 for Virtual WAN",
+    "metadata": {
+      "offeringName": "Virtual WAN",
+      "offeringId": "658a4a19-9c40-472b-a918-3f550848421a",
+      "mcsb": {
+        "mcsbId": "IM-8",
+        "features": [
+          {
+            "featureId": "AKV_SUPPORT_FOR_CREDENTIAL_AND_SECRETS",
+            "featureName": "Service Credential and Secrets Support Integration and Storage in Azure Key Vault",
+            "featureDescription": "Data plane supports native use of Azure Key Vault for credential and secrets store.",
+            "featureSupport": "True",
+            "featureGuidance": "Ensure that secrets and credentials are stored in secure locations such as Azure Key Vault, instead of embedding them into code or configuration files.",
+            "featureReference": "Not Applicable",
+            "enabledByDefault": "False",
+            "customerActionsDescription": "Restrict the exposure of credential and secrets"
+          }
+        ],
+        "automatedPolicyAvailability": [],
+        "frameworkControls": [
+          "CIS_Azure_2.0.0_3.3",
+          "NIST_SP_800-53_R4_IA-5",
+          "PCI_DSS_v4.0_8.6.2",
+          "PCI_DSS_v4.0_3.6.1"
+        ]
+      },
+      "version": "1.0.0",
+      "category": "Regulatory Compliance"
+    },
+    "mode": "All",
+    "policyType": "Custom",
+    "policyRule": {
+      "if": {
+        "allOf": [
+          {
+            "field": "type",
+            "in": [
+              "Microsoft.Resources/subscriptions",
+              "Microsoft.Resources/subscriptions/resourceGroups"
+            ]
+          },
+          {
+            "value": "false",
+            "equals": "true"
+          }
+        ]
+      },
+      "then": {
+        "effect": "Manual",
+        "details": {
+          "defaultState": "Unknown"
+        }
+      }
+    }
+  }
+}

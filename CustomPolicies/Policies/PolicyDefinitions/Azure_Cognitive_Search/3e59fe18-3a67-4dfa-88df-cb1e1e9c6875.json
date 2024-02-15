@@ -1,0 +1,70 @@
+{
+  "id": "/providers/Microsoft.Authorization/policyDefinitions/3e59fe18-3a67-4dfa-88df-cb1e1e9c6875",
+  "name": "3e59fe18-3a67-4dfa-88df-cb1e1e9c6875",
+  "properties": {
+    "description": "Description Custom Manual - MCSB Baseline item PA-7 for Azure Cognitive Search",
+    "displayName": "MCSB Baseline item PA-7 for Azure Cognitive Search",
+    "metadata": {
+      "offeringName": "Azure Cognitive Search",
+      "offeringId": "2be23fe8-3b59-46d2-bcb6-cdf01ede0583",
+      "mcsb": {
+        "mcsbId": "PA-7",
+        "features": [
+          {
+            "featureId": "AZURE_RBAC_DATAPLANE_SUPPORTED",
+            "featureName": "Azure RBAC for Data Plane",
+            "featureDescription": "Azure Role-Based Access Control (Azure RBAC) can be used to managed access to service's data plane actions.",
+            "featureSupport": "True",
+            "featureGuidance": "Azure provides a global role-based access control (RBAC) authorization system for all services running on the platform. In Cognitive Search, you can use Azure roles for:\r\n- Control plane operations (service administration tasks through Azure Resource Manager).\r\n- Data plane operations, such as creating, loading, and querying indexes.",
+            "featureReference": "https://docs.microsoft.com/azure/search/search-security-rbac?tabs=config-svc-portal%2Croles-portal%2Ctest-portal%2Ccustom-role-portal",
+            "enabledByDefault": "False",
+            "customerActionsDescription": "Follow just enough administration (least privilege) principle"
+          }
+        ],
+        "automatedPolicyAvailability": [],
+        "frameworkControls": [
+          "CIS_Azure_2.0.0_1.24",
+          "CIS_Azure_2.0.0_4.5.3",
+          "NIST_SP_800-53_R4_AC-3",
+          "NIST_SP_800-53_R4_AC-2",
+          "NIST_SP_800-53_R4_AC-6",
+          "PCI_DSS_v4.0_7.2.5",
+          "PCI_DSS_v4.0_7.2.2",
+          "PCI_DSS_v4.0_7.2.1",
+          "PCI_DSS_v4.0_7.3.2",
+          "PCI_DSS_v4.0_7.3.1",
+          "PCI_DSS_v4.0_8.2.7",
+          "PCI_DSS_v4.0_7.3.3",
+          "PCI_DSS_v4.0_7.2.6"
+        ]
+      },
+      "version": "1.0.0",
+      "category": "Regulatory Compliance"
+    },
+    "mode": "All",
+    "policyType": "Custom",
+    "policyRule": {
+      "if": {
+        "allOf": [
+          {
+            "field": "type",
+            "in": [
+              "Microsoft.Resources/subscriptions",
+              "Microsoft.Resources/subscriptions/resourceGroups"
+            ]
+          },
+          {
+            "value": "false",
+            "equals": "true"
+          }
+        ]
+      },
+      "then": {
+        "effect": "Manual",
+        "details": {
+          "defaultState": "Unknown"
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,61 @@
+{
+  "id": "/providers/Microsoft.Authorization/policyDefinitions/78f496b4-5385-4724-990f-dd1e14f03625",
+  "name": "78f496b4-5385-4724-990f-dd1e14f03625",
+  "properties": {
+    "description": "Description Custom Manual - MCSB Baseline item IM-8 for Azure Bastion",
+    "displayName": "MCSB Baseline item IM-8 for Azure Bastion",
+    "metadata": {
+      "offeringName": "Azure Bastion",
+      "offeringId": "3e82bdb1-32b9-4dc5-908b-ff492b871f79",
+      "mcsb": {
+        "mcsbId": "IM-8",
+        "features": [
+          {
+            "featureId": "AKV_SUPPORT_FOR_CREDENTIAL_AND_SECRETS",
+            "featureName": "Service Credential and Secrets Support Integration and Storage in Azure Key Vault",
+            "featureDescription": "Data plane supports native use of Azure Key Vault for credential and secrets store.",
+            "featureSupport": "True",
+            "featureGuidance": "You can store your SSH keys as Azure Key Vault secrets and use these secrets to connect to your virtual machines using Azure Bastion. You can control user access to these secrets by assigning Key Vault access policies either on individual users or Azure AD groups.",
+            "featureReference": "Not Applicable",
+            "enabledByDefault": "False",
+            "customerActionsDescription": "Restrict the exposure of credential and secrets"
+          }
+        ],
+        "automatedPolicyAvailability": [],
+        "frameworkControls": [
+          "CIS_Azure_2.0.0_3.3",
+          "NIST_SP_800-53_R4_IA-5",
+          "PCI_DSS_v4.0_8.6.2",
+          "PCI_DSS_v4.0_3.6.1"
+        ]
+      },
+      "version": "1.0.0",
+      "category": "Regulatory Compliance"
+    },
+    "mode": "All",
+    "policyType": "Custom",
+    "policyRule": {
+      "if": {
+        "allOf": [
+          {
+            "field": "type",
+            "in": [
+              "Microsoft.Resources/subscriptions",
+              "Microsoft.Resources/subscriptions/resourceGroups"
+            ]
+          },
+          {
+            "value": "false",
+            "equals": "true"
+          }
+        ]
+      },
+      "then": {
+        "effect": "Manual",
+        "details": {
+          "defaultState": "Unknown"
+        }
+      }
+    }
+  }
+}

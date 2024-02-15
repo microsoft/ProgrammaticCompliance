@@ -1,0 +1,67 @@
+{
+  "id": "/providers/Microsoft.Authorization/policyDefinitions/53bb8817-805d-4c3b-8891-6c423ac33140",
+  "name": "53bb8817-805d-4c3b-8891-6c423ac33140",
+  "properties": {
+    "description": "Description Custom Manual - MCSB Baseline item PV-6 for IoT Central",
+    "displayName": "MCSB Baseline item PV-6 for IoT Central",
+    "metadata": {
+      "offeringName": "IoT Central",
+      "offeringId": "c8be96e2-b091-4fc9-8b93-7defdb0eb66f",
+      "mcsb": {
+        "mcsbId": "PV-6",
+        "features": [
+          {
+            "featureId": "AZURE_AUTOMATION_UPDATE_MANAGEMENT",
+            "featureName": "Azure Automation Update Management",
+            "featureDescription": "Service can use Azure Automation Update Management to deploy patches and updates automatically.",
+            "featureSupport": "Not Applicable",
+            "featureGuidance": "This feature is not applicable to secure this service.",
+            "featureReference": "Not Applicable",
+            "enabledByDefault": "Not Applicable",
+            "customerActionsDescription": "Rapidly and automatically remediate vulnerabilities"
+          }
+        ],
+        "automatedPolicyAvailability": [],
+        "frameworkControls": [
+          "CIS_Azure_2.0.0_4.2.5",
+          "CIS_Azure_2.0.0_4.2.4",
+          "CIS_Azure_2.0.0_4.2.3",
+          "CIS_Azure_2.0.0_4.2.2",
+          "NIST_SP_800-53_R4_SI-2",
+          "NIST_SP_800-53_R4_RA-5",
+          "NIST_SP_800-53_R4_RA-3",
+          "PCI_DSS_v4.0_2.2.1",
+          "PCI_DSS_v4.0_11.3.2",
+          "PCI_DSS_v4.0_11.3.1"
+        ]
+      },
+      "version": "1.0.0",
+      "category": "Regulatory Compliance"
+    },
+    "mode": "All",
+    "policyType": "Custom",
+    "policyRule": {
+      "if": {
+        "allOf": [
+          {
+            "field": "type",
+            "in": [
+              "Microsoft.Resources/subscriptions",
+              "Microsoft.Resources/subscriptions/resourceGroups"
+            ]
+          },
+          {
+            "value": "false",
+            "equals": "true"
+          }
+        ]
+      },
+      "then": {
+        "effect": "Manual",
+        "details": {
+          "defaultState": "Unknown"
+        }
+      }
+    }
+  }
+}

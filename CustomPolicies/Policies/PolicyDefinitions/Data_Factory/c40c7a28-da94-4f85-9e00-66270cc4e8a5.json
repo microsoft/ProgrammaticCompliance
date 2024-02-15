@@ -1,0 +1,61 @@
+{
+  "id": "/providers/Microsoft.Authorization/policyDefinitions/c40c7a28-da94-4f85-9e00-66270cc4e8a5",
+  "name": "c40c7a28-da94-4f85-9e00-66270cc4e8a5",
+  "properties": {
+    "description": "Description Custom Manual - MCSB Baseline item PA-8 for Data Factory",
+    "displayName": "MCSB Baseline item PA-8 for Data Factory",
+    "metadata": {
+      "offeringName": "Data Factory",
+      "offeringId": "d5fbb83d-baa0-4d89-82ca-73476c963144",
+      "mcsb": {
+        "mcsbId": "PA-8",
+        "features": [
+          {
+            "featureId": "CUSTOMER_LOCKBOX_SUPPORTED",
+            "featureName": "Customer Lockbox",
+            "featureDescription": "Customer Lockbox can be used for Microsoft support access.",
+            "featureSupport": "True",
+            "featureGuidance": "There is no current Microsoft guidance for this feature configuration. Please review and determine if your organization wants to configure this security feature.",
+            "featureReference": "https://docs.microsoft.com/azure/security/fundamentals/customer-lockbox-overview",
+            "enabledByDefault": "False",
+            "customerActionsDescription": "Determine access process for cloud provider support\n\n"
+          }
+        ],
+        "automatedPolicyAvailability": [],
+        "frameworkControls": [
+          "CIS_Azure_2.0.0_1.20",
+          "NIST_SP_800-53_R4_AC-3",
+          "NIST_SP_800-53_R4_AC-2",
+          "NIST_SP_800-53_R4_AC-4"
+        ]
+      },
+      "version": "1.0.0",
+      "category": "Regulatory Compliance"
+    },
+    "mode": "All",
+    "policyType": "Custom",
+    "policyRule": {
+      "if": {
+        "allOf": [
+          {
+            "field": "type",
+            "in": [
+              "Microsoft.Resources/subscriptions",
+              "Microsoft.Resources/subscriptions/resourceGroups"
+            ]
+          },
+          {
+            "value": "false",
+            "equals": "true"
+          }
+        ]
+      },
+      "then": {
+        "effect": "Manual",
+        "details": {
+          "defaultState": "Unknown"
+        }
+      }
+    }
+  }
+}

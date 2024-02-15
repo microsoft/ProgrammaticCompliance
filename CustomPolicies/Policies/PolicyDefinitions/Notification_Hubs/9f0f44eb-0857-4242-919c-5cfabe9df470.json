@@ -1,0 +1,70 @@
+{
+  "id": "/providers/Microsoft.Authorization/policyDefinitions/9f0f44eb-0857-4242-919c-5cfabe9df470",
+  "name": "9f0f44eb-0857-4242-919c-5cfabe9df470",
+  "properties": {
+    "description": "Description Custom Manual - MCSB Baseline item BR-1 for Notification Hubs",
+    "displayName": "MCSB Baseline item BR-1 for Notification Hubs",
+    "metadata": {
+      "offeringName": "Notification Hubs",
+      "offeringId": "36ef89ac-65c9-498d-95b4-5241f0b4f2e1",
+      "mcsb": {
+        "mcsbId": "BR-1",
+        "features": [
+          {
+            "featureId": "AZURE_BACKUP_SUPPORT",
+            "featureName": "Azure Backup",
+            "featureDescription": "The service can be backed up by the Azure Backup service.",
+            "featureSupport": "False",
+            "featureGuidance": "This feature is not supported to secure this service.",
+            "featureReference": "Not Applicable",
+            "enabledByDefault": "Not Applicable",
+            "customerActionsDescription": "Ensure regular automated backups"
+          },
+          {
+            "featureId": "NATIVE_BACKUP",
+            "featureName": "Service Native Backup Capability",
+            "featureDescription": "Service supports its own native backup capability (if not using Azure Backup).",
+            "featureSupport": "True",
+            "featureGuidance": "There are scenarios in which it is required to create or modify large numbers of registrations in a notification hub. Batch support is designed to support long-running jobs involving millions of registrations. To achieve this scale, batch support uses Azure Storage blob containers to store job details and output.",
+            "featureReference": "https://docs.microsoft.com/azure/notification-hubs/export-modify-registrations-bulk",
+            "enabledByDefault": "False",
+            "customerActionsDescription": "Ensure regular automated backups"
+          }
+        ],
+        "automatedPolicyAvailability": [],
+        "frameworkControls": [
+          "NIST_SP_800-53_R4_CP-9",
+          "NIST_SP_800-53_R4_CP-4",
+          "NIST_SP_800-53_R4_CP-2"
+        ]
+      },
+      "version": "1.0.0",
+      "category": "Regulatory Compliance"
+    },
+    "mode": "All",
+    "policyType": "Custom",
+    "policyRule": {
+      "if": {
+        "allOf": [
+          {
+            "field": "type",
+            "in": [
+              "Microsoft.Resources/subscriptions",
+              "Microsoft.Resources/subscriptions/resourceGroups"
+            ]
+          },
+          {
+            "value": "false",
+            "equals": "true"
+          }
+        ]
+      },
+      "then": {
+        "effect": "Manual",
+        "details": {
+          "defaultState": "Unknown"
+        }
+      }
+    }
+  }
+}

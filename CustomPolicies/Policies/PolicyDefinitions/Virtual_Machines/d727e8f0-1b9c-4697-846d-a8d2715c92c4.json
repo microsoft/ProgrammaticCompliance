@@ -1,0 +1,81 @@
+{
+  "id": "/providers/Microsoft.Authorization/policyDefinitions/d727e8f0-1b9c-4697-846d-a8d2715c92c4",
+  "name": "d727e8f0-1b9c-4697-846d-a8d2715c92c4",
+  "properties": {
+    "description": "Description Custom Manual - MCSB Baseline item PV-5 for Virtual Machines",
+    "displayName": "MCSB Baseline item PV-5 for Virtual Machines",
+    "metadata": {
+      "offeringName": "Virtual Machines",
+      "offeringId": "07649cbd-2ee4-4992-898b-f5f16bad1b36",
+      "mcsb": {
+        "mcsbId": "PV-5",
+        "features": [
+          {
+            "featureId": "VULNERABILITY_ASSESSMENT_USING_MICROSOFT_DEFENDER",
+            "featureName": "Vulnerability Assessment using Microsoft Defender",
+            "featureDescription": "Service can be scanned for vulnerability scan using Microsoft Defender for Cloud or other Microsoft Defender services embedded vulnerability assessment capability (including Microsoft Defender for server, container registry, App Service, SQL, and DNS).",
+            "featureSupport": "True",
+            "featureGuidance": "Follow recommendations from Microsoft Defender for Cloud for performing vulnerability assessments on your Azure virtual machines.",
+            "featureReference": "https://learn.microsoft.com/azure/defender-for-cloud/plan-defender-for-servers",
+            "enabledByDefault": "False",
+            "customerActionsDescription": "Perform vulnerability assessments"
+          }
+        ],
+        "automatedPolicyAvailability": [
+          {
+            "policyId": "501541f7-f7e7-4cd6-868c-4190fdad3ac9",
+            "policyName": "A vulnerability assessment solution should be enabled on your virtual machines",
+            "policyDescription": "Audits virtual machines to detect whether they are running a supported vulnerability assessment solution. A core component of every cyber risk and security program is the identification and analysis of vulnerabilities. Azure Security Center's standard pricing tier includes vulnerability scanning for your virtual machines at no extra cost. Additionally, Security Center can automatically deploy this tool for you.",
+            "policyCategory": "Security Center"
+          },
+          {
+            "policyId": "3ac7c827-eea2-4bde-acc7-9568cd320efa",
+            "policyName": "Machines should have secret findings resolved",
+            "policyDescription": "Audits virtual machines to detect whether they contain secret findings from the secret scanning solutions on your virtual machines.",
+            "policyCategory": "Security Center"
+          }
+        ],
+        "frameworkControls": [
+          "CIS_Azure_2.0.0_2.1.16",
+          "NIST_SP_800-53_R4_RA-5",
+          "NIST_SP_800-53_R4_RA-3",
+          "PCI_DSS_v4.0_11.3.2",
+          "PCI_DSS_v4.0_11.3.1",
+          "PCI_DSS_v4.0_2.2.1",
+          "PCI_DSS_v4.0_6.4.2",
+          "PCI_DSS_v4.0_6.4.1",
+          "PCI_DSS_v4.0_6.3.3",
+          "PCI_DSS_v4.0_6.3.2",
+          "PCI_DSS_v4.0_6.3.1"
+        ]
+      },
+      "version": "1.0.0",
+      "category": "Regulatory Compliance"
+    },
+    "mode": "All",
+    "policyType": "Custom",
+    "policyRule": {
+      "if": {
+        "allOf": [
+          {
+            "field": "type",
+            "in": [
+              "Microsoft.Resources/subscriptions",
+              "Microsoft.Resources/subscriptions/resourceGroups"
+            ]
+          },
+          {
+            "value": "false",
+            "equals": "true"
+          }
+        ]
+      },
+      "then": {
+        "effect": "Manual",
+        "details": {
+          "defaultState": "Unknown"
+        }
+      }
+    }
+  }
+}

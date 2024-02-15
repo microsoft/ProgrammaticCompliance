@@ -1,0 +1,75 @@
+{
+  "id": "/providers/Microsoft.Authorization/policyDefinitions/59b749e3-02c0-44e0-9432-840d538f07b2",
+  "name": "59b749e3-02c0-44e0-9432-840d538f07b2",
+  "properties": {
+    "description": "Description Custom Manual - MCSB Baseline item IM-3 for Key Vault",
+    "displayName": "MCSB Baseline item IM-3 for Key Vault",
+    "metadata": {
+      "offeringName": "Key Vault",
+      "offeringId": "8e93a1fd-5378-4ec7-a1e7-135f74745054",
+      "mcsb": {
+        "mcsbId": "IM-3",
+        "features": [
+          {
+            "featureId": "MANAGED_IDENTITIES",
+            "featureName": "Managed Identities",
+            "featureDescription": "Data plane actions support authentication using managed identities.",
+            "featureSupport": "True",
+            "featureGuidance": "Use Azure managed identities instead of service principals when possible, which can authenticate to Azure services and resources that support Azure Active Directory (Azure AD) authentication. Managed identity credentials are fully managed, rotated, and protected by the platform, avoiding hard-coded credentials in source code or configuration files.",
+            "featureReference": "https://docs.microsoft.com/azure/key-vault/general/authentication",
+            "enabledByDefault": "False",
+            "customerActionsDescription": "Manage application identities securely and automatically"
+          },
+          {
+            "featureId": "SERVICE_PRINCIPAL",
+            "featureName": "Service Principals",
+            "featureDescription": "Data plane supports authentication using service principals.",
+            "featureSupport": "True",
+            "featureGuidance": "It is recommended to use managed identities instead of service principals. When service principals have to be used, limit the usage to use case scenarios where non-user-based access is required and managed identities are not supported, such as automation flows or 3rd party system integrations.",
+            "featureReference": "https://docs.microsoft.com/azure/key-vault/general/authentication#security-principal-registration",
+            "enabledByDefault": "False",
+            "customerActionsDescription": "Manage application identities securely and automatically"
+          }
+        ],
+        "automatedPolicyAvailability": [],
+        "frameworkControls": [
+          "NIST_SP_800-53_R4_IA-5",
+          "NIST_SP_800-53_R4_AC-2",
+          "NIST_SP_800-53_R4_AC-3",
+          "NIST_SP_800-53_R4_IA-9",
+          "NIST_SP_800-53_R4_IA-4",
+          "PCI_DSS_v4.0_8.6.2",
+          "PCI_DSS_v4.0_8.6.3",
+          "PCI_DSS_v4.0_8.6.1"
+        ]
+      },
+      "version": "1.0.0",
+      "category": "Regulatory Compliance"
+    },
+    "mode": "All",
+    "policyType": "Custom",
+    "policyRule": {
+      "if": {
+        "allOf": [
+          {
+            "field": "type",
+            "in": [
+              "Microsoft.Resources/subscriptions",
+              "Microsoft.Resources/subscriptions/resourceGroups"
+            ]
+          },
+          {
+            "value": "false",
+            "equals": "true"
+          }
+        ]
+      },
+      "then": {
+        "effect": "Manual",
+        "details": {
+          "defaultState": "Unknown"
+        }
+      }
+    }
+  }
+}

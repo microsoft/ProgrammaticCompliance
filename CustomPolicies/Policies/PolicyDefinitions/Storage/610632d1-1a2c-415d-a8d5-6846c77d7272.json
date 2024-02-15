@@ -1,0 +1,84 @@
+{
+  "id": "/providers/Microsoft.Authorization/policyDefinitions/610632d1-1a2c-415d-a8d5-6846c77d7272",
+  "name": "610632d1-1a2c-415d-a8d5-6846c77d7272",
+  "properties": {
+    "description": "Description Custom Manual - MCSB Baseline item IM-1 for Storage",
+    "displayName": "MCSB Baseline item IM-1 for Storage",
+    "metadata": {
+      "offeringName": "Storage",
+      "offeringId": "c6b94711-f1f5-4e7e-9c89-c17ed4190969",
+      "mcsb": {
+        "mcsbId": "IM-1",
+        "features": [
+          {
+            "featureId": "AAD_AUTH_FOR_DATA_PLANE_ACCESS",
+            "featureName": "Azure AD Authentication Required for Data Plane Access",
+            "featureDescription": "Service supports using Azure AD authentication for data plane access.",
+            "featureSupport": "True",
+            "featureGuidance": "No additional configurations are required as this is enabled on a default deployment.",
+            "featureReference": "https://docs.microsoft.com/azure/storage/common/authorize-data-access?toc=/azure/storage/blobs/toc.json",
+            "enabledByDefault": "True",
+            "customerActionsDescription": "Use centralized identity and authentication system"
+          },
+          {
+            "featureId": "LOCAL_AUTH_METHODS_FOR_DATA_PLANE_ACCESS",
+            "featureName": "Local Authentication Methods for Data Plane Access",
+            "featureDescription": "Local authentications methods supported for data plane access, such as a local username and password.",
+            "featureSupport": "True",
+            "featureGuidance": "Restrict the use of local authentication methods for data plane access. Instead, use Azure Active Directory (Azure AD) as the default authentication method to control your data plane access.",
+            "featureReference": "https://docs.microsoft.com/azure/storage/blobs/secure-file-transfer-protocol-support#sftp-permission-model",
+            "enabledByDefault": "False",
+            "customerActionsDescription": "Use centralized identity and authentication system"
+          }
+        ],
+        "automatedPolicyAvailability": [
+          {
+            "policyId": "8c6a50c6-9ffd-4ae7-986f-5fa6111f9a54",
+            "policyName": "Storage accounts should prevent shared key access",
+            "policyDescription": "Audit requirement of Azure Active Directory (Azure AD) to authorize requests for your storage account. By default, requests can be authorized with either Azure Active Directory credentials, or by using the account access key for Shared Key authorization. Of these two types of authorization, Azure AD provides superior security and ease of use over Shared Key, and is recommended by Microsoft.",
+            "policyCategory": "Storage"
+          }
+        ],
+        "frameworkControls": [
+          "CIS_Azure_2.0.0_9.5",
+          "CIS_Azure_2.0.0_4.5.3",
+          "CIS_Azure_2.0.0_4.1.4",
+          "NIST_SP_800-53_R4_IA-8",
+          "NIST_SP_800-53_R4_IA-2",
+          "NIST_SP_800-53_R4_AC-3",
+          "NIST_SP_800-53_R4_AC-2",
+          "PCI_DSS_v4.0_8.2.1",
+          "PCI_DSS_v4.0_7.3.2",
+          "PCI_DSS_v4.0_7.3.1"
+        ]
+      },
+      "version": "1.0.0",
+      "category": "Regulatory Compliance"
+    },
+    "mode": "All",
+    "policyType": "Custom",
+    "policyRule": {
+      "if": {
+        "allOf": [
+          {
+            "field": "type",
+            "in": [
+              "Microsoft.Resources/subscriptions",
+              "Microsoft.Resources/subscriptions/resourceGroups"
+            ]
+          },
+          {
+            "value": "false",
+            "equals": "true"
+          }
+        ]
+      },
+      "then": {
+        "effect": "Manual",
+        "details": {
+          "defaultState": "Unknown"
+        }
+      }
+    }
+  }
+}

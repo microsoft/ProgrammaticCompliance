@@ -1,0 +1,75 @@
+{
+  "id": "/providers/Microsoft.Authorization/policyDefinitions/1b48a7c2-bcac-485d-948e-b8790109c9c5",
+  "name": "1b48a7c2-bcac-485d-948e-b8790109c9c5",
+  "properties": {
+    "description": "Description Custom Manual - MCSB Baseline item IM-3 for Azure Kubernetes Service (AKS)",
+    "displayName": "MCSB Baseline item IM-3 for Azure Kubernetes Service (AKS)",
+    "metadata": {
+      "offeringName": "Azure Kubernetes Service (AKS)",
+      "offeringId": "1f30fa84-8aae-4c27-92cf-f77bfdaf5958",
+      "mcsb": {
+        "mcsbId": "IM-3",
+        "features": [
+          {
+            "featureId": "MANAGED_IDENTITIES",
+            "featureName": "Managed Identities",
+            "featureDescription": "Data plane actions support authentication using managed identities.",
+            "featureSupport": "True",
+            "featureGuidance": "No additional configurations are required as this is enabled on a default deployment.",
+            "featureReference": "https://docs.microsoft.com/azure/aks/use-managed-identity",
+            "enabledByDefault": "True",
+            "customerActionsDescription": "Manage application identities securely and automatically"
+          },
+          {
+            "featureId": "SERVICE_PRINCIPAL",
+            "featureName": "Service Principals",
+            "featureDescription": "Data plane supports authentication using service principals.",
+            "featureSupport": "True",
+            "featureGuidance": "There is no current Microsoft guidance for this feature configuration. Please review and determine if your organization wants to configure this security feature.",
+            "featureReference": "https://docs.microsoft.com/azure/aks/kubernetes-service-principal?tabs=azure-cli",
+            "enabledByDefault": "False",
+            "customerActionsDescription": "Manage application identities securely and automatically"
+          }
+        ],
+        "automatedPolicyAvailability": [],
+        "frameworkControls": [
+          "NIST_SP_800-53_R4_AC-3",
+          "NIST_SP_800-53_R4_AC-2",
+          "NIST_SP_800-53_R4_IA-5",
+          "NIST_SP_800-53_R4_IA-9",
+          "NIST_SP_800-53_R4_IA-4",
+          "PCI_DSS_v4.0_8.6.3",
+          "PCI_DSS_v4.0_8.6.2",
+          "PCI_DSS_v4.0_8.6.1"
+        ]
+      },
+      "version": "1.0.0",
+      "category": "Regulatory Compliance"
+    },
+    "mode": "All",
+    "policyType": "Custom",
+    "policyRule": {
+      "if": {
+        "allOf": [
+          {
+            "field": "type",
+            "in": [
+              "Microsoft.Resources/subscriptions",
+              "Microsoft.Resources/subscriptions/resourceGroups"
+            ]
+          },
+          {
+            "value": "false",
+            "equals": "true"
+          }
+        ]
+      },
+      "then": {
+        "effect": "Manual",
+        "details": {
+          "defaultState": "Unknown"
+        }
+      }
+    }
+  }
+}

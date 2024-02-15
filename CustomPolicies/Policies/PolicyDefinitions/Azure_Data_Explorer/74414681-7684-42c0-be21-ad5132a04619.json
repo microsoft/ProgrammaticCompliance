@@ -1,0 +1,62 @@
+{
+  "id": "/providers/Microsoft.Authorization/policyDefinitions/74414681-7684-42c0-be21-ad5132a04619",
+  "name": "74414681-7684-42c0-be21-ad5132a04619",
+  "properties": {
+    "description": "Description Custom Manual - MCSB Baseline item DP-2 for Azure Data Explorer",
+    "displayName": "MCSB Baseline item DP-2 for Azure Data Explorer",
+    "metadata": {
+      "offeringName": "Azure Data Explorer",
+      "offeringId": "f69180f4-2eea-4124-a08d-c8ab3663a249",
+      "mcsb": {
+        "mcsbId": "DP-2",
+        "features": [
+          {
+            "featureId": "DATA_LEAKAGE/LOSS_PREVENTION",
+            "featureName": "Data Leakage/Loss Prevention",
+            "featureDescription": "Service supports DLP solution to monitor sensitive data movement (in customer's content).",
+            "featureSupport": "True",
+            "featureGuidance": "Restricting outbound access of your cluster is important to mitigate risks like data exfiltration. A malicious actor could potentially create an external table to a storage account and extract large amounts of data. You can control outbound access at the cluster level by defining callout policies. Managing callout policies enables you to allow outbound access to specified SQL, storage, or other endpoints.",
+            "featureReference": "https://docs.microsoft.com/azure/data-explorer/security-network-restrict-outbound-access",
+            "enabledByDefault": "False",
+            "customerActionsDescription": "Monitor anomalies and threats targeting sensitive data"
+          }
+        ],
+        "automatedPolicyAvailability": [],
+        "frameworkControls": [
+          "CIS_Azure_2.0.0_2.1.6",
+          "CIS_Azure_2.0.0_2.1.4",
+          "CIS_Azure_2.0.0_4.2.1",
+          "NIST_SP_800-53_R4_AC-4",
+          "NIST_SP_800-53_R4_SI-4"
+        ]
+      },
+      "version": "1.0.0",
+      "category": "Regulatory Compliance"
+    },
+    "mode": "All",
+    "policyType": "Custom",
+    "policyRule": {
+      "if": {
+        "allOf": [
+          {
+            "field": "type",
+            "in": [
+              "Microsoft.Resources/subscriptions",
+              "Microsoft.Resources/subscriptions/resourceGroups"
+            ]
+          },
+          {
+            "value": "false",
+            "equals": "true"
+          }
+        ]
+      },
+      "then": {
+        "effect": "Manual",
+        "details": {
+          "defaultState": "Unknown"
+        }
+      }
+    }
+  }
+}

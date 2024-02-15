@@ -1,0 +1,59 @@
+{
+  "id": "/providers/Microsoft.Authorization/policyDefinitions/2908c320-7fbf-4f33-8317-e3091f4c5802",
+  "name": "2908c320-7fbf-4f33-8317-e3091f4c5802",
+  "properties": {
+    "description": "Description Custom Manual - MCSB Baseline item DP-1 for Machine Learning Service",
+    "displayName": "MCSB Baseline item DP-1 for Machine Learning Service",
+    "metadata": {
+      "offeringName": "Machine Learning Service",
+      "offeringId": "72b76e95-fad8-45b8-9888-a61255034d11",
+      "mcsb": {
+        "mcsbId": "DP-1",
+        "features": [
+          {
+            "featureId": "SENSITIVE_DATA_DISCOVERY_AND_CLASSIFICATION",
+            "featureName": "Sensitive Data Discovery and Classification",
+            "featureDescription": "Tools (such as Azure Purview or Azure Information Protection) can be used for data discovery and classification in the service.",
+            "featureSupport": "True",
+            "featureGuidance": "Use tools such as Azure Purview, Azure Information Protection, and Azure SQL Data Discovery and Classification to centrally scan, classify and label any sensitive data that resides in Azure, on-premises, Microsoft 365, or other locations.",
+            "featureReference": "https://learn.microsoft.com/azure/purview/register-scan-azure-machine-learning",
+            "enabledByDefault": "False",
+            "customerActionsDescription": "Discover, classify, and label sensitive data\n\n"
+          }
+        ],
+        "automatedPolicyAvailability": [],
+        "frameworkControls": [
+          "NIST_SP_800-53_R4_SC-28",
+          "NIST_SP_800-53_R4_RA-2"
+        ]
+      },
+      "version": "1.0.0",
+      "category": "Regulatory Compliance"
+    },
+    "mode": "All",
+    "policyType": "Custom",
+    "policyRule": {
+      "if": {
+        "allOf": [
+          {
+            "field": "type",
+            "in": [
+              "Microsoft.Resources/subscriptions",
+              "Microsoft.Resources/subscriptions/resourceGroups"
+            ]
+          },
+          {
+            "value": "false",
+            "equals": "true"
+          }
+        ]
+      },
+      "then": {
+        "effect": "Manual",
+        "details": {
+          "defaultState": "Unknown"
+        }
+      }
+    }
+  }
+}

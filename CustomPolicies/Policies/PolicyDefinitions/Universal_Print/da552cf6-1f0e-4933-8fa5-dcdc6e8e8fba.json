@@ -1,0 +1,70 @@
+{
+  "id": "/providers/Microsoft.Authorization/policyDefinitions/da552cf6-1f0e-4933-8fa5-dcdc6e8e8fba",
+  "name": "da552cf6-1f0e-4933-8fa5-dcdc6e8e8fba",
+  "properties": {
+    "description": "Description Custom Manual - MCSB Baseline item PA-7 for Universal Print",
+    "displayName": "MCSB Baseline item PA-7 for Universal Print",
+    "metadata": {
+      "offeringName": "Universal Print",
+      "offeringId": "9ed6243f-ef2e-4279-9d3f-6621708eb5f2",
+      "mcsb": {
+        "mcsbId": "PA-7",
+        "features": [
+          {
+            "featureId": "AZURE_RBAC_DATAPLANE_SUPPORTED",
+            "featureName": "Azure RBAC for Data Plane",
+            "featureDescription": "Azure Role-Based Access Control (Azure RBAC) can be used to managed access to service's data plane actions.",
+            "featureSupport": "True",
+            "featureGuidance": "You can designate limited privilege administrators to manage printers. Universal Print introduced two roles into Azure AD:\r\n- Printer Administrator: Users in this role have full access to manage all aspects of printers in Universal Print.\r\n- Printer Technician: Can register and unregister printers and update printer status.",
+            "featureReference": "https://docs.microsoft.comuniversal-print/fundamentals/universal-print-administrator-roles",
+            "enabledByDefault": "False",
+            "customerActionsDescription": "Follow just enough administration (least privilege) principle"
+          }
+        ],
+        "automatedPolicyAvailability": [],
+        "frameworkControls": [
+          "CIS_Azure_2.0.0_1.24",
+          "CIS_Azure_2.0.0_4.5.3",
+          "NIST_SP_800-53_R4_AC-6",
+          "NIST_SP_800-53_R4_AC-2",
+          "NIST_SP_800-53_R4_AC-3",
+          "PCI_DSS_v4.0_7.2.5",
+          "PCI_DSS_v4.0_7.2.2",
+          "PCI_DSS_v4.0_7.2.1",
+          "PCI_DSS_v4.0_7.3.2",
+          "PCI_DSS_v4.0_7.3.1",
+          "PCI_DSS_v4.0_8.2.7",
+          "PCI_DSS_v4.0_7.3.3",
+          "PCI_DSS_v4.0_7.2.6"
+        ]
+      },
+      "version": "1.0.0",
+      "category": "Regulatory Compliance"
+    },
+    "mode": "All",
+    "policyType": "Custom",
+    "policyRule": {
+      "if": {
+        "allOf": [
+          {
+            "field": "type",
+            "in": [
+              "Microsoft.Resources/subscriptions",
+              "Microsoft.Resources/subscriptions/resourceGroups"
+            ]
+          },
+          {
+            "value": "false",
+            "equals": "true"
+          }
+        ]
+      },
+      "then": {
+        "effect": "Manual",
+        "details": {
+          "defaultState": "Unknown"
+        }
+      }
+    }
+  }
+}

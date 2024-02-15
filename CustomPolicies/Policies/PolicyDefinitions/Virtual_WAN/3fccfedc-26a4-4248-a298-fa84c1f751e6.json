@@ -1,0 +1,66 @@
+{
+  "id": "/providers/Microsoft.Authorization/policyDefinitions/3fccfedc-26a4-4248-a298-fa84c1f751e6",
+  "name": "3fccfedc-26a4-4248-a298-fa84c1f751e6",
+  "properties": {
+    "description": "Description Custom Manual - MCSB Baseline item DP-3 for Virtual WAN",
+    "displayName": "MCSB Baseline item DP-3 for Virtual WAN",
+    "metadata": {
+      "offeringName": "Virtual WAN",
+      "offeringId": "658a4a19-9c40-472b-a918-3f550848421a",
+      "mcsb": {
+        "mcsbId": "DP-3",
+        "features": [
+          {
+            "featureId": "DATA_IN_TRANSIT_ENCRYPTION",
+            "featureName": "Data in Transit Encryption",
+            "featureDescription": "Service supports data in-transit encryption for data plane.",
+            "featureSupport": "True",
+            "featureGuidance": "Enable secure transfer in services where there is a native data in transit encryption feature built in. Microsoft Azure Virtual WAN provides custom routing capabilities and offers encryption for your ExpressRoute traffic. All route management is provided by the virtual hub router, which also enables transit connectivity between virtual networks. Encrypting your ExpressRoute traffic with Virtual WAN provides an encrypted transit between the on-premises networks and Azure virtual networks over ExpressRoute, without going over the public internet or using public IP addresses.",
+            "featureReference": "https://docs.microsoft.com/azure/virtual-wan/vpn-over-expressroute",
+            "enabledByDefault": "False",
+            "customerActionsDescription": "Encrypt sensitive data in transit"
+          }
+        ],
+        "automatedPolicyAvailability": [],
+        "frameworkControls": [
+          "CIS_Azure_2.0.0_2.1.5",
+          "CIS_Azure_2.0.0_9.3",
+          "CIS_Azure_2.0.0_9.2",
+          "CIS_Azure_2.0.0_4.4.1",
+          "CIS_Azure_2.0.0_3.15",
+          "NIST_SP_800-53_R4_SC-8",
+          "PCI_DSS_v4.0_4.2.2",
+          "PCI_DSS_v4.0_4.2.1.2",
+          "PCI_DSS_v4.0_2.2.7"
+        ]
+      },
+      "version": "1.0.0",
+      "category": "Regulatory Compliance"
+    },
+    "mode": "All",
+    "policyType": "Custom",
+    "policyRule": {
+      "if": {
+        "allOf": [
+          {
+            "field": "type",
+            "in": [
+              "Microsoft.Resources/subscriptions",
+              "Microsoft.Resources/subscriptions/resourceGroups"
+            ]
+          },
+          {
+            "value": "false",
+            "equals": "true"
+          }
+        ]
+      },
+      "then": {
+        "effect": "Manual",
+        "details": {
+          "defaultState": "Unknown"
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,75 @@
+{
+  "id": "/providers/Microsoft.Authorization/policyDefinitions/23d1f3cd-2f11-4257-8498-378de38d861d",
+  "name": "23d1f3cd-2f11-4257-8498-378de38d861d",
+  "properties": {
+    "description": "Description Custom Manual - MCSB Baseline item IM-3 for Cost Management",
+    "displayName": "MCSB Baseline item IM-3 for Cost Management",
+    "metadata": {
+      "offeringName": "Cost Management",
+      "offeringId": "9b1b3bf5-762a-4a9e-8a1c-726e4857fbd6",
+      "mcsb": {
+        "mcsbId": "IM-3",
+        "features": [
+          {
+            "featureId": "MANAGED_IDENTITIES",
+            "featureName": "Managed Identities",
+            "featureDescription": "Data plane actions support authentication using managed identities.",
+            "featureSupport": "False",
+            "featureGuidance": "This feature is not supported to secure this service.",
+            "featureReference": "Not Applicable",
+            "enabledByDefault": "Not Applicable",
+            "customerActionsDescription": "Manage application identities securely and automatically"
+          },
+          {
+            "featureId": "SERVICE_PRINCIPAL",
+            "featureName": "Service Principals",
+            "featureDescription": "Data plane supports authentication using service principals.",
+            "featureSupport": "True",
+            "featureGuidance": "For services that don't support managed identities, use Azure Active Directory (Azure AD) to create a service principal with restricted permissions at the resource level. Configure service principals with certificate credentials and fall back to client secrets for authentication.\r\n\r\nAfter you create a service principal to programmatically call the Azure Resource Manager APIs, you need to assign it the proper permissions to authorize against and execute requests in Azure Resource Manager.",
+            "featureReference": "https://learn.microsoft.com/azure/cost-management-billing/automate/cost-management-api-permissions#assign-service-principal-access-to-azure-resource-manager-apis",
+            "enabledByDefault": "False",
+            "customerActionsDescription": "Manage application identities securely and automatically"
+          }
+        ],
+        "automatedPolicyAvailability": [],
+        "frameworkControls": [
+          "NIST_SP_800-53_R4_AC-3",
+          "NIST_SP_800-53_R4_AC-2",
+          "NIST_SP_800-53_R4_IA-5",
+          "NIST_SP_800-53_R4_IA-9",
+          "NIST_SP_800-53_R4_IA-4",
+          "PCI_DSS_v4.0_8.6.2",
+          "PCI_DSS_v4.0_8.6.3",
+          "PCI_DSS_v4.0_8.6.1"
+        ]
+      },
+      "version": "1.0.0",
+      "category": "Regulatory Compliance"
+    },
+    "mode": "All",
+    "policyType": "Custom",
+    "policyRule": {
+      "if": {
+        "allOf": [
+          {
+            "field": "type",
+            "in": [
+              "Microsoft.Resources/subscriptions",
+              "Microsoft.Resources/subscriptions/resourceGroups"
+            ]
+          },
+          {
+            "value": "false",
+            "equals": "true"
+          }
+        ]
+      },
+      "then": {
+        "effect": "Manual",
+        "details": {
+          "defaultState": "Unknown"
+        }
+      }
+    }
+  }
+}

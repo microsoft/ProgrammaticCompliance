@@ -1,0 +1,61 @@
+{
+  "id": "/providers/Microsoft.Authorization/policyDefinitions/b824cb02-26b7-4659-a3d3-e1462a8fca0b",
+  "name": "b824cb02-26b7-4659-a3d3-e1462a8fca0b",
+  "properties": {
+    "description": "Description Custom Manual - MCSB Baseline item IM-8 for Azure Web PubSub",
+    "displayName": "MCSB Baseline item IM-8 for Azure Web PubSub",
+    "metadata": {
+      "offeringName": "Azure Web PubSub",
+      "offeringId": "7f262d83-376b-45bf-9912-c0760d2c205c",
+      "mcsb": {
+        "mcsbId": "IM-8",
+        "features": [
+          {
+            "featureId": "AKV_SUPPORT_FOR_CREDENTIAL_AND_SECRETS",
+            "featureName": "Service Credential and Secrets Support Integration and Storage in Azure Key Vault",
+            "featureDescription": "Data plane supports native use of Azure Key Vault for credential and secrets store.",
+            "featureSupport": "True",
+            "featureGuidance": "Ensure that secrets and credentials are stored in secure locations such as Azure Key Vault, instead of embedding them into code or configuration files.",
+            "featureReference": "https://learn.microsoft.com/azure/azure-web-pubsub/howto-custom-domain?tabs=vault-access-policy%2Cazure-powershell#add-a-custom-certificate",
+            "enabledByDefault": "False",
+            "customerActionsDescription": "Restrict the exposure of credential and secrets"
+          }
+        ],
+        "automatedPolicyAvailability": [],
+        "frameworkControls": [
+          "CIS_Azure_2.0.0_3.3",
+          "NIST_SP_800-53_R4_IA-5",
+          "PCI_DSS_v4.0_8.6.2",
+          "PCI_DSS_v4.0_3.6.1"
+        ]
+      },
+      "version": "1.0.0",
+      "category": "Regulatory Compliance"
+    },
+    "mode": "All",
+    "policyType": "Custom",
+    "policyRule": {
+      "if": {
+        "allOf": [
+          {
+            "field": "type",
+            "in": [
+              "Microsoft.Resources/subscriptions",
+              "Microsoft.Resources/subscriptions/resourceGroups"
+            ]
+          },
+          {
+            "value": "false",
+            "equals": "true"
+          }
+        ]
+      },
+      "then": {
+        "effect": "Manual",
+        "details": {
+          "defaultState": "Unknown"
+        }
+      }
+    }
+  }
+}
