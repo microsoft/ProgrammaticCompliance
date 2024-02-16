@@ -35,10 +35,9 @@ const TableStates = (props) => {
         horizontalAlign="space-between">
         <Stack horizontal verticalAlign="center">
           <div>
-            <Text variant="mediumPlus" className="titleStyle">
+            <h2 variant="mediumPlus" className="titleStyle">
               {title}
-            </Text>
-            <br></br>
+            </h2>
             <Text variant="medium" className="subtitleStyle">
               {subtitle}
             </Text>

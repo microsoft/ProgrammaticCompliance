@@ -52,7 +52,7 @@ const MCSB = (props) => {
         <TooltipHost
           content="Identifier for specific control within the selected regulatory framework"
           closeDelay={1000}>
-          <Icon styles={{ root: { verticalAlign: "bottom", marginLeft: "5px" } }} iconName="info" aria-label="Tooltip"/>
+          <Icon styles={{ root: { verticalAlign: "bottom", marginLeft: "5px" } }} iconName="info" aria-label="Tooltip" />
         </TooltipHost>
       </>,
       fieldName: 'control',
@@ -76,7 +76,7 @@ const MCSB = (props) => {
             }
             closeDelay={1000}
           >
-            <Icon styles={{ root: { verticalAlign: "bottom", marginLeft: "5px", fontSize: '14px' } }} iconName="info" aria-label="Tooltip"/>
+            <Icon styles={{ root: { verticalAlign: "bottom", marginLeft: "5px", fontSize: '14px' } }} iconName="info" aria-label="Tooltip" />
           </TooltipHost>
         </>
       ),
@@ -91,7 +91,7 @@ const MCSB = (props) => {
         <TooltipHost
           content=<Link href={'https://azure.microsoft.com/products/'} target="_blank" rel="noopener noreferrer">Microsoft Cloud product</Link>
           closeDelay={1000}>
-          <Icon styles={{ root: { verticalAlign: "bottom", marginLeft: "5px" } }} iconName="info" aria-label="Tooltip"/>
+          <Icon styles={{ root: { verticalAlign: "bottom", marginLeft: "5px" } }} iconName="info" aria-label="Tooltip" />
         </TooltipHost>
       </>,
       fieldName: 'service',
@@ -105,7 +105,7 @@ const MCSB = (props) => {
         <TooltipHost
           content="Technical control a customer can configure to help achieve their compliance obligations"
           closeDelay={1000}>
-          <Icon styles={{ root: { verticalAlign: "bottom", marginLeft: "5px" } }} iconName="info" aria-label="Tooltip"/>
+          <Icon styles={{ root: { verticalAlign: "bottom", marginLeft: "5px" } }} iconName="info" aria-label="Tooltip" />
         </TooltipHost>
       </>,
       fieldName: 'name',
@@ -119,7 +119,7 @@ const MCSB = (props) => {
         <TooltipHost
           content="Describes whether a technical control is supported by a given service"
           closeDelay={1000}>
-          <Icon styles={{ root: { verticalAlign: "bottom", marginLeft: "5px" } }} iconName="info" aria-label="Tooltip"/>
+          <Icon styles={{ root: { verticalAlign: "bottom", marginLeft: "5px" } }} iconName="info" aria-label="Tooltip" />
         </TooltipHost>
       </>,
       fieldName: 'supported',
@@ -133,7 +133,7 @@ const MCSB = (props) => {
         <TooltipHost
           content="Description of the MCSB Feature for the given Service"
           closeDelay={1000}>
-          <Icon styles={{ root: { verticalAlign: "bottom", marginLeft: "5px" } }} iconName="info" aria-label="Tooltip"/>
+          <Icon styles={{ root: { verticalAlign: "bottom", marginLeft: "5px" } }} iconName="info" aria-label="Tooltip" />
         </TooltipHost>
       </>,
       fieldName: 'description',
@@ -147,7 +147,7 @@ const MCSB = (props) => {
         <TooltipHost
           content="Guidance to help customers configure the MCSB Feature for the given Service"
           closeDelay={1000}>
-          <Icon styles={{ root: { verticalAlign: "bottom", marginLeft: "5px" } }} iconName="info" aria-label="Tooltip"/>
+          <Icon styles={{ root: { verticalAlign: "bottom", marginLeft: "5px" } }} iconName="info" aria-label="Tooltip" />
         </TooltipHost>
       </>,
       fieldName: 'guidance',
@@ -161,7 +161,7 @@ const MCSB = (props) => {
         <TooltipHost
           content="Link to more information about the MCSB Feature for the given Service"
           closeDelay={1000}>
-          <Icon styles={{ root: { verticalAlign: "bottom", marginLeft: "5px" } }} iconName="info" aria-label="Tooltip"/>
+          <Icon styles={{ root: { verticalAlign: "bottom", marginLeft: "5px" } }} iconName="info" aria-label="Tooltip" />
         </TooltipHost>
       </>,
       fieldName: 'reference',
@@ -174,7 +174,7 @@ const MCSB = (props) => {
         }
         return (
           <Link href={item.reference} target="_blank" rel="noopener noreferrer">
-            <Icon iconName="OpenInNewWindow" style={{ marginRight: '4px' }} aria-label="Open in new tab"/>
+            <Icon iconName="OpenInNewWindow" style={{ marginRight: '4px' }} aria-label="Open in new tab" />
             See Docs
           </Link>
         );
@@ -452,10 +452,9 @@ const MCSB = (props) => {
         horizontalAlign="space-between">
         <Stack horizontal verticalAlign="center">
           <div>
-            <Text variant="mediumPlus" className="titleStyle">
+            <h2 className="titleStyle">
               {tableText.mcsbTitle}
-            </Text>
-            <br></br>
+            </h2>
             <Text variant="medium" className="subtitleStyle">
               {tableText.mcsbDescription}
             </Text>

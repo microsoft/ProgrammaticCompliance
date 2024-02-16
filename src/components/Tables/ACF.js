@@ -386,10 +386,9 @@ const ACF = (props) => {
         horizontalAlign="space-between">
         <Stack horizontal verticalAlign="center">
           <div>
-            <Text variant="mediumPlus" className="titleStyle">
+            <h2 className="titleStyle">
               {tableText.acfTitle}
-            </Text>
-            <br></br>
+            </h2>
             <Text variant="medium" className="subtitleStyle">
               {tableText.acfDescription}
             </Text>

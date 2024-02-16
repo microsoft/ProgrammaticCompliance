@@ -433,10 +433,9 @@ const POLICY = (props) => {
         horizontalAlign="space-between">
         <Stack horizontal verticalAlign="center">
           <div>
-            <Text variant="mediumPlus" className="titleStyle">
+            <h2 className="titleStyle">
               {tableText.policyTitle}
-            </Text>
-            <br></br>
+            </h2>
             <Text variant="medium" className="subtitleStyle">
               {tableText.policyDescription}
             </Text>
