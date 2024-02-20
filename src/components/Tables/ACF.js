@@ -28,6 +28,7 @@ const ACF = (props) => {
   const [modalData, setModalData] = useState({});
   const [isTableExpanded, setIsTableExpanded] = useState(true);
   const [isControlDescending, setIsControlDescending] = useState(true);
+  const [isSmallScreen, setIsSmallScreen] = useState(window.innerWidth <= 1300);
 
   const columns = [
     {
@@ -53,7 +54,7 @@ const ACF = (props) => {
         <TooltipHost
           content="Identifier for specific control within the selected regulatory framework"
           closeDelay={1000}>
-          <Icon styles={{ root: { verticalAlign: "bottom", marginLeft: "5px" } }} iconName="info" aria-label="Tooltip"/>
+          <Icon styles={{ root: { verticalAlign: "bottom", marginLeft: "5px" } }} iconName="info" aria-label="Tooltip" />
         </TooltipHost>
       </>,
       fieldName: 'control',
@@ -70,7 +71,7 @@ const ACF = (props) => {
         <TooltipHost
           content="Identifier for specific control within Azure Control Framework"
           closeDelay={1000}>
-          <Icon styles={{ root: { verticalAlign: "bottom", marginLeft: "5px" } }} iconName="info" aria-label="Tooltip"/>
+          <Icon styles={{ root: { verticalAlign: "bottom", marginLeft: "5px" } }} iconName="info" aria-label="Tooltip" />
         </TooltipHost>
       </>,
       fieldName: 'acfID',
@@ -84,7 +85,7 @@ const ACF = (props) => {
         <TooltipHost
           content="Summary of the actions Microsoft takes to help fulfill its compliance responsibilities when developing and operating the Microsoft Cloud"
           closeDelay={1000}>
-          <Icon styles={{ root: { verticalAlign: "bottom", marginLeft: "5px" } }} iconName="info" aria-label="Tooltip"/>
+          <Icon styles={{ root: { verticalAlign: "bottom", marginLeft: "5px" } }} iconName="info" aria-label="Tooltip" />
         </TooltipHost>
       </>,
       fieldName: 'description',
@@ -98,7 +99,7 @@ const ACF = (props) => {
         <TooltipHost
           content="Additional details about the actions Microsoft takes to help fulfill its compliance responsibilities when developing and operating the Microsoft Cloud"
           closeDelay={1000}>
-          <Icon styles={{ root: { verticalAlign: "bottom", marginLeft: "5px" } }} iconName="info" aria-label="Tooltip"/>
+          <Icon styles={{ root: { verticalAlign: "bottom", marginLeft: "5px" } }} iconName="info" aria-label="Tooltip" />
         </TooltipHost>
       </>,
       fieldName: 'details',
@@ -124,7 +125,7 @@ const ACF = (props) => {
       }
       setItems(reversedItems);
       setGroupedItems(groupedArray);
-    } 
+    }
   }
 
   function findLabelByValue(value) {
@@ -172,7 +173,7 @@ const ACF = (props) => {
       groups[controlId].push(item);
       return groups;
     }, {});
-  
+
     const groupedArray = Object.keys(groupedItems).map((key) => ({
       key,
       name: key,
@@ -180,13 +181,13 @@ const ACF = (props) => {
       count: groupedItems[key].length,
       isCollapsed: false,
     }));
-  
+
     groupedArray.sort((a, b) => {
       const getNumericParts = (str) => str.match(/\d+/g).map(Number) || [0];
-      
+
       const [alphaA, numsA] = [a.name.match(/[A-Za-z]+/)[0], getNumericParts(a.name)];
       const [alphaB, numsB] = [b.name.match(/[A-Za-z]+/)[0], getNumericParts(b.name)];
-  
+
       for (let i = 0; i < Math.max(numsA.length, numsB.length); i++) {
         const diff = numsA[i] - numsB[i];
         if (diff !== 0) {
@@ -195,7 +196,7 @@ const ACF = (props) => {
       }
       return alphaA.localeCompare(alphaB);
     });
-  
+
     return groupedArray;
   };
 
@@ -281,10 +282,10 @@ const ACF = (props) => {
   const nistTableLoad = (flattenedData) => {
     let sortedItems = flattenedData.sort((a, b) => {
       const getNumericParts = (str) => str.match(/\d+/g).map(Number) || [0];
-      
+
       const [alphaA, numsA] = [a.control.match(/[A-Za-z]+/)[0], getNumericParts(a.control)];
       const [alphaB, numsB] = [b.control.match(/[A-Za-z]+/)[0], getNumericParts(b.control)];
-  
+
       for (let i = 0; i < Math.max(numsA.length, numsB.length); i++) {
         const diff = numsA[i] - numsB[i];
         if (diff !== 0) {
@@ -293,11 +294,11 @@ const ACF = (props) => {
       }
       return alphaA.localeCompare(alphaB);
     });
-  
+
     setItems(sortedItems);
     setGroupedItems(groupAndSortNIST(sortedItems, false));
   };
-  
+
 
   const pciTableLoad = (flattenedData) => {
     let sortedItems = flattenedData.sort((a, b) => {
@@ -343,6 +344,19 @@ const ACF = (props) => {
   }
 
   useEffect(() => {
+    const handleResize = () => {
+      setIsSmallScreen(window.innerWidth < 1300);
+    };
+
+    window.addEventListener('resize', handleResize);
+
+    return () => {
+      <div className={isSmallScreen ? classNames.scrollable : ''}></div>
+      window.removeEventListener('resize', handleResize);
+    };
+  }, []);
+
+  useEffect(() => {
     const flattenedData = flattenData(props.data);
     if (props.framework === "NIST_SP_800-53_Rev4") {
       nistTableLoad(flattenedData);
@@ -386,25 +400,24 @@ const ACF = (props) => {
         horizontalAlign="space-between">
         <Stack horizontal verticalAlign="center">
           <div>
-            <Text variant="mediumPlus" className="titleStyle">
+            <h2 className="titleStyle">
               {tableText.acfTitle}
-            </Text>
-            <br></br>
+            </h2>
             <Text variant="medium" className="subtitleStyle">
               {tableText.acfDescription}
             </Text>
           </div>
         </Stack>
         <Icon
-        aria-label="Expand table"
+          aria-label="Expand table"
           iconName={isTableExpanded ? 'ChevronUp' : 'ChevronDown'}
           onClick={() => setIsTableExpanded(!isTableExpanded)}
-          style={{ fontSize: '15px', cursor: 'pointer', color: '#0078D4', paddingLeft: '15px', fontWeight: 'bold'}}
+          style={{ fontSize: '15px', cursor: 'pointer', color: '#0078D4', paddingLeft: '15px', fontWeight: 'bold' }}
         />
       </Stack>
 
       {isTableExpanded ? (
-        <div>
+        <div className={isSmallScreen ? classNames.scrollable : ''}>
           {items.length > 0 ? (
             <DetailsList
               items={items}

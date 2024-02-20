@@ -527,7 +527,7 @@ const FilterBar = ({ authToken }) => {
               options={frameworks}
               dropdownWidthAuto={true}
               styles={selectedFramework.length > 0 ? selectedFrameworkStyles : frameworkStyles}
-              aria-label="Framework Dropdown"
+              aria-label="Regulatory framework dropdown"
             />
           </div>
           <div className="select-dropdown">
@@ -548,7 +548,7 @@ const FilterBar = ({ authToken }) => {
                   </div>
                 );
               }}
-              aria-label="Service Dropdown"
+              aria-label="Service dropdown"
             />
           </div>
           <div className="select-dropdown">
@@ -569,7 +569,7 @@ const FilterBar = ({ authToken }) => {
                   </div>
                 );
               }}
-              aria-label="Control Domain Dropdown"
+              aria-label="Control domain dropdown"
             />
           </div>
           <div className="select-dropdown">
@@ -590,7 +590,7 @@ const FilterBar = ({ authToken }) => {
               }}
               dropdownWidthAuto={true}
               styles={selectedControls.length > 0 ? selectedControlStyles : controlStyles}
-              aria-label="Control ID Dropdown"
+              aria-label="Control ID dropdown"
             />
           </div>
           <div className="exportButton">
