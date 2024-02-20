@@ -43,16 +43,6 @@ stages:
       displayName: 'Publish npm artifact'
     - task: ComponentGovernanceComponentDetection@0
 
-    - task: Guardian@1
-      inputs:
-        break: true
-    
-    - task: TSAUpload@2
-      inputs:
-        GdnPublishTsaOnboard: true
-        GdnPublishTsaConfigFile: '$(Build.SourcesDirectory)/.gdn/.gdntsa'
-        GdnPublishTsaExportedResultsPublishable: true
-
     - task: PublishSecurityAnalysisLogs@3
       inputs:
         ArtifactName: 'CodeAnalysisLogs'
