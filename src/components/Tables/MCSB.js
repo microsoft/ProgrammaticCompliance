@@ -27,6 +27,7 @@ const MCSB = (props) => {
   const [modalData, setModalData] = useState({});
   const [isTableExpanded, setIsTableExpanded] = useState(true);
   const [isControlDescending, setIsControlDescending] = useState(true);
+  const [isSmallScreen, setIsSmallScreen] = useState(window.innerWidth <= 1300);
 
   const columns = [
     {
@@ -402,6 +403,19 @@ const MCSB = (props) => {
   }
 
   useEffect(() => {
+    const handleResize = () => {
+      setIsSmallScreen(window.innerWidth < 1300);
+    };
+
+    window.addEventListener('resize', handleResize);
+
+    return () => {
+      <div className={isSmallScreen ? classNames.scrollable : ''}></div>
+      window.removeEventListener('resize', handleResize);
+    };
+  }, []);
+
+  useEffect(() => {
     const flattenedData = flattenData(props.data);
     if (props.framework === "NIST_SP_800-53_Rev4") {
       nistTableLoad(flattenedData)
@@ -469,7 +483,7 @@ const MCSB = (props) => {
       </Stack>
 
       {isTableExpanded ? (
-        <div>
+        <div className={isSmallScreen ? classNames.scrollable : ''}>
           {items.length > 0 ? (
             <DetailsList
               items={items}

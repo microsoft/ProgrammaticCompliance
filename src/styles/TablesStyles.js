@@ -31,6 +31,9 @@ export const classNames = mergeStyleSets({
         width: '100%',
         overflow: 'hidden',
     },
+    scrollable: {
+        overflowX: 'auto', // Add horizontal scrollbar
+    },
 });
 
 export const focusZoneProps = {
