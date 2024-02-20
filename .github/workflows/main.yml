@@ -1,0 +1,76 @@
+name: Compliance frontend deployment
+
+on:
+    workflow_dispatch:
+    push:
+        branches:
+            - main
+            - jul-fetchAPI
+
+env:
+    ARM_CLIENT_ID: '${{ secrets.ARM_CLIENT_ID }}'
+    ARM_CLIENT_SECRET: '${{ secrets.ARM_CLIENT_SECRET }}'
+    ARM_SUBSCRIPTION_ID: '${{ vars.ARM_SUBSCRIPTION_ID }}'
+    ARM_TENANT_ID: '${{ vars.ARM_TENANT_ID }}'
+    TF_VAR_resource_group_name: '${{ vars.FRONTEND_RESOURCE_GROUP }}'
+    TF_VAR_location: '${{ vars.FRONTEND_LOCATION }}'
+    TF_VAR_azure_app_name: '${{ vars.AZURE_APP_NAME }}'
+    BACKEND_STORAGE_ACCOUNT_NAME: 'complianceterfrontendsa'
+    BACKEND_STORAGE_ACCOUNT_RG: 'complianceterfrontend_rg'
+    BACKEND_STORAGE_ACCOUNT_LOCATION: 'westus'
+    SCRIPTS_DIR: ./pipeline/scripts
+    TERRAFORM_DIR: ./pipeline/terraform
+    PACKAGE_PATH: '.'
+
+jobs:
+    compliance-deploy:
+        runs-on: ubuntu-latest
+
+        steps:
+            - uses: actions/checkout@v3
+
+            - name: Azure Login
+              uses: azure/login@v1
+              with:
+                creds: ${{ secrets.AZURE_CREDENTIALS }}
+            
+            - name: Azure CLI
+              uses: azure/CLI@v1
+              with:
+                azcliversion: 2.54.0
+                inlineScript: |
+                    az account set -s "${ARM_SUBSCRIPTION_ID}"
+                    chmod +x $SCRIPTS_DIR/create-terraform-storageAccount.sh
+                    $SCRIPTS_DIR/create-terraform-storageAccount.sh "${BACKEND_STORAGE_ACCOUNT_NAME}" "${BACKEND_STORAGE_ACCOUNT_RG}" "${BACKEND_STORAGE_ACCOUNT_LOCATION}" 
+
+            - name: Terraform setup
+              uses: hashicorp/setup-terraform@v2
+              with:
+                terraform_version: 1.6.4
+            
+            - name: Terraform init
+              working-directory: ${{ env.TERRAFORM_DIR }}
+              run: terraform init
+            
+            - name: Terraform plan
+              working-directory: ${{ env.TERRAFORM_DIR }}
+              run: terraform plan -no-color
+            
+            - name: Terraform apply
+              working-directory: ${{ env.TERRAFORM_DIR }}
+              run: terraform apply -auto-approve
+
+            - name: Set up Node.js
+              uses: actions/setup-node@v3
+              with:
+                node-version: '18.x'
+                cache: npm
+            
+            - name: npm install
+              run: npm install
+            
+            - name: Deploy to Azure
+              uses: azure/webapps-deploy@v2
+              with:
+                app-name: ${{ env.TF_VAR_azure_app_name }}
+                package: ${{ env.PACKAGE_PATH }}
