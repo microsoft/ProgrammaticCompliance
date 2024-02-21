@@ -78,3 +78,27 @@ Congrats! 🎉 You're in!
 
 ## Troubleshooting 🆘
 If the site fails to load, contact Julia with error logs. Copy & paste the terminal output if there are errors there. If not, "Inspect" the webpage in your browser, navigate to the "Output" tab, and screenshot that.
+
+# Tenant configuration - custom policy definitions creation
+Download the latest version of [PowerShell](https://learn.microsoft.com/en-us/powershell/scripting/install/installing-powershell-on-windows?view=powershell-7.4)
+
+## Local Machine configuration
+* Set the working directory to the PowerShell scripts directory
+```
+Set-Location -Path .\CustomPolicies\PowerShell
+```
+* Run the environment set up script with the powershell elevated privileges
+```
+.\EnvConfig.ps1
+```
+
+## Log into the tenant where all the custom policies will be installed
+One can configure a service principal and give it enough privileges to create the custom policies
+To run the login script with service principal use
+```
+.\Login.ps1 -ApplicationId <Service Principal client ID> -TenantId <Tenant ID>
+```
+To run the login script with the interactive auth run the script with just the tenant id as a parameter as follow
+```
+.\Login.ps1 -TenantId <Tenant ID>
+```
