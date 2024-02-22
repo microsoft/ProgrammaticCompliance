@@ -102,3 +102,30 @@ To run the login script with the interactive auth run the script with just the t
 ```
 .\Login.ps1 -TenantId <Tenant ID>
 ```
+
+## Create the custom policies
+* Create the management groups in which the custom policies will be created
+```
+.\CreateManagementGroup.ps1 -BaseName <base name of choice for the management group> -Start <starting index> -End <end index not inclusive>
+```
+
+* Create the custom policy definitions resources.
+- with a service principal
+```
+.\PoliciesCreate.ps1 -TenantId <the tenant id> -ApplicationId <the service principal id> -ManagementGroupIds <the array of the created management groups (comma separated)>
+```
+- with an interactive login
+```
+.\PoliciesCreate.ps1 -TenantId <the tenant id> -ManagementGroupIds <the array of the created management groups (comma separated)>
+```
+
+* Delete the custom policy definitions resources when they are not needed.
+- with a service principal
+```
+.\PoliciesCleanUp.ps1 -TenantId <the tenant id> -ApplicationId <the service principal id> -ManagementGroupIds <the array of the created management groups (comma separated)>
+```
+- with an interactive login
+```
+.\PoliciesCleanUp.ps1 -TenantId <the tenant id> -ManagementGroupIds <the array of the created management groups (comma separated)>
+```
+

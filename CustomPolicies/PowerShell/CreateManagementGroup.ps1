@@ -1,6 +1,6 @@
-param ([String] $BaseName, [int] $Start, [int] $Total)
+param ([String] $BaseName, [int] $Start, [int] $End)
 
-while ($Start -lt $Total) {
+while ($Start -lt $End) {
     $Name = "$BaseName" + "$Start"
     Write-Host "Creating the management group $Name"
     New-AzManagementGroup -GroupName $Name
