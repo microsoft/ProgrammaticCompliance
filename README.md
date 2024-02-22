@@ -93,7 +93,7 @@ Set-Location -Path .\CustomPolicies\PowerShell
 ```
 
 ## Log into the tenant where all the custom policies will be installed
-One can configure a service principal and give it enough privileges to create the custom policies
+One can configure a service principal and give it enough privileges to create the custom policies.
 To run the login script with service principal use
 ```
 .\Login.ps1 -ApplicationId <Service Principal client ID> -TenantId <Tenant ID>
@@ -110,21 +110,21 @@ To run the login script with the interactive auth run the script with just the t
 ```
 
 * Create the custom policy definitions resources.
-- with a service principal
+    - with a service principal
 ```
 .\PoliciesCreate.ps1 -TenantId <the tenant id> -ApplicationId <the service principal id> -ManagementGroupIds <the array of the created management groups (comma separated)>
 ```
-- with an interactive login
+    - with an interactive login
 ```
 .\PoliciesCreate.ps1 -TenantId <the tenant id> -ManagementGroupIds <the array of the created management groups (comma separated)>
 ```
 
 * Delete the custom policy definitions resources when they are not needed.
-- with a service principal
+    - with a service principal
 ```
 .\PoliciesCleanUp.ps1 -TenantId <the tenant id> -ApplicationId <the service principal id> -ManagementGroupIds <the array of the created management groups (comma separated)>
 ```
-- with an interactive login
+    - with an interactive login
 ```
 .\PoliciesCleanUp.ps1 -TenantId <the tenant id> -ManagementGroupIds <the array of the created management groups (comma separated)>
 ```
