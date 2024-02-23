@@ -3,7 +3,7 @@ resource "azurerm_service_plan" "sp" {
   resource_group_name   = var.app_resource_group_name
   location              = var.app_location
   os_type               = "Linux"
-  sku_name             = "P1v3"
+  sku_name              = "P1v3"
   worker_count          = var.worker_count
 }
 
@@ -33,6 +33,9 @@ resource "azurerm_linux_web_app" "webapp" {
     health_check_path                               = var.health_check_path
     health_check_eviction_time_in_min               = var.health_check_eviction_time_in_min
   }
+  identity {
+    type                                            = "SystemAssigned"
+  }   
   app_settings = {
     "APPLICATIONINSIGHTS_CONNECTION_STRING"         = var.appinsights_connection_string
     "ApplicationInsightsAgent_EXTENSION_VERSION"    = "~3"

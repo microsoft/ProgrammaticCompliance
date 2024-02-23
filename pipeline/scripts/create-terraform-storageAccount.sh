@@ -1,9 +1,9 @@
-#!/bin/bash
+﻿#!/bin/bash
 
 STORAGE_ACCOUNT_NAME=$1
 RESOURCE_GROUP_NAME=$2
 RESOURCE_GROUP_LOCATION=$3
-TERRAFORM_CONTAINER_NAME="terraform-state"
+TERRAFORM_CONTAINER_NAME=$4
 
 function ExitIfFailed {
 	if [ "$1" != 0 ]; then

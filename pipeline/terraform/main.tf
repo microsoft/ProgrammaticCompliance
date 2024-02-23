@@ -15,6 +15,10 @@ provider "azurerm" {
   }
 }
 
+data "azurerm_subscription" "sub" {
+  
+}
+
 resource "azurerm_resource_group" "rg" {
   name      = var.resource_group_name
   location  = var.location
@@ -35,3 +39,26 @@ module "webapp" {
   health_check_path                 = "/"
   health_check_eviction_time_in_min = 5
 }
+
+resource "azurerm_role_definition" "policyreader" {
+  name          = "Policy resources reader"
+  scope         = data.azurerm_subscription.sub.id
+  description   = "Custom role to read policy definitions, initiatives and policy metadata resources"
+  permissions {
+    actions     = [ 
+      "Microsoft.Authorization/policyDefinitions/read",
+      "Microsoft.Authorization/policySetDefinitions/read",
+      "Microsoft.PolicyInsights/policyMetadata/read"
+    ]
+    not_actions = []
+  }
+  assignable_scopes = [ data.azurerm_subscription.sub.id ]
+}
+
+resource "azurerm_role_assignment" "policyreaderrole" {
+  scope               = data.azurerm_subscription.sub.id
+  role_definition_id  = azurerm_role_definition.policyreader.role_definition_resource_id
+  principal_id        = module.webapp.webapp_principal_id
+}
+
+
