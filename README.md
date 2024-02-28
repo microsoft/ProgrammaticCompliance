@@ -80,6 +80,10 @@ Congrats! 🎉 You're in!
 If the site fails to load, contact Julia with error logs. Copy & paste the terminal output if there are errors there. If not, "Inspect" the webpage in your browser, navigate to the "Output" tab, and screenshot that.
 
 # Tenant configuration - custom policy definitions creation
+> [!NOTE]
+> The custom policies creation process is strictly for a non-production/testing environment (tenants or subscriptions) and destined for any user allowed in private preview. Once the policies are made available as built-in it is recommended to use the cleanup scripts to delete all the custom policies created during the private preview phase.
+
+
 Download the latest version of [PowerShell](https://learn.microsoft.com/en-us/powershell/scripting/install/installing-powershell-on-windows?view=powershell-7.4)
 
 ## Local Machine configuration
