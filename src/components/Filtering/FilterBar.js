@@ -10,7 +10,8 @@ import SearchableDropdown from './SearchableDropdown.js';
 
 import { frameworks, apiText } from '../../static/staticStrings.js';
 import { allDomains, allServices, allControls } from '../../requests/queries/Filters.Query.js';
-import { allACFs } from '../../requests/queries/ACF.Query.js';
+import { allACFs, filteredACFs } from '../../requests/queries/ACF.Query.js';
+import { filteredMCSB } from '../../requests/queries/MCSB.Query.js';
 
 import cisIDS from '../../static/cisControls.json';
 import cisDOMAINS from '../../static/cisDomains.json';
@@ -246,12 +247,8 @@ const FilterBar = ({ azureToken }) => {
         const controlPrefixes = new Set();
         data.forEach(item => {
           if (framework === "NIST_SP_800-53_R4") {
-            controlID = item.ControlID.split('_').pop();
-            text = item.properties1.title.split('|')[0];
-            var lastIndex = text.lastIndexOf("-");
-            if (lastIndex !== -1) {
-              text = text.substring(0, lastIndex);
-            }
+            controlID = item.properties.metadataId.replace(/\([^()]*\)/g, '');
+            controlID = controlID.trim().split(' ').pop();
             const controlPrefix = prefixExtractor(controlID);
             if (controlPrefix !== currentPrefix && !controlPrefixes.has(controlPrefix)) {
               controlPrefixes.add(controlPrefix)
@@ -267,9 +264,29 @@ const FilterBar = ({ azureToken }) => {
               controlKeys.add(sanitizedControlID);
               currentControls.push({
                 key: sanitizedControlID,
-                text: `${sanitizedControlID}: ${text}`,
+                text: `${sanitizedControlID}: ${item.properties.title}`,
               });
             }
+          } else {
+            controlID = item.properties.metadataId.split(' ').pop().trim();
+            const controlPrefix = prefixExtractor(controlID);
+            if (controlPrefix !== currentPrefix && !controlPrefixes.has(controlPrefix)) {
+              controlPrefixes.add(controlPrefix)
+              currentControls.push({
+                key: `${controlPrefix}`,
+                text: `${controlPrefix}`,
+                itemType: DropdownMenuItemType.Header,
+              });
+              currentPrefix = controlPrefix;
+            }
+            if (!controlKeys.has(controlID)) {
+              controlKeys.add(controlID);
+              currentControls.push({
+                key: controlID,
+                text: `${controlID}: ${item.properties.title}`,
+              });
+            }
+            setDefaultControls(currentControls);
           }
         });
         currentControls.sort((a, b) => {
@@ -287,7 +304,7 @@ const FilterBar = ({ azureToken }) => {
     setResponseData("onload")
     setACFData("onload")
     fetchServices()
-    //   fetchData();
+    fetchData();
     fetchACFData();
   }, []);
 
@@ -299,7 +316,7 @@ const FilterBar = ({ azureToken }) => {
 
   useEffect(() => {
     fetchServices();
-    //   fetchData();
+    fetchData();
   }, [selectedFramework, selectedServices, selectedControls]);
 
   useEffect(() => {
@@ -388,38 +405,12 @@ const FilterBar = ({ azureToken }) => {
   };
 
   const fetchData = async () => {
-    let fetchURL = apiText.mainEndpoint;
-    let controlIds = [];
-    if (selectedFramework.length > 0) {
-      setIsOnload(false);
-      setIsLoading(true);
-      fetchURL += "?standardName=";
-      fetchURL += selectedFramework;
-    }
-    if (selectedServices.length > 0) {
-      selectedServices.forEach(service => {
-        fetchURL += "&serviceNames=";
-        fetchURL += service;
-      });
-    }
-    if (selectedControls.length > 0) {
-      selectedControls.forEach(control => {
-        const controlIdWithoutSub = control.replace(/\([^)]*\)/g, '');
-        controlIds.push(controlIdWithoutSub);
-
-      });
-      controlIds = [...new Set(controlIds)];
-      controlIds.forEach(controlId => {
-        fetchURL += "&standardControlIds=";
-        fetchURL += controlId;
-      });
-    } else {
-      fetchURL = fetchURL.replace(/&standardIds=[^&]*/, '');
-    }
-    fetch(fetchURL, {
+    apiText.requestBody.query = filteredMCSB(selectedFramework, selectedServices, selectedControls);
+    fetch(apiText.mainEndpoint, {
       mode: 'cors',
-      method: 'GET',
+      method: 'POST',
       headers: myHeaders,
+      body: JSON.stringify(apiText.requestBody)
     })
       .then(response => {
         if (!response.ok) {
@@ -428,7 +419,8 @@ const FilterBar = ({ azureToken }) => {
         return response.json();
       })
       .then(data => {
-        setResponseData(data);
+        console.log("DATAR", data)
+        // setResponseData(data);
       })
       .catch(error => {
         console.error('API Error:', error);
@@ -445,19 +437,14 @@ const FilterBar = ({ azureToken }) => {
       setACFIsLoading(true);
       apiText.requestBody.query = allACFs(selectedFramework);
     }
-    // if (selectedControls.length > 0) {
-    //   selectedControls.forEach(control => {
-    //     const controlIdWithoutSub = control.replace(/\([^)]*\)/g, '');
-    //     controlIds.push(controlIdWithoutSub);
-    //   });
-    //   controlIds = [...new Set(controlIds)];
-    //   controlIds.forEach(controlId => {
-    //     URL += "&standardControlIds=";
-    //     URL += controlId;
-    //   });
-    // } else {
-    //   URL = URL.replace(/&standardIds=[^&]*/, '');
-    // }
+    if (selectedControls.length > 0) {
+      selectedControls.forEach(control => {
+        const controlIdWithoutSub = control.replace(/\([^)]*\)/g, '');
+        controlIds.push(controlIdWithoutSub);
+      });
+      controlIds = [...new Set(controlIds)];
+      apiText.requestBody.query = filteredACFs(selectedFramework, controlIds);
+    }
     fetch(apiText.mainEndpoint, {
       mode: 'cors',
       method: 'POST',

@@ -7,5 +7,5 @@ export const allServices = () => {
 };
 
 export const allControls = (framework) => {
-    return `policyresources | where type == 'microsoft.authorization/policydefinitions' | where properties.displayName startswith 'Custom - Microsoft Managed Control' | where properties.metadata.standardControlMappings contains '${framework}' | extend additionalMetadataId = tostring(properties.metadata.additionalMetadataId) | join kind=inner(policyresources | where type == 'microsoft.policyinsights/policymetadata' ) on $left.additionalMetadataId == $right.['id'] | project ControlIDs = properties.metadata.standardControlMappings, properties1, id1 | mv-expand ControlIDs to typeof(string) | where ControlIDs contains '${framework}' | project ControlID = ControlIDs, properties1, id1`
+    return `policyresources | where type == 'microsoft.policyinsights/policymetadata' | where name startswith '${framework}' | order by ['name'] asc`
 }
