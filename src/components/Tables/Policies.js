@@ -204,9 +204,9 @@ const POLICY = (props) => {
     if (sortableColumn.key === 'control') {
       setIsControlDescending(!isControlDescending);
       const reversedItems = items.reverse();
-      if (props.framework === "NIST_SP_800-53_Rev4") {
+      if (props.framework === "NIST_SP_800-53_R4") {
         groupedArray = groupAndSortNIST(reversedItems, isControlDescending);
-      } else if (props.framework === "CIS_Azure_Benchmark_v2.0.0") {
+      } else if (props.framework === "CIS_Azure_2.0.0") {
         groupedArray = groupAndSortCIS(reversedItems, isControlDescending);
       } else {
         groupedArray = groupAndSortPCI(reversedItems, isControlDescending);
@@ -399,7 +399,7 @@ const POLICY = (props) => {
 
   useEffect(() => {
     const flattenedData = flattenData(props.data);
-    if (props.framework === "NIST_SP_800-53_Rev4") {
+    if (props.framework === "NIST_SP_800-53_R4") {
       nistTableLoad(flattenedData)
     } else if (props.framework === "CIS_Azure_Benchmark_v2.0.0") {
       cisTableLoad(flattenedData)

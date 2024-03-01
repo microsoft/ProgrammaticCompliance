@@ -9,17 +9,16 @@ import ExportButton from '../ExportButton.js';
 import SearchableDropdown from './SearchableDropdown.js';
 
 import { frameworks, apiText } from '../../static/staticStrings.js';
-import nistIDS from '../../static/nistControls.json';
-import nistDOMAINS from '../../static/nistDomains.json';
+import { allDomains, allServices, allControls } from '../../requests/queries/Filters.Query.js';
+import { allACFs } from '../../requests/queries/ACF.Query.js';
+
 import cisIDS from '../../static/cisControls.json';
 import cisDOMAINS from '../../static/cisDomains.json';
-import pciIDS from '../../static/pciControls.json';
-import pciDOMAINS from '../../static/pciDomains.json';
 
 import { styles, frameworkStyles, selectedFrameworkStyles, serviceStyles, selectedServiceStyles, controlStyles, selectedControlStyles } from '../../styles/DropdownStyles.js';
 import '../../styles/FilterBar.css';
 
-const FilterBar = ({ authToken }) => {
+const FilterBar = ({ azureToken }) => {
   const [selectedFramework, setSelectedFramework] = useState([]);
   const [selectedServices, setSelectedServices] = useState([]);
   const [selectedControls, setSelectedControls] = useState([]);
@@ -36,6 +35,13 @@ const FilterBar = ({ authToken }) => {
   const [defaultDomains, setDefaultDomains] = useState([]);
   const [isExportButtonDisabled, setIsExportButtonDisabled] = useState(true);
 
+  // API SETUP
+  let TOKEN = `Bearer ${azureToken}`
+  const myHeaders = new Headers();
+  myHeaders.append('Authorization', TOKEN);
+  myHeaders.append('Accept', '*/*');
+  myHeaders.append('Content-Type', 'application/json');
+
   // UTILITY FUNCTIONS
   const sanitizeControlID = (controlId) => {
     const prefixMatch = controlId.match(/^[^:()]+/);
@@ -44,18 +50,15 @@ const FilterBar = ({ authToken }) => {
   };
 
   const customSort = (a, b) => {
-    const splitA = a.split('.').map(Number);
-    const splitB = b.split('.').map(Number);
+    const splitA = a.match(/([a-zA-Z]+)(-?\d*)/);
+    const splitB = b.match(/([a-zA-Z]+)(-?\d*)/);
 
-    for (let i = 0; i < Math.max(splitA.length, splitB.length); i++) {
-      const numA = splitA[i] || 0;
-      const numB = splitB[i] || 0;
+    if (splitA[1] < splitB[1]) return -1;
+    if (splitA[1] > splitB[1]) return 1;
 
-      if (numA !== numB) {
-        return numA - numB;
-      }
-    }
-    return a.length - b.length;
+    const numA = parseInt(splitA[2]) || 0;
+    const numB = parseInt(splitB[2]) || 0;
+    return numB - numA;
   };
 
   const countMaxTotal = (seekControl) => {
@@ -87,7 +90,7 @@ const FilterBar = ({ authToken }) => {
 
   const prefixExtractor = (control) => {
     if (control) {
-      if (selectedFramework === "NIST_SP_800-53_Rev4") {
+      if (selectedFramework === "NIST_SP_800-53_R4") {
         return control.split('-')[0];
       } else {
         return control.split('.')[0];
@@ -95,84 +98,188 @@ const FilterBar = ({ authToken }) => {
     }
   }
 
-  const populateFilters = (framework) => {
+  const populateDomains = (framework) => {
     let currentControls = [];
     let currentPrefix = '';
     let currentDomains = [];
     let IDS;
     let DOMAINS;
-    if (framework === "NIST_SP_800-53_Rev4") {
-      IDS = nistIDS;
-      DOMAINS = nistDOMAINS;
-      IDS.forEach((id, _) => {
-        const controlPrefix = prefixExtractor(id.value);
-        if (controlPrefix !== currentPrefix) {
-          currentControls.push({
-            text: `${controlPrefix}`,
-            itemType: DropdownMenuItemType.Header,
-          });
-          currentPrefix = controlPrefix;
+    let controlID;
+    let key;
+    let text;
+    apiText.requestBody.query = allDomains(framework);
+    fetch(apiText.mainEndpoint, {
+      mode: 'cors',
+      method: 'POST',
+      headers: myHeaders,
+      body: JSON.stringify(apiText.requestBody)
+    })
+      .then(response => {
+        if (!response.ok) {
+          throw new Error(`HTTP error! Status: ${response.status}`);
         }
-        currentControls.push({
-          key: sanitizeControlID(id.value),
-          text: id.label,
+        return response.json();
+      })
+      .then(result => {
+        const data = result.data;
+        const domainMap = {};
+        data.forEach(item => {
+          if (framework === "NIST_SP_800-53_R4") {
+            controlID = item.ControlID.split('_').pop().split('-')[0];
+            key = controlID;
+            text = `${controlID}: ${item.ControlDomain}`;
+          } else if (framework === "PCI_DSS_v4.0") {
+            controlID = item.ControlDomain.split(':')[0].split(' ')[1];
+            if (controlID.startsWith('0')) {
+              controlID = controlID.substring(1);
+            }
+            key = controlID;
+            text = `${controlID}: ${item.ControlDomain.split(':')[1]}`;
+          } else if (framework === "CIS_Azure_2.0.0") {
+            key = item.ControlDomain;
+            text = item.ControlDomain;
+          }
+          if (!domainMap[key]) {
+            domainMap[key] = text;
+          }
         });
+        const uniqueDomains = Object.values(domainMap).map(text => ({ key: text.split(': ')[0], text }));
+        setDefaultDomains(uniqueDomains);
+      })
+      .catch(error => {
+        console.error('API Error:', error);
       });
-      setDefaultControls(currentControls);
-    }
-    else if (framework === "CIS_Azure_Benchmark_v2.0.0") {
-      IDS = cisIDS;
-      DOMAINS = cisDOMAINS;
-      IDS.forEach((id, _) => {
-        const controlPrefix = prefixExtractor(id.value);
-        if (controlPrefix !== currentPrefix && !currentControls.some(item => item.text === controlPrefix)) {
-          currentControls.push({
-            text: `${controlPrefix}`,
-            itemType: DropdownMenuItemType.Header,
-          });
-          currentPrefix = controlPrefix;
+    // if (framework === "NIST_SP_800-53_R4") {
+    //   // IDS = nistIDS;
+    //   IDS.forEach((id, _) => {
+    //     const controlPrefix = prefixExtractor(id.value);
+    //     if (controlPrefix !== currentPrefix) {
+    //       currentControls.push({
+    //         text: `${controlPrefix}`,
+    //         itemType: DropdownMenuItemType.Header,
+    //       });
+    //       currentPrefix = controlPrefix;
+    //     }
+    //     currentControls.push({
+    //       key: sanitizeControlID(id.value),
+    //       text: id.label,
+    //     });
+    //   });
+    //   setDefaultControls(currentControls);
+    // }
+    // else if (framework === "CIS_Azure_Benchmark_v2.0.0") {
+    //   IDS = cisIDS;
+    //   DOMAINS = cisDOMAINS;
+    //   IDS.forEach((id, _) => {
+    //     const controlPrefix = prefixExtractor(id.value);
+    //     if (controlPrefix !== currentPrefix && !currentControls.some(item => item.text === controlPrefix)) {
+    //       currentControls.push({
+    //         text: `${controlPrefix}`,
+    //         itemType: DropdownMenuItemType.Header,
+    //       });
+    //       currentPrefix = controlPrefix;
+    //     }
+    //     currentControls.push({
+    //       key: sanitizeControlID(id.value),
+    //       text: id.label,
+    //     });
+    //   });
+    //   currentControls.sort((a, b) => {
+    //     const partA = a.text.split(':')[0].trim();
+    //     const partB = b.text.split(':')[0].trim();
+    //     return customSort(partA, partB);
+    //   });
+    //   setDefaultControls(currentControls);
+    // }
+    // else {
+    //   IDS = pciIDS;
+    //   DOMAINS = pciDOMAINS
+    //   IDS.forEach((id, _) => {
+    //     const dotIndex = id.value.indexOf('.', id.value.indexOf('.') + 1);
+    //     const controlPrefix = dotIndex !== -1 ? id.value.slice(0, dotIndex) : id.value;
+    //     if (controlPrefix !== currentPrefix) {
+    //       currentControls.push({
+    //         text: `${controlPrefix}`,
+    //         itemType: DropdownMenuItemType.Header,
+    //       });
+    //       currentPrefix = controlPrefix;
+    //     }
+    //     currentControls.push({
+    //       key: sanitizeControlID(id.value),
+    //       text: id.label,
+    //     });
+    //   });
+    //   currentControls.sort((a, b) => {
+    //     const partA = a.text.split(':')[0].trim();
+    //     const partB = b.text.split(':')[0].trim();
+    //     return customSort(partA, partB);
+    //   });
+    //   setDefaultControls(currentControls);
+    // }
+    // currentDomains = DOMAINS.map(domain => {
+    //   return { key: domain.value, text: domain.label };
+    // });
+    // setDefaultDomains(currentDomains);
+  }
+
+  const populateControls = (framework) => {
+    let currentControls = [];
+    let currentPrefix = '';
+    let controlID;
+    let text;
+    apiText.requestBody.query = allControls(framework);
+    fetch(apiText.mainEndpoint, {
+      mode: 'cors',
+      method: 'POST',
+      headers: myHeaders,
+      body: JSON.stringify(apiText.requestBody)
+    })
+      .then(response => {
+        if (!response.ok) {
+          throw new Error(`HTTP error! Status: ${response.status}`);
         }
-        currentControls.push({
-          key: sanitizeControlID(id.value),
-          text: id.label,
+        return response.json();
+      })
+      .then(result => {
+        const data = result.data;
+        const controlKeys = new Set();
+        const controlPrefixes = new Set();
+        data.forEach(item => {
+          if (framework === "NIST_SP_800-53_R4") {
+            controlID = item.ControlID.split('_').pop();
+            text = item.properties1.title.split('|')[0];
+            var lastIndex = text.lastIndexOf("-");
+            if (lastIndex !== -1) {
+              text = text.substring(0, lastIndex);
+            }
+            const controlPrefix = prefixExtractor(controlID);
+            if (controlPrefix !== currentPrefix && !controlPrefixes.has(controlPrefix)) {
+              controlPrefixes.add(controlPrefix)
+              currentControls.push({
+                key: `${controlPrefix}`,
+                text: `${controlPrefix}`,
+                itemType: DropdownMenuItemType.Header,
+              });
+              currentPrefix = controlPrefix;
+            }
+            const sanitizedControlID = sanitizeControlID(controlID);
+            if (!controlKeys.has(sanitizedControlID)) {
+              controlKeys.add(sanitizedControlID);
+              currentControls.push({
+                key: sanitizedControlID,
+                text: `${sanitizedControlID}: ${text}`,
+              });
+            }
+          }
         });
-      });
-      currentControls.sort((a, b) => {
-        const partA = a.text.split(':')[0].trim();
-        const partB = b.text.split(':')[0].trim();
-        return customSort(partA, partB);
-      });
-      setDefaultControls(currentControls);
-    }
-    else {
-      IDS = pciIDS;
-      DOMAINS = pciDOMAINS
-      IDS.forEach((id, _) => {
-        const dotIndex = id.value.indexOf('.', id.value.indexOf('.') + 1);
-        const controlPrefix = dotIndex !== -1 ? id.value.slice(0, dotIndex) : id.value;
-        if (controlPrefix !== currentPrefix) {
-          currentControls.push({
-            text: `${controlPrefix}`,
-            itemType: DropdownMenuItemType.Header,
-          });
-          currentPrefix = controlPrefix;
-        }
-        currentControls.push({
-          key: sanitizeControlID(id.value),
-          text: id.label,
+        currentControls.sort((a, b) => {
+          return customSort(a.key, b.key);
         });
+        setDefaultControls(currentControls);
+      })
+      .catch(error => {
+        console.error('API Error:', error);
       });
-      currentControls.sort((a, b) => {
-        const partA = a.text.split(':')[0].trim();
-        const partB = b.text.split(':')[0].trim();
-        return customSort(partA, partB);
-      });
-      setDefaultControls(currentControls);
-    }
-    currentDomains = DOMAINS.map(domain => {
-      return { key: domain.value, text: domain.label };
-    });
-    setDefaultDomains(currentDomains);
   }
 
   // USEEFFECT HOOKS
@@ -180,24 +287,24 @@ const FilterBar = ({ authToken }) => {
     setResponseData("onload")
     setACFData("onload")
     fetchServices()
-    fetchData();
+    //   fetchData();
     fetchACFData();
   }, []);
 
   useEffect(() => {
     setIsExportButtonDisabled(selectedFramework.length === 0);
-    populateFilters(selectedFramework);
+    populateDomains(selectedFramework);
+    populateControls(selectedFramework);
   }, [selectedFramework]);
 
   useEffect(() => {
     fetchServices();
-    fetchData();
+    //   fetchData();
   }, [selectedFramework, selectedServices, selectedControls]);
 
   useEffect(() => {
     fetchACFData();
   }, [selectedFramework, selectedControls]);
-
 
   useEffect(() => {
     if (controlFocus) {
@@ -252,21 +359,13 @@ const FilterBar = ({ authToken }) => {
     }
   }, [selectedControls]);
 
-  // API SETUP / FETCH
-  let KEY = apiText.subscription
-  let TOKEN = `Bearer ${authToken}`
-  const myHeaders = new Headers();
-
-  myHeaders.append('Ocp-Apim-Subscription-Key', KEY);
-  myHeaders.append('Authorization', TOKEN);
-  myHeaders.append('Accept', 'application/json');
-
   const fetchServices = async () => {
-    let servicesURL = apiText.serviceEndpoint;
-    fetch(servicesURL, {
+    apiText.requestBody.query = allServices();
+    fetch(apiText.mainEndpoint, {
       mode: 'cors',
-      method: 'GET',
+      method: 'POST',
       headers: myHeaders,
+      body: JSON.stringify(apiText.requestBody)
     })
       .then(response => {
         if (!response.ok) {
@@ -274,10 +373,11 @@ const FilterBar = ({ authToken }) => {
         }
         return response.json();
       })
-      .then(data => {
-        const transformedData = data.map(service => ({
-          key: service['Service Name'],
-          text: service['Service Name'],
+      .then(result => {
+        const data = result.data;
+        const transformedData = data.map(item => ({
+          key: item.Service,
+          text: item.Service,
         }));
         transformedData.sort((a, b) => a.text.localeCompare(b.text));
         setServices(transformedData);
@@ -337,33 +437,32 @@ const FilterBar = ({ authToken }) => {
         setIsLoading(false);
       });
   };
-  
+
   const fetchACFData = async () => {
-    let fetchURL = apiText.mainEndpoint;
     let controlIds = [];
     if (selectedFramework.length > 0) {
       setIsOnload(false);
       setACFIsLoading(true);
-      fetchURL += "?standardName=";
-      fetchURL += selectedFramework;
+      apiText.requestBody.query = allACFs(selectedFramework);
     }
-    if (selectedControls.length > 0) {
-      selectedControls.forEach(control => {
-        const controlIdWithoutSub = control.replace(/\([^)]*\)/g, '');
-        controlIds.push(controlIdWithoutSub);
-      });
-      controlIds = [...new Set(controlIds)];
-      controlIds.forEach(controlId => {
-        fetchURL += "&standardControlIds=";
-        fetchURL += controlId;
-      });
-    } else {
-      fetchURL = fetchURL.replace(/&standardIds=[^&]*/, '');
-    }
-    fetch(fetchURL, {
+    // if (selectedControls.length > 0) {
+    //   selectedControls.forEach(control => {
+    //     const controlIdWithoutSub = control.replace(/\([^)]*\)/g, '');
+    //     controlIds.push(controlIdWithoutSub);
+    //   });
+    //   controlIds = [...new Set(controlIds)];
+    //   controlIds.forEach(controlId => {
+    //     URL += "&standardControlIds=";
+    //     URL += controlId;
+    //   });
+    // } else {
+    //   URL = URL.replace(/&standardIds=[^&]*/, '');
+    // }
+    fetch(apiText.mainEndpoint, {
       mode: 'cors',
-      method: 'GET',
+      method: 'POST',
       headers: myHeaders,
+      body: JSON.stringify(apiText.requestBody)
     })
       .then(response => {
         if (!response.ok) {
@@ -371,8 +470,9 @@ const FilterBar = ({ authToken }) => {
         }
         return response.json();
       })
-      .then(data => {
-        setACFData(data);
+      .then(result => {
+        console.log("ACF DATER", result.data)
+        setACFData(result.data);
       })
       .catch(error => {
         console.error('API Error:', error);
@@ -594,7 +694,7 @@ const FilterBar = ({ authToken }) => {
             />
           </div>
           <div className="exportButton">
-            <ExportButton apiData={responseData} disabled={isExportButtonDisabled} acfData={acfData}/>
+            <ExportButton apiData={responseData} disabled={isExportButtonDisabled} acfData={acfData} />
           </div>
         </div>
       </div>

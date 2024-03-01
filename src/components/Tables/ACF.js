@@ -116,9 +116,9 @@ const ACF = (props) => {
       setIsControlDescending(!isControlDescending);
       const reversedItems = items.reverse();
 
-      if (props.framework === "NIST_SP_800-53_Rev4") {
+      if (props.framework === "NIST_SP_800-53_R4") {
         groupedArray = groupAndSortNIST(reversedItems, isControlDescending);
-      } else if (props.framework === "CIS_Azure_Benchmark_v2.0.0") {
+      } else if (props.framework === "CIS_Azure_2.0.0") {
         groupedArray = groupAndSortCIS(reversedItems, isControlDescending);
       } else {
         groupedArray = groupAndSortPCI(reversedItems, isControlDescending);
@@ -356,9 +356,10 @@ const ACF = (props) => {
     };
   }, []);
 
+  // ENTRY POINT
   useEffect(() => {
     const flattenedData = flattenData(props.data);
-    if (props.framework === "NIST_SP_800-53_Rev4") {
+    if (props.framework === "NIST_SP_800-53_R4") {
       nistTableLoad(flattenedData);
     } else if (props.framework === "CIS_Azure_Benchmark_v2.0.0") {
       cisTableLoad(flattenedData);
@@ -369,24 +370,13 @@ const ACF = (props) => {
 
   function flattenData(dataset) {
     const temp = [];
-    dataset.forEach((service) => {
-      const serviceName = service['Service Name'];
-      service['Standard Controls'].forEach((control) => {
-        const controlID = control['Standard Control ID'];
-        const controlName = control['Standard Control Name'];
-        const acfBaseline = control['ACF Baseline'];
-        const sanitizedControlName = controlName ? controlName.replace(/[^\w.,: ]/g, '') : '';
-
-        acfBaseline.forEach((baselineItem) => {
-          temp.push({
-            acfID: baselineItem['ACF ID'],
-            control: `${controlID}: ${sanitizedControlName}`,
-            responsibility: baselineItem['Compliance | Responsibility'],
-            description: baselineItem['Microsoft Managed Actions - Description'],
-            details: baselineItem['Microsoft Managed Actions - Details'],
-            service: serviceName,
-          });
-        });
+    dataset.forEach((row) => {
+      temp.push({
+        acfID: row.AzureControlFrameworkID,
+        control: row.ControlID.split("_").pop(),
+        // responsibility: baselineItem['Compliance | Responsibility'],
+        description: row.MicrosoftManagedActionsDescription,
+        details: row.MicrosoftManagedActionsDetails,
       });
     });
     return temp;

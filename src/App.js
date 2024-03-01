@@ -12,19 +12,21 @@ import { appText } from './static/staticStrings.js';
 
 import "./styles/Modal.css";
 import './styles/index.css';
+import { useAuthorizeUser } from './hooks/getAzureToken.js';
 
 function MainApp() {
 
   const [isCalloutVisible, { toggle: toggleIsCalloutVisible }] = useBoolean(false);
   const isAuthenticated = useIsAuthenticated();
   const { inProgress, instance, accounts } = useMsal();
-  const [authToken, setAuthToken] = useState("");
+  const [userToken, setUserToken] = useState("");   // Who am I?
+  const { azureToken } = useAuthorizeUser({ isAuthenticated, inProgress, accounts, instance }); // ARG API auth token
 
-  const fetchData = async () => {
+  const getUserToken = async () => {
     try {
       const response = await instance.acquireTokenSilent({
         authority: msalConfig.auth.authority,
-        scopes: [tokenConfig.apiDataEndpoint],
+        scopes: [tokenConfig.managementEndpoint],
         account: accounts[0],
       }, {
         onTokenFailure: async (error) => {
@@ -32,7 +34,7 @@ function MainApp() {
             try {
               await instance.loginRedirect({
                 authority: msalConfig.auth.authority,
-                scopes: [tokenConfig.apiDataEndpoint],
+                scopes: [tokenConfig.managementEndpoint],
               });
             } catch (loginError) {
               console.error("Error during loginRedirect:", loginError);
@@ -42,40 +44,25 @@ function MainApp() {
           }
         },
       });
-
-      setAuthToken(response.accessToken);
+      setUserToken(response.accessToken);
     } catch (error) {
       console.error("Error fetching data:", error);
     }
   };
 
   useEffect(() => {
-    const fetchDataIfAuthenticated = async () => {
-      if (isAuthenticated && inProgress === InteractionStatus.None) {
-        fetchData();
-      }
-    };
-
-    fetchDataIfAuthenticated();
-  }, [isAuthenticated, inProgress, accounts, instance]);
+    console.log('elbert has azure token: ', azureToken);
+  }, [azureToken])
 
   useEffect(() => {
-    const loginRedirectIfNotAuthenticated = async () => {
-      if (!isAuthenticated && inProgress === InteractionStatus.None) {
-        try {
-          await instance.loginRedirect({
-            authority: msalConfig.auth.authority,
-            scopes: [tokenConfig.apiDataEndpoint],
-
-          });
-        } catch (error) {
-          console.error("Error during loginRedirect:", error);
-        }
+    const getUserTokenIfAuthenticated = async () => {
+      if (isAuthenticated && inProgress === InteractionStatus.None) {
+        getUserToken();
       }
     };
 
-    loginRedirectIfNotAuthenticated();
-  }, [isAuthenticated, inProgress, instance]);
+    getUserTokenIfAuthenticated();
+  }, [isAuthenticated, inProgress, accounts, instance]);
 
   const styles = mergeStyleSets({
     callout: {
@@ -108,7 +95,7 @@ function MainApp() {
             {appText.readMoreButton}
           </Link>
         </p>
-        <FilterBar authToken={authToken} />
+        <FilterBar azureToken={azureToken}/>
         <p></p>
         <p></p>
       </div>
