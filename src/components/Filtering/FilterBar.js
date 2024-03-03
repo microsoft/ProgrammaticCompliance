@@ -9,10 +9,11 @@ import ExportButton from '../ExportButton.js';
 import SearchableDropdown from './SearchableDropdown.js';
 
 import { frameworks, apiText } from '../../static/staticStrings.js';
-import { allDomains, allServices, allControls } from '../../requests/queries/Filters.Query.js';
-import { allACFs, filteredACFs } from '../../requests/queries/ACF.Query.js';
-import { filteredMCSB } from '../../requests/queries/MCSB.Query.js';
+import { allDomains, allServices, allControls } from '../../queries/Filters.Query.js';
+import { allACFs, filteredACFs } from '../../queries/ACF.Query.js';
+import { filteredMCSB } from '../../queries/MCSB.Query.js';
 
+// need to add domain names to CIS ACF data
 import cisIDS from '../../static/cisControls.json';
 import cisDOMAINS from '../../static/cisDomains.json';
 
@@ -100,11 +101,6 @@ const FilterBar = ({ azureToken }) => {
   }
 
   const populateDomains = (framework) => {
-    let currentControls = [];
-    let currentPrefix = '';
-    let currentDomains = [];
-    let IDS;
-    let DOMAINS;
     let controlID;
     let key;
     let text;
@@ -303,7 +299,6 @@ const FilterBar = ({ azureToken }) => {
   useEffect(() => {
     setResponseData("onload")
     setACFData("onload")
-    fetchServices()
     fetchData();
     fetchACFData();
   }, []);
@@ -418,9 +413,8 @@ const FilterBar = ({ azureToken }) => {
         }
         return response.json();
       })
-      .then(data => {
-        console.log("DATAR", data)
-        // setResponseData(data);
+      .then(response => {
+        setResponseData(response.data);
       })
       .catch(error => {
         console.error('API Error:', error);
@@ -458,7 +452,6 @@ const FilterBar = ({ azureToken }) => {
         return response.json();
       })
       .then(result => {
-        console.log("ACF DATER", result.data)
         setACFData(result.data);
       })
       .catch(error => {
@@ -721,13 +714,13 @@ const FilterBar = ({ azureToken }) => {
             isLoading ? (
               <TableStates type="MCSB" variant="Loading" />
             ) : (
-              responseData && <MCSB data={responseData} framework={selectedFramework} />
+              responseData && <MCSB data={responseData} framework={selectedFramework} controls={selectedControls}/>
             )
           ))
         }
       </div>
       <p></p>
-      <div>
+      {/* <div>
         {
           isOnload ? (
             <TableStates type="Policy" variant="Onload" />
@@ -739,7 +732,7 @@ const FilterBar = ({ azureToken }) => {
             )
           ))
         }
-      </div>
+      </div> */}
     </div>
   );
 };

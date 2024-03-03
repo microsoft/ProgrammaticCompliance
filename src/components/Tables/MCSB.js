@@ -12,6 +12,8 @@ initializeIcons();
 
 const MCSB = (props) => {
 
+  let controlIDSet = new Set(props.controls);
+
   const onItemInvoked = (item) => {
     setModalData(item);
     setIsModalOpen(true);
@@ -397,7 +399,6 @@ const MCSB = (props) => {
       }
       return sanitizeControlID(a.control).localeCompare(sanitizeControlID(b.control));
     });
-
     setItems(sortedItems);
     setGroupedItems(groupAndSortCIS(sortedItems, false));
   }
@@ -428,32 +429,51 @@ const MCSB = (props) => {
 
   function flattenData(dataset) {
     const temp = [];
-    dataset.forEach((service) => {
-      const serviceName = service['Service Name'];
-      service['Standard Controls'].forEach((control) => {
-        const controlID = control['Standard Control ID'];
-        const controlName = control['Standard Control Name'];
-        const mcsbBaseline = control['MCSB Baseline'];
-        const sanitizedControlName = controlName ? controlName.replace(/[^\w.,: ]/g, '') : '';
-
-        mcsbBaseline.forEach((baselineItem) => {
-          const feature = baselineItem['Features'];
-          feature.forEach((feature) => {
-            temp.push({
-              mcsbID: baselineItem['MCSB ID'],
-              control: `${controlID}: ${sanitizedControlName}`,
-              service: serviceName,
-              name: feature['Feature Name'],
-              actions: feature['Customer Actions Description'],
-              supported: feature['Feature Support'],
-              enabled: feature['Enabled by Default'],
-              description: feature['Feature Description'],
-              guidance: feature['Feature Guidance'],
-              reference: feature['Feature Reference'],
+    dataset.forEach((row) => {
+      let rowControls = row.properties_metadata.mcsb.frameworkControls;
+      // if there are user-selected control IDs, then only show those controls
+      // this filters out rows that do not have any user-selected IDs in their controls array
+      if (controlIDSet && controlIDSet.size > 0) {
+        rowControls.forEach((control) => {
+          if (controlIDSet.has(control.split('_').pop())) {
+            row.properties_metadata.mcsb.features.forEach((feature) => {
+              temp.push({
+                mcsbID: row.properties_metadata.mcsb.mcsbId,
+                control: control.split('_').pop(),
+                service: row.properties_metadata.offeringName,
+                name: feature.featureName,
+                actions: feature.customerActionsDescription,
+                supported: feature.featureSupport,
+                enabled: feature.enabledByDefault,
+                description: feature.featureDescription,
+                guidance: feature.featureGuidance,
+                reference: feature.featureReference,
+              });
             });
-          });
+          }
         });
-      });
+      // otherwise, since the user didn't limit any controls,
+      // find all of the rows that have our chosen framework instead and show them all
+      } else {
+        rowControls.forEach((control) => {
+          if (control.includes(props.framework)) {
+            row.properties_metadata.mcsb.features.forEach((feature) => {
+              temp.push({
+                mcsbID: row.properties_metadata.mcsb.mcsbId,
+                control: control.split('_').pop(),
+                service: row.properties_metadata.offeringName,
+                name: feature.featureName,
+                actions: feature.customerActionsDescription,
+                supported: feature.featureSupport,
+                enabled: feature.enabledByDefault,
+                description: feature.featureDescription,
+                guidance: feature.featureGuidance,
+                reference: feature.featureReference,
+              });
+            })
+          }
+        });
+      }
     });
     return temp;
   }
