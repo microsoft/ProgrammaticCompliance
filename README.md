@@ -79,6 +79,13 @@ Congrats! 🎉 You're in!
 ## Troubleshooting 🆘
 If the site fails to load, contact Julia with error logs. Copy & paste the terminal output if there are errors there. If not, "Inspect" the webpage in your browser, navigate to the "Output" tab, and screenshot that.
 
+# Azure WebApp creation that hosts the UX
+> [!NOTE]
+> Terraform is the infrastructure script deployment tool used to set up the UX. One can use the portal to create the WebApp as well and deploy the UX code as well. 
+
+* Download the latest version of [Terraform](https://developer.hashicorp.com/terraform/install)
+* Create a ```.tfvars``` file to set up the terraform variables. 
+
 # Tenant configuration - custom policy definitions creation
 > [!NOTE]
 > The custom policies creation process is strictly for a non-production/testing environment (tenants or subscriptions) and destined for any user allowed in private preview. Once the policies are made available as built-in it is recommended to use the cleanup scripts to delete all the custom policies created during the private preview phase.
@@ -108,6 +115,8 @@ To run the login script with the interactive auth run the script with just the t
 ```
 
 ## Create the custom policies
+> [!NOTE]
+> There is a limitation to create 500 policy definitions per subscription or management group. With this in mind, since there are over 4000 policy definitions to create, the intent is to create about 9 management groups that will host the policy definitions. Once the policy definitions are builtin this step will no longer be needed.
 * Create the management groups in which the custom policies will be created
 ```
 .\CreateManagementGroup.ps1 -BaseName <base name of choice for the management group> -Start <starting index> -End <end index not inclusive>

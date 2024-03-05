@@ -32,9 +32,7 @@ resource "azurerm_linux_web_app" "webapp" {
     ftps_state                                      = "FtpsOnly"
     health_check_path                               = var.health_check_path
     health_check_eviction_time_in_min               = var.health_check_eviction_time_in_min
-  }
-  identity {
-    type                                            = "SystemAssigned"
+    app_command_line                                = "pm2 serve /home/site/wwwroot/build --no-daemon --spa"
   }   
   app_settings = {
     "APPLICATIONINSIGHTS_CONNECTION_STRING"         = var.appinsights_connection_string
