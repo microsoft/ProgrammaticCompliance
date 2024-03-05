@@ -12,6 +12,8 @@ initializeIcons();
 
 const POLICY = (props) => {
 
+  let controlIDSet = new Set(props.controls);
+
   const onItemInvoked = (item) => {
     setModalData(item);
     setIsModalOpen(true);
@@ -410,33 +412,75 @@ const POLICY = (props) => {
 
   function flattenData(dataset) {
     const temp = [];
-    dataset.forEach((service) => {
-      const serviceName = service['Service Name'];
-      service['Standard Controls'].forEach((control) => {
-        const controlID = control['Standard Control ID'];
-        const controlName = control['Standard Control Name'];
-        const mcsbBaseline = control['MCSB Baseline'];
-        const sanitizedControlName = controlName ? controlName.replace(/[^\w.,: ]/g, '') : '';
+    dataset.forEach((row) => {
+      let rowControls = row.properties_metadata.mcsb.frameworkControls;
+      // if there are user-selected control IDs, then only show those controls
+      // this filters out rows that do not have any user-selected IDs in their controls array
+      console.log("SET", controlIDSet)
 
-        mcsbBaseline.forEach((baselineItem) => {
-          if (baselineItem['Automated Policy Availability'].length > 0) {
-            baselineItem['Automated Policy Availability'].forEach((policy) => {
-              const ID = policy["Policy ID"]
+      if (controlIDSet && controlIDSet.size > 0) {
+        rowControls.forEach((control) => {
+          if (controlIDSet.has(control.split('_').pop())) {
+            row.properties_metadata.mcsb.automatedPolicyAvailability.forEach((policy) => {
               temp.push({
-                policyID: ID,
-                mcsbID: baselineItem['MCSB ID'],
-                control: `${controlID}: ${sanitizedControlName}`,
-                service: serviceName,
-                category: policy['Policy Category'],
-                policy: policy['Policy Name'],
-                description: policy['Policy Description'],
+                mcsbID: row.properties_metadata.mcsb.mcsbId,
+                control: control.split('_').pop(),
+                service: row.properties_metadata.offeringName,
+                category: policy.policyCategory,
+                policy: policy.policyName,
+                description: policy.policyDescription,
               });
             });
           }
         });
-      });
+        // otherwise, since the user didn't limit any controls,
+        // find all of the rows that have our chosen framework instead and show them all
+      } else {
+        rowControls.forEach((control) => {
+          if (control.includes(props.framework)) {
+            row.properties_metadata.mcsb.automatedPolicyAvailability.forEach((policy) => {
+              temp.push({
+                mcsbID: row.properties_metadata.mcsb.mcsbId,
+                control: control.split('_').pop(),
+                service: row.properties_metadata.offeringName,
+                category: policy.policyCategory,
+                policy: policy.policyName,
+                description: policy.policyDescription,
+              });
+            })
+          }
+        });
+      }
     });
     return temp;
+    // const temp = [];
+    // dataset.forEach((service) => {
+    //   const serviceName = service['Service Name'];
+    //   service['Standard Controls'].forEach((control) => {
+    //     const controlID = control['Standard Control ID'];
+    //     const controlName = control['Standard Control Name'];
+    //     const mcsbBaseline = control['MCSB Baseline'];
+    //     const sanitizedControlName = controlName ? controlName.replace(/[^\w.,: ]/g, '') : '';
+
+    //     mcsbBaseline.forEach((baselineItem) => {
+    //       if (baselineItem['Automated Policy Availability'].length > 0) {
+    //         baselineItem['Automated Policy Availability'].forEach((policy) => {
+    //           const ID = policy["Policy ID"]
+    //           temp.push({
+    //             policyID: ID,
+    //             mcsbID: baselineItem['MCSB ID'],
+    //             control: `${controlID}: ${sanitizedControlName}`,
+    //             service: serviceName,
+    //             category: policy['Policy Category'],
+    //             policy: policy['Policy Name'],
+    //             description: policy['Policy Description'],
+    //           });
+    //         });
+    //       }
+    //     });
+    //   });
+    // });
+    // return temp;
   }
 
   return (

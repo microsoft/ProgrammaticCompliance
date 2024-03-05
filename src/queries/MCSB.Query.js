@@ -6,7 +6,7 @@ export const filteredMCSB = (framework, services, controls) => {
     if (controls.length > 0) {
         services.forEach((service) => {
             controls.forEach((control) => {
-                PAIRED_CLAUSES += (servicesClause + "'" + service + "'" + " and " + controlIDsClause + "_" + control + " or ");
+                PAIRED_CLAUSES += (servicesClause + "'" + service + "'" + " and " + controlIDsClause + "_" + control + "'" + " or ");
             })
         })
     // if not, just stack all the service clauses together instead

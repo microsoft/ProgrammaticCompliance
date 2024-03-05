@@ -133,8 +133,8 @@ const FilterBar = ({ azureToken }) => {
             key = controlID;
             text = `${controlID}: ${item.ControlDomain.split(':')[1]}`;
           } else if (framework === "CIS_Azure_2.0.0") {
-            key = item.ControlDomain;
-            text = item.ControlDomain;
+            key = item.ControlDomain.split('.')[0];
+            text = item.ControlDomain.split('.')[0];
           }
           if (!domainMap[key]) {
             domainMap[key] = text;
@@ -146,24 +146,6 @@ const FilterBar = ({ azureToken }) => {
       .catch(error => {
         console.error('API Error:', error);
       });
-    // if (framework === "NIST_SP_800-53_R4") {
-    //   // IDS = nistIDS;
-    //   IDS.forEach((id, _) => {
-    //     const controlPrefix = prefixExtractor(id.value);
-    //     if (controlPrefix !== currentPrefix) {
-    //       currentControls.push({
-    //         text: `${controlPrefix}`,
-    //         itemType: DropdownMenuItemType.Header,
-    //       });
-    //       currentPrefix = controlPrefix;
-    //     }
-    //     currentControls.push({
-    //       key: sanitizeControlID(id.value),
-    //       text: id.label,
-    //     });
-    //   });
-    //   setDefaultControls(currentControls);
-    // }
     // else if (framework === "CIS_Azure_Benchmark_v2.0.0") {
     //   IDS = cisIDS;
     //   DOMAINS = cisDOMAINS;
@@ -188,35 +170,6 @@ const FilterBar = ({ azureToken }) => {
     //   });
     //   setDefaultControls(currentControls);
     // }
-    // else {
-    //   IDS = pciIDS;
-    //   DOMAINS = pciDOMAINS
-    //   IDS.forEach((id, _) => {
-    //     const dotIndex = id.value.indexOf('.', id.value.indexOf('.') + 1);
-    //     const controlPrefix = dotIndex !== -1 ? id.value.slice(0, dotIndex) : id.value;
-    //     if (controlPrefix !== currentPrefix) {
-    //       currentControls.push({
-    //         text: `${controlPrefix}`,
-    //         itemType: DropdownMenuItemType.Header,
-    //       });
-    //       currentPrefix = controlPrefix;
-    //     }
-    //     currentControls.push({
-    //       key: sanitizeControlID(id.value),
-    //       text: id.label,
-    //     });
-    //   });
-    //   currentControls.sort((a, b) => {
-    //     const partA = a.text.split(':')[0].trim();
-    //     const partB = b.text.split(':')[0].trim();
-    //     return customSort(partA, partB);
-    //   });
-    //   setDefaultControls(currentControls);
-    // }
-    // currentDomains = DOMAINS.map(domain => {
-    //   return { key: domain.value, text: domain.label };
-    // });
-    // setDefaultDomains(currentDomains);
   }
 
   const populateControls = (framework) => {
@@ -674,7 +627,7 @@ const FilterBar = ({ azureToken }) => {
             />
           </div>
           <div className="exportButton">
-            <ExportButton apiData={responseData} disabled={isExportButtonDisabled} acfData={acfData} />
+            <ExportButton apiData={responseData} disabled={isExportButtonDisabled} acfData={acfData} controlIDs={selectedControls}/>
           </div>
         </div>
       </div>
@@ -720,7 +673,7 @@ const FilterBar = ({ azureToken }) => {
         }
       </div>
       <p></p>
-      {/* <div>
+      <div>
         {
           isOnload ? (
             <TableStates type="Policy" variant="Onload" />
@@ -728,11 +681,11 @@ const FilterBar = ({ azureToken }) => {
             isLoading ? (
               <TableStates type="Policy" variant="Loading" />
             ) : (
-              responseData && <Policies data={responseData} framework={selectedFramework} />
+              responseData && <Policies data={responseData} framework={selectedFramework} controls={selectedControls}/>
             )
           ))
         }
-      </div> */}
+      </div>
     </div>
   );
 };
