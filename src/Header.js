@@ -63,12 +63,6 @@ const Header = () => {
                     </Text>
                 </Stack>
             </Stack.Item>
-            {/* <Stack.Item grow={6}>
-                <SearchBox
-                    placeholder="Search"
-                    onSearch={(newValue) => console.log("value is " + newValue)}
-                />
-            </Stack.Item> */}
             <Stack.Item
                 grow={3}
                 styles={{

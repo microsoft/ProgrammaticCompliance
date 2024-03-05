@@ -370,11 +370,16 @@ const ACF = (props) => {
 
   function flattenData(dataset) {
     const temp = [];
+    let controlValue;
     dataset.forEach((row) => {
+      if (props.framework === "NIST_SP_800-53_R4") {
+        controlValue = `${row.ControlID.split("_").pop()}: ${props.mapState.get(sanitizeControlID(row.ControlID.split("_").pop()))}`
+      } else {
+        controlValue = `${row.ControlID.split("_").pop()}: ${props.mapState.get(row.ControlID.split("_").pop())}`
+      }
       temp.push({
         acfID: row.AzureControlFrameworkID,
-        control: row.ControlID.split("_").pop(),
-        // responsibility: baselineItem['Compliance | Responsibility'],
+        control: controlValue,
         description: row.MicrosoftManagedActionsDescription,
         details: row.MicrosoftManagedActionsDetails,
       });

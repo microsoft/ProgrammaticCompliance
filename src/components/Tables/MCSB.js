@@ -439,7 +439,7 @@ const MCSB = (props) => {
             row.properties_metadata.mcsb.features.forEach((feature) => {
               temp.push({
                 mcsbID: row.properties_metadata.mcsb.mcsbId,
-                control: control.split('_').pop(),
+                control: `${control.split("_").pop()}: ${props.mapState.get(sanitizeControlID(control.split("_").pop()))}`,
                 service: row.properties_metadata.offeringName,
                 name: feature.featureName,
                 actions: feature.customerActionsDescription,
@@ -460,7 +460,7 @@ const MCSB = (props) => {
             row.properties_metadata.mcsb.features.forEach((feature) => {
               temp.push({
                 mcsbID: row.properties_metadata.mcsb.mcsbId,
-                control: control.split('_').pop(),
+                control: `${control.split("_").pop()}: ${props.mapState.get(sanitizeControlID(control.split("_").pop()))}`,
                 service: row.properties_metadata.offeringName,
                 name: feature.featureName,
                 actions: feature.customerActionsDescription,

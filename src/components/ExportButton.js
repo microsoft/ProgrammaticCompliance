@@ -127,7 +127,6 @@ const ExportButton = ({ apiData, disabled, acfData, controlIDs }) => {
     const policyToCsvExporter = (data) => {
         const policyColumns = ["Control ID", "Service", "Policy Name", "Policy Description"];
         const csvRows = [policyColumns.join(',')];
-        console.log("DATER", data)
         for (const item of data) {
             const metadata = item.properties_metadata
             metadata.mcsb.frameworkControls.forEach((control) => {

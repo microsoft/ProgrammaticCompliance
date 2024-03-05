@@ -416,15 +416,13 @@ const POLICY = (props) => {
       let rowControls = row.properties_metadata.mcsb.frameworkControls;
       // if there are user-selected control IDs, then only show those controls
       // this filters out rows that do not have any user-selected IDs in their controls array
-      console.log("SET", controlIDSet)
-
       if (controlIDSet && controlIDSet.size > 0) {
         rowControls.forEach((control) => {
           if (controlIDSet.has(control.split('_').pop())) {
             row.properties_metadata.mcsb.automatedPolicyAvailability.forEach((policy) => {
               temp.push({
                 mcsbID: row.properties_metadata.mcsb.mcsbId,
-                control: control.split('_').pop(),
+                control: `${control.split("_").pop()}: ${props.mapState.get(sanitizeControlID(control.split("_").pop()))}`,
                 service: row.properties_metadata.offeringName,
                 category: policy.policyCategory,
                 policy: policy.policyName,
@@ -441,7 +439,7 @@ const POLICY = (props) => {
             row.properties_metadata.mcsb.automatedPolicyAvailability.forEach((policy) => {
               temp.push({
                 mcsbID: row.properties_metadata.mcsb.mcsbId,
-                control: control.split('_').pop(),
+                control: `${control.split("_").pop()}: ${props.mapState.get(sanitizeControlID(control.split("_").pop()))}`,
                 service: row.properties_metadata.offeringName,
                 category: policy.policyCategory,
                 policy: policy.policyName,

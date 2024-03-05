@@ -29,23 +29,11 @@ const getAzureToken = async ({ accounts, instance}) => {
         const accessToken = (await instance.acquireTokenSilent(params)).accessToken;
         return accessToken;
       } catch (err) {
-        // @TODO handle error
-        /**
-         * 
-          await myMSAL.loginPopup(params);
-          const login = await myMSAL.acquireTokenSilent(params);
-          return login.accessToken;
-         */
         console.log(err);
         return null;
       }
 }
 
-/**
- * This function rocks!
- * @param {} param0 
- * @returns 
- */
 export const useAuthorizeUser = ({ isAuthenticated, inProgress, accounts, instance}) => {
     const [azureToken, setAzureToken] = useState("");
 

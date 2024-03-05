@@ -50,9 +50,9 @@ function MainApp() {
     }
   };
 
-  useEffect(() => {
-    console.log('elbert has azure token: ', azureToken);
-  }, [azureToken])
+  // useEffect(() => {
+  //   console.log('UNCOMMENT TO GET TOKEN FOR POSTMAN: ', azureToken);
+  // }, [azureToken])
 
   useEffect(() => {
     const getUserTokenIfAuthenticated = async () => {

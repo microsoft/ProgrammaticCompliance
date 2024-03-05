@@ -13,10 +13,6 @@ import { allDomains, allServices, allControls } from '../../queries/Filters.Quer
 import { allACFs, filteredACFs } from '../../queries/ACF.Query.js';
 import { filteredMCSB } from '../../queries/MCSB.Query.js';
 
-// need to add domain names to CIS ACF data
-import cisIDS from '../../static/cisControls.json';
-import cisDOMAINS from '../../static/cisDomains.json';
-
 import { styles, frameworkStyles, selectedFrameworkStyles, serviceStyles, selectedServiceStyles, controlStyles, selectedControlStyles } from '../../styles/DropdownStyles.js';
 import '../../styles/FilterBar.css';
 
@@ -36,6 +32,7 @@ const FilterBar = ({ azureToken }) => {
   const [defaultControls, setDefaultControls] = useState([]);
   const [defaultDomains, setDefaultDomains] = useState([]);
   const [isExportButtonDisabled, setIsExportButtonDisabled] = useState(true);
+  const [mapState, setMapState] = useState(new Map());
 
   // API SETUP
   let TOKEN = `Bearer ${azureToken}`
@@ -176,7 +173,7 @@ const FilterBar = ({ azureToken }) => {
     let currentControls = [];
     let currentPrefix = '';
     let controlID;
-    let text;
+    let IDMap = new Map(mapState)
     apiText.requestBody.query = allControls(framework);
     fetch(apiText.mainEndpoint, {
       mode: 'cors',
@@ -215,6 +212,7 @@ const FilterBar = ({ azureToken }) => {
                 key: sanitizedControlID,
                 text: `${sanitizedControlID}: ${item.properties.title}`,
               });
+              IDMap.set(sanitizedControlID, item.properties.title)
             }
           } else {
             controlID = item.properties.metadataId.split(' ').pop().trim();
@@ -234,10 +232,12 @@ const FilterBar = ({ azureToken }) => {
                 key: controlID,
                 text: `${controlID}: ${item.properties.title}`,
               });
+              IDMap.set(controlID, item.properties.title)
             }
             setDefaultControls(currentControls);
           }
         });
+        setMapState(IDMap)
         currentControls.sort((a, b) => {
           return customSort(a.key, b.key);
         });
@@ -258,6 +258,7 @@ const FilterBar = ({ azureToken }) => {
 
   useEffect(() => {
     setIsExportButtonDisabled(selectedFramework.length === 0);
+    setMapState(new Map());
     populateDomains(selectedFramework);
     populateControls(selectedFramework);
     setSelectedDomains([]);
@@ -358,6 +359,7 @@ const FilterBar = ({ azureToken }) => {
   };
 
   const fetchData = async () => {
+    setIsLoading(true);
     apiText.requestBody.query = filteredMCSB(selectedFramework, selectedServices, selectedControls);
     fetch(apiText.mainEndpoint, {
       mode: 'cors',
@@ -431,6 +433,7 @@ const FilterBar = ({ azureToken }) => {
     setACFData(null)
     setControlCount({});
     setControlFocus("");
+    // setMapState(new Map());
   };
 
   const onFrameworkChange = (_, item) => {
@@ -632,7 +635,7 @@ const FilterBar = ({ azureToken }) => {
             />
           </div>
           <div className="exportButton">
-            <ExportButton apiData={responseData} disabled={isExportButtonDisabled} acfData={acfData} controlIDs={selectedControls}/>
+            <ExportButton apiData={responseData} disabled={isExportButtonDisabled} acfData={acfData} controlIDs={selectedControls} mapState={mapState}/>
           </div>
         </div>
       </div>
@@ -658,7 +661,7 @@ const FilterBar = ({ azureToken }) => {
             isACFLoading ? (
               <TableStates type="ACF" variant="Loading" />
             ) : (
-              acfData && <ACF data={acfData} framework={selectedFramework} />
+              acfData && <ACF data={acfData} framework={selectedFramework} mapState={mapState}/>
             )
           )
         }
@@ -672,7 +675,7 @@ const FilterBar = ({ azureToken }) => {
             isLoading ? (
               <TableStates type="MCSB" variant="Loading" />
             ) : (
-              responseData && <MCSB data={responseData} framework={selectedFramework} controls={selectedControls}/>
+              responseData && <MCSB data={responseData} framework={selectedFramework} controls={selectedControls} mapState={mapState}/>
             )
           ))
         }
@@ -686,7 +689,7 @@ const FilterBar = ({ azureToken }) => {
             isLoading ? (
               <TableStates type="Policy" variant="Loading" />
             ) : (
-              responseData && <Policies data={responseData} framework={selectedFramework} controls={selectedControls}/>
+              responseData && <Policies data={responseData} framework={selectedFramework} controls={selectedControls} mapState={mapState}/>
             )
           ))
         }
