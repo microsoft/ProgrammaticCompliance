@@ -260,6 +260,11 @@ const FilterBar = ({ azureToken }) => {
     setIsExportButtonDisabled(selectedFramework.length === 0);
     populateDomains(selectedFramework);
     populateControls(selectedFramework);
+    setSelectedDomains([]);
+    setSelectedControls([]);
+    setResponseData(null);
+    setControlCount({});
+    setControlFocus("");
   }, [selectedFramework]);
 
   useEffect(() => {
