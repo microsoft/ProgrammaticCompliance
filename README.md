@@ -175,7 +175,7 @@ terraform apply plan.tfplan
 ```
 
 ## Deploy the UX code to the webapp created
-* Create an zip file that contains the source code at the root of the project
+* Create a zip file that contains the source code at the root of the project
 ```
 npm install
 npm run build
