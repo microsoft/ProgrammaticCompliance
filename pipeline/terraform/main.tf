@@ -38,6 +38,8 @@ module "webapp" {
   appinsights_connection_string     = module.appinsights.appinsights_connection_string
   health_check_path                 = "/"
   health_check_eviction_time_in_min = 5
+  webapp_client_id                  = var.webapp_client_id
+  webapp_tenant_id                  = data.azurerm_subscription.sub.tenant_id
 }
 
 
