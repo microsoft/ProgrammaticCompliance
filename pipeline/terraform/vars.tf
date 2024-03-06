@@ -10,6 +10,6 @@ variable "azure_app_name" {
     type = string
 }
 
-variable "webapp_client_id" {
+variable "react_app_client_id" {
   type = string
 }

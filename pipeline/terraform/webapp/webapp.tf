@@ -40,7 +40,7 @@ resource "azurerm_linux_web_app" "webapp" {
     "XDT_MicrosoftApplicationInsights_Mode"         = "Recommended"
     "WEBSITE_RUN_FROM_PACKAGE"                      = "1"
     "WEBSITE_WEBDEPLOY_USE_SCM"                     = "true"
-    "APP_CLIENT_ID"                                 = var.webapp_client_id
-    "APP_TENANT_ID"                                 = var.webapp_tenant_id
+    "REACT_APP_CLIENT_ID"                           = var.react_app_client_id
+    "REACT_APP_TENANT_ID"                           = var.react_app_tenant_id
   }
 }
