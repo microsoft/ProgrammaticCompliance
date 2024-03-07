@@ -9,7 +9,7 @@ import ExportButton from '../ExportButton.js';
 import SearchableDropdown from './SearchableDropdown.js';
 
 import { frameworks, apiText } from '../../static/staticStrings.js';
-import { allDomains, allServices, allControls } from '../../queries/Filters.Query.js';
+import { cisDomains, allDomains, allServices, allControls } from '../../queries/Filters.Query.js';
 import { allACFs, filteredACFs } from '../../queries/ACF.Query.js';
 import { filteredMCSB } from '../../queries/MCSB.Query.js';
 
@@ -101,7 +101,11 @@ const FilterBar = ({ azureToken }) => {
     let controlID;
     let key;
     let text;
-    apiText.requestBody.query = allDomains(framework);
+    if (selectedFramework === "CIS_Azure_2.0.0") {
+      apiText.requestBody.query = cisDomains();
+    } else {
+      apiText.requestBody.query = allDomains(framework);
+    }
     fetch(apiText.mainEndpoint, {
       mode: 'cors',
       method: 'POST',
@@ -130,8 +134,8 @@ const FilterBar = ({ azureToken }) => {
             key = controlID;
             text = `${controlID}: ${item.ControlDomain.split(':')[1]}`;
           } else if (framework === "CIS_Azure_2.0.0") {
-            key = item.ControlDomain.split('.')[0];
-            text = item.ControlDomain.split('.')[0];
+            key = item.ControlDomain.split(' ')[0];
+            text = `${item.ControlDomain.split(' ')[0]}: ${item.ControlDomain.substring(item.ControlDomain.indexOf(" ") + 1)}`;
           }
           if (!domainMap[key]) {
             domainMap[key] = text;
@@ -568,7 +572,7 @@ const FilterBar = ({ azureToken }) => {
               options={frameworks}
               dropdownWidthAuto={true}
               styles={selectedFramework.length > 0 ? selectedFrameworkStyles : frameworkStyles}
-              aria-label="Regulatory framework dropdown"
+              aria-label="Regulatory framework"
             />
           </div>
           <div className="select-dropdown">
@@ -589,7 +593,7 @@ const FilterBar = ({ azureToken }) => {
                   </div>
                 );
               }}
-              aria-label="Service dropdown"
+              aria-label="Service"
             />
           </div>
           <div className="select-dropdown">
@@ -610,7 +614,7 @@ const FilterBar = ({ azureToken }) => {
                   </div>
                 );
               }}
-              aria-label="Control domain dropdown"
+              aria-label="Control domain"
             />
           </div>
           <div className="select-dropdown">
@@ -631,11 +635,11 @@ const FilterBar = ({ azureToken }) => {
               }}
               dropdownWidthAuto={true}
               styles={selectedControls.length > 0 ? selectedControlStyles : controlStyles}
-              aria-label="Control ID dropdown"
+              aria-label="Control ID"
             />
           </div>
           <div className="exportButton">
-            <ExportButton apiData={responseData} disabled={isExportButtonDisabled} acfData={acfData} controlIDs={selectedControls} mapState={mapState}/>
+            <ExportButton apiData={responseData} disabled={isExportButtonDisabled} acfData={acfData} controlIDs={selectedControls} mapState={mapState} />
           </div>
         </div>
       </div>
@@ -661,7 +665,7 @@ const FilterBar = ({ azureToken }) => {
             isACFLoading ? (
               <TableStates type="ACF" variant="Loading" />
             ) : (
-              acfData && <ACF data={acfData} framework={selectedFramework} mapState={mapState}/>
+              acfData && <ACF data={acfData} framework={selectedFramework} mapState={mapState} />
             )
           )
         }
@@ -675,7 +679,7 @@ const FilterBar = ({ azureToken }) => {
             isLoading ? (
               <TableStates type="MCSB" variant="Loading" />
             ) : (
-              responseData && <MCSB data={responseData} framework={selectedFramework} controls={selectedControls} mapState={mapState}/>
+              responseData && <MCSB data={responseData} framework={selectedFramework} controls={selectedControls} mapState={mapState} />
             )
           ))
         }
@@ -689,7 +693,7 @@ const FilterBar = ({ azureToken }) => {
             isLoading ? (
               <TableStates type="Policy" variant="Loading" />
             ) : (
-              responseData && <Policies data={responseData} framework={selectedFramework} controls={selectedControls} mapState={mapState}/>
+              responseData && <Policies data={responseData} framework={selectedFramework} controls={selectedControls} mapState={mapState} />
             )
           ))
         }

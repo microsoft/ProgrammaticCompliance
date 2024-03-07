@@ -88,14 +88,14 @@ function MainApp() {
         <h1 className="siteTitle">
           {appText.siteTitle}
         </h1>
-        <p className="siteDescription">
+        <p className="siteDescription" aria-label="Complementary">
           <em>This experience is for <strong>internal use only</strong> at this moment. Please send any questions, comments, or feedback to <a href="mailto:pcompvteam@microsoft.com">pcompvteam@microsoft.com</a>.</em><p></p>
           {appText.siteDescription}&nbsp;
           <Link onClick={toggleIsCalloutVisible} id="readMoreButton">
             {appText.readMoreButton}
           </Link>
         </p>
-        <FilterBar azureToken={azureToken}/>
+        <FilterBar azureToken={azureToken} aria-label="Main"/>
         <p></p>
         <p></p>
       </div>

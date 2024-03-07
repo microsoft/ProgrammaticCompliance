@@ -34,6 +34,7 @@ const Header = () => {
                     maxHeight: "49px",
                 },
             }}
+            aria-label="Banner"
         >
             <Stack.Item grow={3}>
                 <Stack horizontal wrap={false} verticalAlign="center">

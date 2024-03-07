@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { DetailsList, SelectionMode, DetailsListLayoutMode, Text, Icon, Stack, initializeIcons, TooltipHost, Sticky, StickyPositionType, ConstrainMode, Link } from '@fluentui/react';
+import { DetailsList, SelectionMode, DetailsListLayoutMode, Text, Icon, IconButton, Stack, initializeIcons, TooltipHost, Sticky, StickyPositionType, ConstrainMode, Link } from '@fluentui/react';
 
 import PoliciesModal from '../Modals/PoliciesModal.js';
 import TableStates from './TableStates.js';
@@ -497,11 +497,14 @@ const POLICY = (props) => {
             </Text>
           </div>
         </Stack>
-        <Icon
-          aria-label="Expand table"
-          iconName={isTableExpanded ? 'ChevronUp' : 'ChevronDown'}
+        <IconButton
+          ariaLabel={isTableExpanded ? "Collapse table" : "Expand table"}
+          title={isTableExpanded ? "Collapse Compliance Policies by Service table" : "Expand Compliance Policies by Service table"}
+          iconProps={{iconName: isTableExpanded ? 'ChevronUp' : 'ChevronDown'}}
           onClick={() => setIsTableExpanded(!isTableExpanded)}
-          style={{ fontSize: '15px', cursor: 'pointer', color: '#0078D4', paddingLeft: '15px', fontWeight: 'bold' }}
+          styles={{
+            icon: { color: '#0078D4', fontSize: 15, fontWeight: "bold" },
+          }}
         />
       </Stack>
       {isTableExpanded ? (
