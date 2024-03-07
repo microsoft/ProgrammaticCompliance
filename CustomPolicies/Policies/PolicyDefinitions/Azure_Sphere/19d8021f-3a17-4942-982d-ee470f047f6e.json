@@ -1,0 +1,65 @@
+{
+  "id": "/providers/Microsoft.Authorization/policyDefinitions/19d8021f-3a17-4942-982d-ee470f047f6e",
+  "name": "19d8021f-3a17-4942-982d-ee470f047f6e",
+  "properties": {
+    "description": "Description Custom Manual - MCSB Baseline item AM-5 for Azure Sphere",
+    "displayName": "MCSB Baseline item AM-5 for Azure Sphere",
+    "metadata": {
+      "offeringName": "Azure Sphere",
+      "offeringId": "fba6e68a-ad73-4ecf-847f-bd146c812bb9",
+      "mcsb": {
+        "mcsbId": "AM-5",
+        "features": [
+          {
+            "featureId": "ADAPTIVE_APPLICATION_CONTROLS",
+            "featureName": "Microsoft Defender for Cloud - Adaptive Application Controls",
+            "featureDescription": "Service can limit what customer applications run on the virtual machine using Adaptive Application Controls in Microsoft Defender for Cloud.",
+            "featureSupport": "Not Applicable",
+            "featureGuidance": "This feature is not applicable to secure this service.",
+            "featureReference": "Not Applicable",
+            "enabledByDefault": "Not Applicable",
+            "customerActionsDescription": "Use only approved applications in virtual machine"
+          }
+        ],
+        "automatedPolicyAvailability": [],
+        "frameworkControls": [
+          "CIS_Azure_2.0.0_7.5",
+          "NIST_SP_800-53_R4_CM-11",
+          "NIST_SP_800-53_R4_CM-10",
+          "NIST_SP_800-53_R4_CM-7",
+          "NIST_SP_800-53_R4_CM-8",
+          "PCI_DSS_v4.0_2.2.6",
+          "PCI_DSS_v4.0_2.2.5",
+          "PCI_DSS_v4.0_2.2.4"
+        ]
+      },
+      "version": "1.0.0",
+      "category": "Regulatory Compliance"
+    },
+    "mode": "All",
+    "policyType": "Custom",
+    "policyRule": {
+      "if": {
+        "allOf": [
+          {
+            "field": "type",
+            "in": [
+              "Microsoft.Resources/subscriptions",
+              "Microsoft.Resources/subscriptions/resourceGroups"
+            ]
+          },
+          {
+            "value": "false",
+            "equals": "true"
+          }
+        ]
+      },
+      "then": {
+        "effect": "Manual",
+        "details": {
+          "defaultState": "Unknown"
+        }
+      }
+    }
+  }
+}

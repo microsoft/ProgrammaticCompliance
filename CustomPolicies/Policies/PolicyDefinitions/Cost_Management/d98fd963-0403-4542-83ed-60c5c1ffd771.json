@@ -1,0 +1,70 @@
+{
+  "id": "/providers/Microsoft.Authorization/policyDefinitions/d98fd963-0403-4542-83ed-60c5c1ffd771",
+  "name": "d98fd963-0403-4542-83ed-60c5c1ffd771",
+  "properties": {
+    "description": "Description Custom Manual - MCSB Baseline item BR-1 for Cost Management",
+    "displayName": "MCSB Baseline item BR-1 for Cost Management",
+    "metadata": {
+      "offeringName": "Cost Management",
+      "offeringId": "9b1b3bf5-762a-4a9e-8a1c-726e4857fbd6",
+      "mcsb": {
+        "mcsbId": "BR-1",
+        "features": [
+          {
+            "featureId": "AZURE_BACKUP_SUPPORT",
+            "featureName": "Azure Backup",
+            "featureDescription": "The service can be backed up by the Azure Backup service.",
+            "featureSupport": "False",
+            "featureGuidance": "This feature is not supported to secure this service.",
+            "featureReference": "Not Applicable",
+            "enabledByDefault": "Not Applicable",
+            "customerActionsDescription": "Ensure regular automated backups"
+          },
+          {
+            "featureId": "NATIVE_BACKUP",
+            "featureName": "Service Native Backup Capability",
+            "featureDescription": "Service supports its own native backup capability (if not using Azure Backup).",
+            "featureSupport": "Not Applicable",
+            "featureGuidance": "This feature is not applicable to secure this service.",
+            "featureReference": "Not Applicable",
+            "enabledByDefault": "Not Applicable",
+            "customerActionsDescription": "Ensure regular automated backups"
+          }
+        ],
+        "automatedPolicyAvailability": [],
+        "frameworkControls": [
+          "NIST_SP_800-53_R4_CP-9",
+          "NIST_SP_800-53_R4_CP-4",
+          "NIST_SP_800-53_R4_CP-2"
+        ]
+      },
+      "version": "1.0.0",
+      "category": "Regulatory Compliance"
+    },
+    "mode": "All",
+    "policyType": "Custom",
+    "policyRule": {
+      "if": {
+        "allOf": [
+          {
+            "field": "type",
+            "in": [
+              "Microsoft.Resources/subscriptions",
+              "Microsoft.Resources/subscriptions/resourceGroups"
+            ]
+          },
+          {
+            "value": "false",
+            "equals": "true"
+          }
+        ]
+      },
+      "then": {
+        "effect": "Manual",
+        "details": {
+          "defaultState": "Unknown"
+        }
+      }
+    }
+  }
+}

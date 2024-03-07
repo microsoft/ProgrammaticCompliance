@@ -1,0 +1,61 @@
+{
+  "id": "/providers/Microsoft.Authorization/policyDefinitions/bd849e5b-151f-4728-9ee3-177ba0399930",
+  "name": "bd849e5b-151f-4728-9ee3-177ba0399930",
+  "properties": {
+    "description": "Description Custom Manual - MCSB Baseline item DP-7 for Data Factory",
+    "displayName": "MCSB Baseline item DP-7 for Data Factory",
+    "metadata": {
+      "offeringName": "Data Factory",
+      "offeringId": "d5fbb83d-baa0-4d89-82ca-73476c963144",
+      "mcsb": {
+        "mcsbId": "DP-7",
+        "features": [
+          {
+            "featureId": "CERTIFICATE_MANAGEMENT_IN_AZURE_KEY_VAULT",
+            "featureName": "Certificate Management in Azure Key Vault",
+            "featureDescription": "The service supports Azure Key Vault integration for any customer certificates.",
+            "featureSupport": "True",
+            "featureGuidance": "There is no current Microsoft guidance for this feature configuration. Please review and determine if your organization wants to configure this security feature.",
+            "featureReference": "https://docs.microsoft.com/azure/data-factory/store-credentials-in-key-vault",
+            "enabledByDefault": "False",
+            "customerActionsDescription": "Use a secure certificate management process"
+          }
+        ],
+        "automatedPolicyAvailability": [],
+        "frameworkControls": [
+          "NIST_SP_800-53_R4_SC-12",
+          "NIST_SP_800-53_R4_IA-5",
+          "NIST_SP_800-53_R4_SC-17",
+          "PCI_DSS_v4.0_4.2.1"
+        ]
+      },
+      "version": "1.0.0",
+      "category": "Regulatory Compliance"
+    },
+    "mode": "All",
+    "policyType": "Custom",
+    "policyRule": {
+      "if": {
+        "allOf": [
+          {
+            "field": "type",
+            "in": [
+              "Microsoft.Resources/subscriptions",
+              "Microsoft.Resources/subscriptions/resourceGroups"
+            ]
+          },
+          {
+            "value": "false",
+            "equals": "true"
+          }
+        ]
+      },
+      "then": {
+        "effect": "Manual",
+        "details": {
+          "defaultState": "Unknown"
+        }
+      }
+    }
+  }
+}

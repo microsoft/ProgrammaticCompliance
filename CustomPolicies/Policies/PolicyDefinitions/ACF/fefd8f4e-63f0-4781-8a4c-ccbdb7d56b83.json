@@ -1,0 +1,38 @@
+{
+  "id": "/providers/Microsoft.Authorization/policyDefinitions/fefd8f4e-63f0-4781-8a4c-ccbdb7d56b83",
+  "name": "fefd8f4e-63f0-4781-8a4c-ccbdb7d56b83",
+  "properties": {
+    "description": "Microsoft implements this Security Assessment and Authorization control",
+    "displayName": "Custom - Microsoft Managed Control 1026 - Security Authorization",
+    "metadata": {
+      "version": "1.0.0",
+      "category": "Regulatory Compliance",
+      "additionalMetadataId": "/providers/Microsoft.PolicyInsights/policyMetadata/ACF1026",
+      "standardControlMappings": [
+        "NIST_SP_800-53_R4_AC-2(13)"
+      ]
+    },
+    "mode": "Indexed",
+    "policyType": "Custom",
+    "policyRule": {
+      "if": {
+        "allOf": [
+          {
+            "field": "type",
+            "in": [
+              "Microsoft.Resources/subscriptions",
+              "Microsoft.Resources/subscriptions/resourceGroups"
+            ]
+          },
+          {
+            "value": "false",
+            "equals": "true"
+          }
+        ]
+      },
+      "then": {
+        "effect": "audit"
+      }
+    }
+  }
+}

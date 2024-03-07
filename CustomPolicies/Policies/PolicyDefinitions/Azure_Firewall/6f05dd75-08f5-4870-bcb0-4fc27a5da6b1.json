@@ -1,0 +1,61 @@
+{
+  "id": "/providers/Microsoft.Authorization/policyDefinitions/6f05dd75-08f5-4870-bcb0-4fc27a5da6b1",
+  "name": "6f05dd75-08f5-4870-bcb0-4fc27a5da6b1",
+  "properties": {
+    "description": "Description Custom Manual - MCSB Baseline item IM-8 for Azure Firewall",
+    "displayName": "MCSB Baseline item IM-8 for Azure Firewall",
+    "metadata": {
+      "offeringName": "Azure Firewall",
+      "offeringId": "edbc7630-1a16-421f-98ce-351f2c6eea22",
+      "mcsb": {
+        "mcsbId": "IM-8",
+        "features": [
+          {
+            "featureId": "AKV_SUPPORT_FOR_CREDENTIAL_AND_SECRETS",
+            "featureName": "Service Credential and Secrets Support Integration and Storage in Azure Key Vault",
+            "featureDescription": "Data plane supports native use of Azure Key Vault for credential and secrets store.",
+            "featureSupport": "False",
+            "featureGuidance": "This feature is not supported to secure this service.",
+            "featureReference": "Not Applicable",
+            "enabledByDefault": "Not Applicable",
+            "customerActionsDescription": "Restrict the exposure of credential and secrets"
+          }
+        ],
+        "automatedPolicyAvailability": [],
+        "frameworkControls": [
+          "CIS_Azure_2.0.0_3.3",
+          "NIST_SP_800-53_R4_IA-5",
+          "PCI_DSS_v4.0_8.6.2",
+          "PCI_DSS_v4.0_3.6.1"
+        ]
+      },
+      "version": "1.0.0",
+      "category": "Regulatory Compliance"
+    },
+    "mode": "All",
+    "policyType": "Custom",
+    "policyRule": {
+      "if": {
+        "allOf": [
+          {
+            "field": "type",
+            "in": [
+              "Microsoft.Resources/subscriptions",
+              "Microsoft.Resources/subscriptions/resourceGroups"
+            ]
+          },
+          {
+            "value": "false",
+            "equals": "true"
+          }
+        ]
+      },
+      "then": {
+        "effect": "Manual",
+        "details": {
+          "defaultState": "Unknown"
+        }
+      }
+    }
+  }
+}

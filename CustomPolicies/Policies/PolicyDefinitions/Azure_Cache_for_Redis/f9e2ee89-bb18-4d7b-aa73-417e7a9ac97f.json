@@ -1,0 +1,64 @@
+{
+  "id": "/providers/Microsoft.Authorization/policyDefinitions/f9e2ee89-bb18-4d7b-aa73-417e7a9ac97f",
+  "name": "f9e2ee89-bb18-4d7b-aa73-417e7a9ac97f",
+  "properties": {
+    "description": "Description Custom Manual - MCSB Baseline item AM-2 for Azure Cache for Redis",
+    "displayName": "MCSB Baseline item AM-2 for Azure Cache for Redis",
+    "metadata": {
+      "offeringName": "Azure Cache for Redis",
+      "offeringId": "36d1891e-40d0-4dc5-bd43-ad946173dcd0",
+      "mcsb": {
+        "mcsbId": "AM-2",
+        "features": [
+          {
+            "featureId": "AZURE_POLICY_SUPPORTED",
+            "featureName": "Azure Policy Support",
+            "featureDescription": "Service configurations can be monitored and enforced via Azure Policy.",
+            "featureSupport": "True",
+            "featureGuidance": "Use Microsoft Defender for Cloud to configure Azure Policy to audit and enforce configurations of your Azure resources. Use Azure Monitor to create alerts when there is a configuration deviation detected on the resources. Use Azure Policy [deny] and [deploy if not exists] effects to enforce secure configuration across Azure resources.",
+            "featureReference": "https://docs.microsoft.com/azure/azure-cache-for-redis/policy-reference",
+            "enabledByDefault": "False",
+            "customerActionsDescription": "Use only approved services\n"
+          }
+        ],
+        "automatedPolicyAvailability": [],
+        "frameworkControls": [
+          "CIS_Azure_2.0.0_7.5",
+          "CIS_Azure_2.0.0_5.5",
+          "NIST_SP_800-53_R4_PM-5",
+          "NIST_SP_800-53_R4_CM-8",
+          "PCI_DSS_v4.0_2.2.6",
+          "PCI_DSS_v4.0_2.2.5",
+          "PCI_DSS_v4.0_2.2.4"
+        ]
+      },
+      "version": "1.0.0",
+      "category": "Regulatory Compliance"
+    },
+    "mode": "All",
+    "policyType": "Custom",
+    "policyRule": {
+      "if": {
+        "allOf": [
+          {
+            "field": "type",
+            "in": [
+              "Microsoft.Resources/subscriptions",
+              "Microsoft.Resources/subscriptions/resourceGroups"
+            ]
+          },
+          {
+            "value": "false",
+            "equals": "true"
+          }
+        ]
+      },
+      "then": {
+        "effect": "Manual",
+        "details": {
+          "defaultState": "Unknown"
+        }
+      }
+    }
+  }
+}

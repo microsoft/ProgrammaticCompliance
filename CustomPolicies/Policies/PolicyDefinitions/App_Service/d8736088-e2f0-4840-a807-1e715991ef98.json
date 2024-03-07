@@ -1,0 +1,84 @@
+{
+  "id": "/providers/Microsoft.Authorization/policyDefinitions/d8736088-e2f0-4840-a807-1e715991ef98",
+  "name": "d8736088-e2f0-4840-a807-1e715991ef98",
+  "properties": {
+    "description": "Description Custom Manual - MCSB Baseline item NS-1 for App Service",
+    "displayName": "MCSB Baseline item NS-1 for App Service",
+    "metadata": {
+      "offeringName": "App Service",
+      "offeringId": "c7f69506-5b4f-4751-b423-0095e68fad64",
+      "mcsb": {
+        "mcsbId": "NS-1",
+        "features": [
+          {
+            "featureId": "NSG_SUPPORTED",
+            "featureName": "Network Security Group Support",
+            "featureDescription": "Service network traffic respects Network Security Groups rule assignment on its subnets.",
+            "featureSupport": "True",
+            "featureGuidance": "No additional configurations are required as this is enabled on a default deployment.",
+            "featureReference": "https://docs.microsoft.com/azure/app-service/environment/networking",
+            "enabledByDefault": "True",
+            "customerActionsDescription": "Establish network segmentation boundaries "
+          },
+          {
+            "featureId": "VNET_INTEGRATION",
+            "featureName": "Virtual Network Integration",
+            "featureDescription": "Service supports deployment into customer's private Virtual Network (VNet).",
+            "featureSupport": "True",
+            "featureGuidance": "Ensure a stable IP for outbound communications towards internet addresses: You can provide a stable outbound IP by using the Virtual Network integration feature. This allows the receiving party to allow-list based on IP, should that be needed.\r\n\r\nWhen using App Service in the Isolated pricing tier, also called an App Service Environment (ASE), you can deploy directly into a subnet within your Azure Virtual Network. Use network security groups to secure your Azure App Service Environment by blocking inbound and outbound traffic to resources in your virtual network, or to restrict access to apps in an App Service Environment.\r\n\r\nIn the multi-tenant App Service (an app not in Isolated tier), enable your apps to access resources in or through a Virtual Network with the Virtual Network Integration feature. You can then use network security groups to control outbound traffic from your app. When using Virtual Network Integration, you can enable the 'Route All' configuration to make all outbound traffic subject to network security groups and user-defined routes on the integration subnet. This feature can also be used to block outbound traffic to public addresses from the app. Virtual Network Integration cannot be used to provide inbound access to an app.\r\n\r\nFor communications towards Azure Services often there's no need to depend on the IP address and mechanics like Service Endpoints should be used instead.",
+            "featureReference": "https://docs.microsoft.com/azure/app-service/overview-vnet-integration",
+            "enabledByDefault": "False",
+            "customerActionsDescription": "Establish network segmentation boundaries "
+          }
+        ],
+        "automatedPolicyAvailability": [],
+        "frameworkControls": [
+          "CIS_Azure_2.0.0_6.7",
+          "CIS_Azure_2.0.0_6.4",
+          "CIS_Azure_2.0.0_6.3",
+          "CIS_Azure_2.0.0_6.2",
+          "CIS_Azure_2.0.0_6.1",
+          "CIS_Azure_2.0.0_4.3.7",
+          "NIST_SP_800-53_R4_SC-7",
+          "NIST_SP_800-53_R4_SC-2",
+          "NIST_SP_800-53_R4_AC-4",
+          "PCI_DSS_v4.0_1.4.5",
+          "PCI_DSS_v4.0_1.4.4",
+          "PCI_DSS_v4.0_1.4.3",
+          "PCI_DSS_v4.0_1.4.2",
+          "PCI_DSS_v4.0_1.4.1",
+          "PCI_DSS_v4.0_1.3.2",
+          "PCI_DSS_v4.0_1.3.1",
+          "PCI_DSS_v4.0_1.2.6"
+        ]
+      },
+      "version": "1.0.0",
+      "category": "Regulatory Compliance"
+    },
+    "mode": "All",
+    "policyType": "Custom",
+    "policyRule": {
+      "if": {
+        "allOf": [
+          {
+            "field": "type",
+            "in": [
+              "Microsoft.Resources/subscriptions",
+              "Microsoft.Resources/subscriptions/resourceGroups"
+            ]
+          },
+          {
+            "value": "false",
+            "equals": "true"
+          }
+        ]
+      },
+      "then": {
+        "effect": "Manual",
+        "details": {
+          "defaultState": "Unknown"
+        }
+      }
+    }
+  }
+}

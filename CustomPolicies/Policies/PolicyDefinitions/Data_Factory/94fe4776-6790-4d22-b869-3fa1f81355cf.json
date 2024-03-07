@@ -1,0 +1,75 @@
+{
+  "id": "/providers/Microsoft.Authorization/policyDefinitions/94fe4776-6790-4d22-b869-3fa1f81355cf",
+  "name": "94fe4776-6790-4d22-b869-3fa1f81355cf",
+  "properties": {
+    "description": "Description Custom Manual - MCSB Baseline item IM-3 for Data Factory",
+    "displayName": "MCSB Baseline item IM-3 for Data Factory",
+    "metadata": {
+      "offeringName": "Data Factory",
+      "offeringId": "d5fbb83d-baa0-4d89-82ca-73476c963144",
+      "mcsb": {
+        "mcsbId": "IM-3",
+        "features": [
+          {
+            "featureId": "MANAGED_IDENTITIES",
+            "featureName": "Managed Identities",
+            "featureDescription": "Data plane actions support authentication using managed identities.",
+            "featureSupport": "True",
+            "featureGuidance": "There is no current Microsoft guidance for this feature configuration. Please review and determine if your organization wants to configure this security feature.",
+            "featureReference": "https://docs.microsoft.com/azure/data-factory/data-factory-service-identity?tabs=data-factory",
+            "enabledByDefault": "False",
+            "customerActionsDescription": "Manage application identities securely and automatically"
+          },
+          {
+            "featureId": "SERVICE_PRINCIPAL",
+            "featureName": "Service Principals",
+            "featureDescription": "Data plane supports authentication using service principals.",
+            "featureSupport": "True",
+            "featureGuidance": "There is no current Microsoft guidance for this feature configuration. Please review and determine if your organization wants to configure this security feature.",
+            "featureReference": "https://docs.microsoft.com/azure/data-factory/connector-azure-data-lake-storage?tabs=data-factory#service-principal-authentication",
+            "enabledByDefault": "False",
+            "customerActionsDescription": "Manage application identities securely and automatically"
+          }
+        ],
+        "automatedPolicyAvailability": [],
+        "frameworkControls": [
+          "NIST_SP_800-53_R4_AC-3",
+          "NIST_SP_800-53_R4_AC-2",
+          "NIST_SP_800-53_R4_IA-5",
+          "NIST_SP_800-53_R4_IA-9",
+          "NIST_SP_800-53_R4_IA-4",
+          "PCI_DSS_v4.0_8.6.3",
+          "PCI_DSS_v4.0_8.6.2",
+          "PCI_DSS_v4.0_8.6.1"
+        ]
+      },
+      "version": "1.0.0",
+      "category": "Regulatory Compliance"
+    },
+    "mode": "All",
+    "policyType": "Custom",
+    "policyRule": {
+      "if": {
+        "allOf": [
+          {
+            "field": "type",
+            "in": [
+              "Microsoft.Resources/subscriptions",
+              "Microsoft.Resources/subscriptions/resourceGroups"
+            ]
+          },
+          {
+            "value": "false",
+            "equals": "true"
+          }
+        ]
+      },
+      "then": {
+        "effect": "Manual",
+        "details": {
+          "defaultState": "Unknown"
+        }
+      }
+    }
+  }
+}

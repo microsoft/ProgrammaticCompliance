@@ -1,0 +1,77 @@
+{
+  "id": "/providers/Microsoft.Authorization/policyDefinitions/bead2d58-0149-4745-8820-2ec9be74747e",
+  "name": "bead2d58-0149-4745-8820-2ec9be74747e",
+  "properties": {
+    "description": "Description Custom Manual - MCSB Baseline item IM-1 for App Service",
+    "displayName": "MCSB Baseline item IM-1 for App Service",
+    "metadata": {
+      "offeringName": "App Service",
+      "offeringId": "c7f69506-5b4f-4751-b423-0095e68fad64",
+      "mcsb": {
+        "mcsbId": "IM-1",
+        "features": [
+          {
+            "featureId": "AAD_AUTH_FOR_DATA_PLANE_ACCESS",
+            "featureName": "Azure AD Authentication Required for Data Plane Access",
+            "featureDescription": "Service supports using Azure AD authentication for data plane access.",
+            "featureSupport": "True",
+            "featureGuidance": "For authenticated web applications, only use well-known established identity providers to authenticate and authorize user access. In case your app should only be accessed by users of your own organization, or otherwise your users are all using Azure Active Directory (Azure AD), configure Azure AD as the default authentication method to control your data plane access.",
+            "featureReference": "https://docs.microsoft.com/azure/app-service/overview-authentication-authorization",
+            "enabledByDefault": "False",
+            "customerActionsDescription": "Use centralized identity and authentication system"
+          },
+          {
+            "featureId": "LOCAL_AUTH_METHODS_FOR_DATA_PLANE_ACCESS",
+            "featureName": "Local Authentication Methods for Data Plane Access",
+            "featureDescription": "Local authentications methods supported for data plane access, such as a local username and password.",
+            "featureSupport": "True",
+            "featureGuidance": "Restrict the use of local authentication methods for data plane access. Instead, use Azure Active Directory (Azure AD) as the default authentication method to control your data plane access.",
+            "featureReference": "https://docs.microsoft.com/azure/app-service/overview-authentication-authorization",
+            "enabledByDefault": "False",
+            "customerActionsDescription": "Use centralized identity and authentication system"
+          }
+        ],
+        "automatedPolicyAvailability": [],
+        "frameworkControls": [
+          "CIS_Azure_2.0.0_9.5",
+          "CIS_Azure_2.0.0_4.5.3",
+          "CIS_Azure_2.0.0_4.1.4",
+          "NIST_SP_800-53_R4_AC-3",
+          "NIST_SP_800-53_R4_AC-2",
+          "NIST_SP_800-53_R4_IA-8",
+          "NIST_SP_800-53_R4_IA-2",
+          "PCI_DSS_v4.0_8.2.1",
+          "PCI_DSS_v4.0_7.3.2",
+          "PCI_DSS_v4.0_7.3.1"
+        ]
+      },
+      "version": "1.0.0",
+      "category": "Regulatory Compliance"
+    },
+    "mode": "All",
+    "policyType": "Custom",
+    "policyRule": {
+      "if": {
+        "allOf": [
+          {
+            "field": "type",
+            "in": [
+              "Microsoft.Resources/subscriptions",
+              "Microsoft.Resources/subscriptions/resourceGroups"
+            ]
+          },
+          {
+            "value": "false",
+            "equals": "true"
+          }
+        ]
+      },
+      "then": {
+        "effect": "Manual",
+        "details": {
+          "defaultState": "Unknown"
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,70 @@
+{
+  "id": "/providers/Microsoft.Authorization/policyDefinitions/31a31dfe-b524-4a51-bf8a-a68ee0c1d2eb",
+  "name": "31a31dfe-b524-4a51-bf8a-a68ee0c1d2eb",
+  "properties": {
+    "description": "Description Custom Manual - MCSB Baseline item PA-7 for Storage",
+    "displayName": "MCSB Baseline item PA-7 for Storage",
+    "metadata": {
+      "offeringName": "Storage",
+      "offeringId": "c6b94711-f1f5-4e7e-9c89-c17ed4190969",
+      "mcsb": {
+        "mcsbId": "PA-7",
+        "features": [
+          {
+            "featureId": "AZURE_RBAC_DATAPLANE_SUPPORTED",
+            "featureName": "Azure RBAC for Data Plane",
+            "featureDescription": "Azure Role-Based Access Control (Azure RBAC) can be used to managed access to service's data plane actions.",
+            "featureSupport": "True",
+            "featureGuidance": "Azure Storage supports using Azure Active Directory (Azure AD) to authorize requests to blob data. With Azure AD, you can use Azure role-based access control (Azure RBAC) to grant permissions to a security principal, which may be a user, group, or application service principal.\r\n\r\nAuthorizing requests against Azure Storage with Azure AD provides superior security and ease of use over Shared Key authorization. Microsoft recommends using Azure AD authorization with your blob applications when possible to assure access with minimum required privileges.",
+            "featureReference": "https://learn.microsoft.com/azure/storage/blobs/authorize-access-azure-active-directory",
+            "enabledByDefault": "False",
+            "customerActionsDescription": "Follow just enough administration (least privilege) principle"
+          }
+        ],
+        "automatedPolicyAvailability": [],
+        "frameworkControls": [
+          "CIS_Azure_2.0.0_4.5.3",
+          "CIS_Azure_2.0.0_1.24",
+          "NIST_SP_800-53_R4_AC-3",
+          "NIST_SP_800-53_R4_AC-2",
+          "NIST_SP_800-53_R4_AC-6",
+          "PCI_DSS_v4.0_7.3.2",
+          "PCI_DSS_v4.0_7.3.1",
+          "PCI_DSS_v4.0_8.2.7",
+          "PCI_DSS_v4.0_7.3.3",
+          "PCI_DSS_v4.0_7.2.6",
+          "PCI_DSS_v4.0_7.2.5",
+          "PCI_DSS_v4.0_7.2.2",
+          "PCI_DSS_v4.0_7.2.1"
+        ]
+      },
+      "version": "1.0.0",
+      "category": "Regulatory Compliance"
+    },
+    "mode": "All",
+    "policyType": "Custom",
+    "policyRule": {
+      "if": {
+        "allOf": [
+          {
+            "field": "type",
+            "in": [
+              "Microsoft.Resources/subscriptions",
+              "Microsoft.Resources/subscriptions/resourceGroups"
+            ]
+          },
+          {
+            "value": "false",
+            "equals": "true"
+          }
+        ]
+      },
+      "then": {
+        "effect": "Manual",
+        "details": {
+          "defaultState": "Unknown"
+        }
+      }
+    }
+  }
+}

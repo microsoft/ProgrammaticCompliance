@@ -1,0 +1,62 @@
+{
+  "id": "/providers/Microsoft.Authorization/policyDefinitions/d0086560-2913-4f8e-bbcb-136a9d4a14a4",
+  "name": "d0086560-2913-4f8e-bbcb-136a9d4a14a4",
+  "properties": {
+    "description": "Description Custom Manual - MCSB Baseline item DP-2 for Cloud Shell",
+    "displayName": "MCSB Baseline item DP-2 for Cloud Shell",
+    "metadata": {
+      "offeringName": "Cloud Shell",
+      "offeringId": "5ed69999-bb66-4565-8d34-1dd214953d6f",
+      "mcsb": {
+        "mcsbId": "DP-2",
+        "features": [
+          {
+            "featureId": "DATA_LEAKAGE/LOSS_PREVENTION",
+            "featureName": "Data Leakage/Loss Prevention",
+            "featureDescription": "Service supports DLP solution to monitor sensitive data movement (in customer's content).",
+            "featureSupport": "Not Applicable",
+            "featureGuidance": "This feature is not applicable to secure this service.",
+            "featureReference": "Not Applicable",
+            "enabledByDefault": "Not Applicable",
+            "customerActionsDescription": "Monitor anomalies and threats targeting sensitive data"
+          }
+        ],
+        "automatedPolicyAvailability": [],
+        "frameworkControls": [
+          "CIS_Azure_2.0.0_4.2.1",
+          "CIS_Azure_2.0.0_2.1.6",
+          "CIS_Azure_2.0.0_2.1.4",
+          "NIST_SP_800-53_R4_SI-4",
+          "NIST_SP_800-53_R4_AC-4"
+        ]
+      },
+      "version": "1.0.0",
+      "category": "Regulatory Compliance"
+    },
+    "mode": "All",
+    "policyType": "Custom",
+    "policyRule": {
+      "if": {
+        "allOf": [
+          {
+            "field": "type",
+            "in": [
+              "Microsoft.Resources/subscriptions",
+              "Microsoft.Resources/subscriptions/resourceGroups"
+            ]
+          },
+          {
+            "value": "false",
+            "equals": "true"
+          }
+        ]
+      },
+      "then": {
+        "effect": "Manual",
+        "details": {
+          "defaultState": "Unknown"
+        }
+      }
+    }
+  }
+}

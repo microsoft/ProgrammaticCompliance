@@ -1,0 +1,77 @@
+{
+  "id": "/providers/Microsoft.Authorization/policyDefinitions/87b72e9c-0f82-4cdc-bf0e-280a369ab691",
+  "name": "87b72e9c-0f82-4cdc-bf0e-280a369ab691",
+  "properties": {
+    "description": "Description Custom Manual - MCSB Baseline item BR-1 for Azure Database for PostgreSQL - Flexible Server",
+    "displayName": "MCSB Baseline item BR-1 for Azure Database for PostgreSQL - Flexible Server",
+    "metadata": {
+      "offeringName": "Azure Database for PostgreSQL - Flexible Server",
+      "offeringId": "84bda2ea-972f-4aaa-ab08-324e9982fbcd",
+      "mcsb": {
+        "mcsbId": "BR-1",
+        "features": [
+          {
+            "featureId": "AZURE_BACKUP_SUPPORT",
+            "featureName": "Azure Backup",
+            "featureDescription": "The service can be backed up by the Azure Backup service.",
+            "featureSupport": "False",
+            "featureGuidance": "This feature is not supported to secure this service.",
+            "featureReference": "Not Applicable",
+            "enabledByDefault": "Not Applicable",
+            "customerActionsDescription": "Ensure regular automated backups"
+          },
+          {
+            "featureId": "NATIVE_BACKUP",
+            "featureName": "Service Native Backup Capability",
+            "featureDescription": "Service supports its own native backup capability (if not using Azure Backup).",
+            "featureSupport": "True",
+            "featureGuidance": "No additional configurations are required as this is enabled on a default deployment.",
+            "featureReference": "https://learn.microsoft.com/azure/postgresql/flexible-server/concepts-backup-restore",
+            "enabledByDefault": "True",
+            "customerActionsDescription": "Ensure regular automated backups"
+          }
+        ],
+        "automatedPolicyAvailability": [
+          {
+            "policyId": "48af4db5-9b8b-401c-8e74-076be876a430",
+            "policyName": "Geo-redundant backup should be enabled for Azure Database for PostgreSQL",
+            "policyDescription": "Azure Database for PostgreSQL allows you to choose the redundancy option for your database server. It can be set to a geo-redundant backup storage in which the data is not only stored within the region in which your server is hosted, but is also replicated to a paired region to provide recovery option in case of a region failure. Configuring geo-redundant storage for backup is only allowed during server create.",
+            "policyCategory": "SQL"
+          }
+        ],
+        "frameworkControls": [
+          "NIST_SP_800-53_R4_CP-9",
+          "NIST_SP_800-53_R4_CP-4",
+          "NIST_SP_800-53_R4_CP-2"
+        ]
+      },
+      "version": "1.0.0",
+      "category": "Regulatory Compliance"
+    },
+    "mode": "All",
+    "policyType": "Custom",
+    "policyRule": {
+      "if": {
+        "allOf": [
+          {
+            "field": "type",
+            "in": [
+              "Microsoft.Resources/subscriptions",
+              "Microsoft.Resources/subscriptions/resourceGroups"
+            ]
+          },
+          {
+            "value": "false",
+            "equals": "true"
+          }
+        ]
+      },
+      "then": {
+        "effect": "Manual",
+        "details": {
+          "defaultState": "Unknown"
+        }
+      }
+    }
+  }
+}

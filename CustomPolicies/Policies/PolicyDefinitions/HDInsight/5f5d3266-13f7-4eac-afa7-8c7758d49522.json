@@ -1,0 +1,67 @@
+{
+  "id": "/providers/Microsoft.Authorization/policyDefinitions/5f5d3266-13f7-4eac-afa7-8c7758d49522",
+  "name": "5f5d3266-13f7-4eac-afa7-8c7758d49522",
+  "properties": {
+    "description": "Description Custom Manual - MCSB Baseline item PV-6 for HDInsight",
+    "displayName": "MCSB Baseline item PV-6 for HDInsight",
+    "metadata": {
+      "offeringName": "HDInsight",
+      "offeringId": "2ee735d6-5f03-45c3-bf11-fc1dbb1aa135",
+      "mcsb": {
+        "mcsbId": "PV-6",
+        "features": [
+          {
+            "featureId": "AZURE_AUTOMATION_UPDATE_MANAGEMENT",
+            "featureName": "Azure Automation Update Management",
+            "featureDescription": "Service can use Azure Automation Update Management to deploy patches and updates automatically.",
+            "featureSupport": "True",
+            "featureGuidance": "Use Azure Automation Update Management or a third-party solution to ensure that the most recent security updates are installed on your Windows and Linux VMs. For Windows VMs, ensure Windows Update has been enabled and set to update automatically.",
+            "featureReference": "https://learn.microsoft.com/azure/automation/update-management/overview",
+            "enabledByDefault": "False",
+            "customerActionsDescription": "Rapidly and automatically remediate vulnerabilities"
+          }
+        ],
+        "automatedPolicyAvailability": [],
+        "frameworkControls": [
+          "CIS_Azure_2.0.0_4.2.5",
+          "CIS_Azure_2.0.0_4.2.4",
+          "CIS_Azure_2.0.0_4.2.3",
+          "CIS_Azure_2.0.0_4.2.2",
+          "NIST_SP_800-53_R4_SI-2",
+          "NIST_SP_800-53_R4_RA-5",
+          "NIST_SP_800-53_R4_RA-3",
+          "PCI_DSS_v4.0_2.2.1",
+          "PCI_DSS_v4.0_11.3.2",
+          "PCI_DSS_v4.0_11.3.1"
+        ]
+      },
+      "version": "1.0.0",
+      "category": "Regulatory Compliance"
+    },
+    "mode": "All",
+    "policyType": "Custom",
+    "policyRule": {
+      "if": {
+        "allOf": [
+          {
+            "field": "type",
+            "in": [
+              "Microsoft.Resources/subscriptions",
+              "Microsoft.Resources/subscriptions/resourceGroups"
+            ]
+          },
+          {
+            "value": "false",
+            "equals": "true"
+          }
+        ]
+      },
+      "then": {
+        "effect": "Manual",
+        "details": {
+          "defaultState": "Unknown"
+        }
+      }
+    }
+  }
+}

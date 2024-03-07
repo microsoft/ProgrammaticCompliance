@@ -1,0 +1,66 @@
+{
+  "id": "/providers/Microsoft.Authorization/policyDefinitions/a84c80cb-88a9-4468-b6b0-b78afe47f02a",
+  "name": "a84c80cb-88a9-4468-b6b0-b78afe47f02a",
+  "properties": {
+    "description": "Description Custom Manual - MCSB Baseline item IM-7 for Virtual WAN",
+    "displayName": "MCSB Baseline item IM-7 for Virtual WAN",
+    "metadata": {
+      "offeringName": "Virtual WAN",
+      "offeringId": "658a4a19-9c40-472b-a918-3f550848421a",
+      "mcsb": {
+        "mcsbId": "IM-7",
+        "features": [
+          {
+            "featureId": "CONDITIONAL_ACCESS",
+            "featureName": "Conditional Access for Data Plane",
+            "featureDescription": "Data plane access can be controlled using Azure AD Conditional Access Policies.",
+            "featureSupport": "Not Applicable",
+            "featureGuidance": "This feature is not applicable to secure this service.",
+            "featureReference": "Not Applicable",
+            "enabledByDefault": "Not Applicable",
+            "customerActionsDescription": "Restrict resource access based on  conditions"
+          }
+        ],
+        "automatedPolicyAvailability": [],
+        "frameworkControls": [
+          "CIS_Azure_2.0.0_1.2.6",
+          "CIS_Azure_2.0.0_1.2.5",
+          "CIS_Azure_2.0.0_1.2.4",
+          "CIS_Azure_2.0.0_1.2.3",
+          "CIS_Azure_2.0.0_1.2.2",
+          "CIS_Azure_2.0.0_1.2.1",
+          "NIST_SP_800-53_R4_AC-6",
+          "NIST_SP_800-53_R4_AC-2",
+          "NIST_SP_800-53_R4_AC-3"
+        ]
+      },
+      "version": "1.0.0",
+      "category": "Regulatory Compliance"
+    },
+    "mode": "All",
+    "policyType": "Custom",
+    "policyRule": {
+      "if": {
+        "allOf": [
+          {
+            "field": "type",
+            "in": [
+              "Microsoft.Resources/subscriptions",
+              "Microsoft.Resources/subscriptions/resourceGroups"
+            ]
+          },
+          {
+            "value": "false",
+            "equals": "true"
+          }
+        ]
+      },
+      "then": {
+        "effect": "Manual",
+        "details": {
+          "defaultState": "Unknown"
+        }
+      }
+    }
+  }
+}

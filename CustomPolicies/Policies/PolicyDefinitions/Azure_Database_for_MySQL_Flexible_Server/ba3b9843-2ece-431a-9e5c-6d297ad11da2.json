@@ -1,0 +1,83 @@
+{
+  "id": "/providers/Microsoft.Authorization/policyDefinitions/ba3b9843-2ece-431a-9e5c-6d297ad11da2",
+  "name": "ba3b9843-2ece-431a-9e5c-6d297ad11da2",
+  "properties": {
+    "description": "Description Custom Manual - MCSB Baseline item DP-4 for Azure Database for MySQL - Flexible Server",
+    "displayName": "MCSB Baseline item DP-4 for Azure Database for MySQL - Flexible Server",
+    "metadata": {
+      "offeringName": "Azure Database for MySQL - Flexible Server",
+      "offeringId": "ffe65641-80b4-4930-8cd4-704eb755936e",
+      "mcsb": {
+        "mcsbId": "DP-4",
+        "features": [
+          {
+            "featureId": "DATA_AT_REST_ENCRYPTION_USING_PLATFORM_KEYS",
+            "featureName": "Data at Rest Encryption Using Platform Keys",
+            "featureDescription": "Data at-rest encryption using platform keys is supported, any customer content at rest is encrypted with these Microsoft managed keys.",
+            "featureSupport": "True",
+            "featureGuidance": "No additional configurations are required as this is enabled on a default deployment.",
+            "featureReference": "Not Applicable",
+            "enabledByDefault": "True",
+            "customerActionsDescription": "Enable data at rest encryption by default  "
+          }
+        ],
+        "automatedPolicyAvailability": [
+          {
+            "policyId": "146412e9-005c-472b-9e48-c87b72ac229e",
+            "policyName": "An Azure Active Directory administrator should be provisioned for MySQL servers",
+            "policyDescription": "Audit provisioning of an Azure Active Directory administrator for your MySQL server to enable Azure AD authentication. Azure AD authentication enables simplified permission management and centralized identity management of database users and other Microsoft services",
+            "policyCategory": "SQL"
+          },
+          {
+            "policyId": "40e85574-ef33-47e8-a854-7a65c7500560",
+            "policyName": "Azure MySQL flexible server should have Azure Active Directory Only Authentication enabled",
+            "policyDescription": "Disabling local authentication methods and allowing only Azure Active Directory Authentication improves security by ensuring that Azure MySQL flexible server can exclusively be accessed by Azure Active Directory identities.",
+            "policyCategory": "SQL"
+          }
+        ],
+        "frameworkControls": [
+          "CIS_Azure_2.0.0_9.10",
+          "CIS_Azure_2.0.0_7.2",
+          "CIS_Azure_2.0.0_4.4.2",
+          "CIS_Azure_2.0.0_4.3.8",
+          "CIS_Azure_2.0.0_4.3.1",
+          "CIS_Azure_2.0.0_4.1.5",
+          "CIS_Azure_2.0.0_3.2",
+          "CIS_Azure_2.0.0_3.1",
+          "NIST_SP_800-53_R4_SC-28",
+          "PCI_DSS_v4.0_4.1.1",
+          "PCI_DSS_v4.0_3.5.1.2",
+          "PCI_DSS_v4.0_3.3.3",
+          "PCI_DSS_v4.0_3.3.2"
+        ]
+      },
+      "version": "1.0.0",
+      "category": "Regulatory Compliance"
+    },
+    "mode": "All",
+    "policyType": "Custom",
+    "policyRule": {
+      "if": {
+        "allOf": [
+          {
+            "field": "type",
+            "in": [
+              "Microsoft.Resources/subscriptions",
+              "Microsoft.Resources/subscriptions/resourceGroups"
+            ]
+          },
+          {
+            "value": "false",
+            "equals": "true"
+          }
+        ]
+      },
+      "then": {
+        "effect": "Manual",
+        "details": {
+          "defaultState": "Unknown"
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,68 @@
+{
+  "id": "/providers/Microsoft.Authorization/policyDefinitions/a8eed969-a72b-41aa-ba49-b4ecdbd2ea76",
+  "name": "a8eed969-a72b-41aa-ba49-b4ecdbd2ea76",
+  "properties": {
+    "description": "Description Custom Manual - MCSB Baseline item DP-5 for Azure Migrate",
+    "displayName": "MCSB Baseline item DP-5 for Azure Migrate",
+    "metadata": {
+      "offeringName": "Azure Migrate",
+      "offeringId": "9d8a7fdc-4f15-4682-b589-78a85286c82c",
+      "mcsb": {
+        "mcsbId": "DP-5",
+        "features": [
+          {
+            "featureId": "DATA_AT_REST_ENCRYPTION_USING_CMK",
+            "featureName": "Data at Rest Encryption Using CMK",
+            "featureDescription": "Data at-rest encryption using customer-managed keys is supported for customer content stored by the service.",
+            "featureSupport": "True",
+            "featureGuidance": "Enable and implement data at rest encryption for your replicated data using customer-managed keys. \r\n\r\nTo replicate VMs with CMK, you'll need to create a disk encryption set under the target Resource Group. A disk encryption set object maps Managed Disks to a Key Vault that contains the CMK to use for SSE.",
+            "featureReference": "https://docs.microsoft.com/azure/migrate/tutorial-migrate-vmware",
+            "enabledByDefault": "False",
+            "customerActionsDescription": "Use customer-managed key option in data at rest encryption when required"
+          }
+        ],
+        "automatedPolicyAvailability": [],
+        "frameworkControls": [
+          "CIS_Azure_2.0.0_7.7",
+          "CIS_Azure_2.0.0_7.4",
+          "CIS_Azure_2.0.0_7.3",
+          "CIS_Azure_2.0.0_5.1.4",
+          "CIS_Azure_2.0.0_4.1.3",
+          "CIS_Azure_2.0.0_3.12",
+          "NIST_SP_800-53_R4_SC-28",
+          "NIST_SP_800-53_R4_SC-12",
+          "PCI_DSS_v4.0_3.5.1.2",
+          "PCI_DSS_v4.0_3.3.3",
+          "PCI_DSS_v4.0_3.3.2"
+        ]
+      },
+      "version": "1.0.0",
+      "category": "Regulatory Compliance"
+    },
+    "mode": "All",
+    "policyType": "Custom",
+    "policyRule": {
+      "if": {
+        "allOf": [
+          {
+            "field": "type",
+            "in": [
+              "Microsoft.Resources/subscriptions",
+              "Microsoft.Resources/subscriptions/resourceGroups"
+            ]
+          },
+          {
+            "value": "false",
+            "equals": "true"
+          }
+        ]
+      },
+      "then": {
+        "effect": "Manual",
+        "details": {
+          "defaultState": "Unknown"
+        }
+      }
+    }
+  }
+}

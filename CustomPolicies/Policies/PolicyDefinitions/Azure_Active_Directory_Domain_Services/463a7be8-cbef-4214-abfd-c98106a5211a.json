@@ -1,0 +1,62 @@
+{
+  "id": "/providers/Microsoft.Authorization/policyDefinitions/463a7be8-cbef-4214-abfd-c98106a5211a",
+  "name": "463a7be8-cbef-4214-abfd-c98106a5211a",
+  "properties": {
+    "description": "Description Custom Manual - MCSB Baseline item DP-2 for Azure Active Directory Domain Services",
+    "displayName": "MCSB Baseline item DP-2 for Azure Active Directory Domain Services",
+    "metadata": {
+      "offeringName": "Azure Active Directory Domain Services",
+      "offeringId": "427b014a-34f3-4568-b59c-45df759441ea",
+      "mcsb": {
+        "mcsbId": "DP-2",
+        "features": [
+          {
+            "featureId": "DATA_LEAKAGE/LOSS_PREVENTION",
+            "featureName": "Data Leakage/Loss Prevention",
+            "featureDescription": "Service supports DLP solution to monitor sensitive data movement (in customer's content).",
+            "featureSupport": "False",
+            "featureGuidance": "This feature is not supported to secure this service.",
+            "featureReference": "Not Applicable",
+            "enabledByDefault": "Not Applicable",
+            "customerActionsDescription": "Monitor anomalies and threats targeting sensitive data"
+          }
+        ],
+        "automatedPolicyAvailability": [],
+        "frameworkControls": [
+          "CIS_Azure_2.0.0_4.2.1",
+          "CIS_Azure_2.0.0_2.1.6",
+          "CIS_Azure_2.0.0_2.1.4",
+          "NIST_SP_800-53_R4_AC-4",
+          "NIST_SP_800-53_R4_SI-4"
+        ]
+      },
+      "version": "1.0.0",
+      "category": "Regulatory Compliance"
+    },
+    "mode": "All",
+    "policyType": "Custom",
+    "policyRule": {
+      "if": {
+        "allOf": [
+          {
+            "field": "type",
+            "in": [
+              "Microsoft.Resources/subscriptions",
+              "Microsoft.Resources/subscriptions/resourceGroups"
+            ]
+          },
+          {
+            "value": "false",
+            "equals": "true"
+          }
+        ]
+      },
+      "then": {
+        "effect": "Manual",
+        "details": {
+          "defaultState": "Unknown"
+        }
+      }
+    }
+  }
+}

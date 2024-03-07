@@ -1,0 +1,70 @@
+{
+  "id": "/providers/Microsoft.Authorization/policyDefinitions/d91667c5-a2bd-4216-af4e-448bdec79ad2",
+  "name": "d91667c5-a2bd-4216-af4e-448bdec79ad2",
+  "properties": {
+    "description": "Description Custom Manual - MCSB Baseline item DP-4 for Azure Kubernetes Service (AKS)",
+    "displayName": "MCSB Baseline item DP-4 for Azure Kubernetes Service (AKS)",
+    "metadata": {
+      "offeringName": "Azure Kubernetes Service (AKS)",
+      "offeringId": "1f30fa84-8aae-4c27-92cf-f77bfdaf5958",
+      "mcsb": {
+        "mcsbId": "DP-4",
+        "features": [
+          {
+            "featureId": "DATA_AT_REST_ENCRYPTION_USING_PLATFORM_KEYS",
+            "featureName": "Data at Rest Encryption Using Platform Keys",
+            "featureDescription": "Data at-rest encryption using platform keys is supported, any customer content at rest is encrypted with these Microsoft managed keys.",
+            "featureSupport": "True",
+            "featureGuidance": "Enable data at rest encryption using platform managed (Microsoft managed) keys where not automatically configured by the service.",
+            "featureReference": "https://docs.microsoft.com/azure/aks/enable-host-encryption",
+            "enabledByDefault": "False",
+            "customerActionsDescription": "Enable data at rest encryption by default  "
+          }
+        ],
+        "automatedPolicyAvailability": [],
+        "frameworkControls": [
+          "CIS_Azure_2.0.0_9.10",
+          "CIS_Azure_2.0.0_7.2",
+          "CIS_Azure_2.0.0_4.4.2",
+          "CIS_Azure_2.0.0_4.3.8",
+          "CIS_Azure_2.0.0_4.3.1",
+          "CIS_Azure_2.0.0_4.1.5",
+          "CIS_Azure_2.0.0_3.2",
+          "CIS_Azure_2.0.0_3.1",
+          "NIST_SP_800-53_R4_SC-28",
+          "PCI_DSS_v4.0_4.1.1",
+          "PCI_DSS_v4.0_3.5.1.2",
+          "PCI_DSS_v4.0_3.3.3",
+          "PCI_DSS_v4.0_3.3.2"
+        ]
+      },
+      "version": "1.0.0",
+      "category": "Regulatory Compliance"
+    },
+    "mode": "All",
+    "policyType": "Custom",
+    "policyRule": {
+      "if": {
+        "allOf": [
+          {
+            "field": "type",
+            "in": [
+              "Microsoft.Resources/subscriptions",
+              "Microsoft.Resources/subscriptions/resourceGroups"
+            ]
+          },
+          {
+            "value": "false",
+            "equals": "true"
+          }
+        ]
+      },
+      "then": {
+        "effect": "Manual",
+        "details": {
+          "defaultState": "Unknown"
+        }
+      }
+    }
+  }
+}

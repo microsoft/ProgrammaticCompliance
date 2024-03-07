@@ -1,0 +1,40 @@
+{
+  "id": "/providers/Microsoft.Authorization/policyDefinitions/ac3f097b-2408-4bf8-be4a-1dd9a390b01a",
+  "name": "ac3f097b-2408-4bf8-be4a-1dd9a390b01a",
+  "properties": {
+    "description": "Microsoft implements this Security Assessment and Authorization control",
+    "displayName": "Custom - Microsoft Managed Control 1449 - Security Authorization",
+    "metadata": {
+      "version": "1.0.0",
+      "category": "Regulatory Compliance",
+      "additionalMetadataId": "/providers/Microsoft.PolicyInsights/policyMetadata/ACF1449",
+      "standardControlMappings": [
+        "NIST_SP_800-53_R4_PE-2",
+        "PCI_DSS_v4.0_9.3.1",
+        "PCI_DSS_v4.0_9.3.1.1"
+      ]
+    },
+    "mode": "Indexed",
+    "policyType": "Custom",
+    "policyRule": {
+      "if": {
+        "allOf": [
+          {
+            "field": "type",
+            "in": [
+              "Microsoft.Resources/subscriptions",
+              "Microsoft.Resources/subscriptions/resourceGroups"
+            ]
+          },
+          {
+            "value": "false",
+            "equals": "true"
+          }
+        ]
+      },
+      "then": {
+        "effect": "audit"
+      }
+    }
+  }
+}

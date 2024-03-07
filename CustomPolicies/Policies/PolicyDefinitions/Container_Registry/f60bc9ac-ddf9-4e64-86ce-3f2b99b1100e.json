@@ -1,0 +1,61 @@
+{
+  "id": "/providers/Microsoft.Authorization/policyDefinitions/f60bc9ac-ddf9-4e64-86ce-3f2b99b1100e",
+  "name": "f60bc9ac-ddf9-4e64-86ce-3f2b99b1100e",
+  "properties": {
+    "description": "Description Custom Manual - MCSB Baseline item DP-7 for Container Registry",
+    "displayName": "MCSB Baseline item DP-7 for Container Registry",
+    "metadata": {
+      "offeringName": "Container Registry",
+      "offeringId": "e3ca8f4d-b86b-41eb-aa82-070498477c56",
+      "mcsb": {
+        "mcsbId": "DP-7",
+        "features": [
+          {
+            "featureId": "CERTIFICATE_MANAGEMENT_IN_AZURE_KEY_VAULT",
+            "featureName": "Certificate Management in Azure Key Vault",
+            "featureDescription": "The service supports Azure Key Vault integration for any customer certificates.",
+            "featureSupport": "Not Applicable",
+            "featureGuidance": "This feature is not applicable to secure this service.",
+            "featureReference": "Not Applicable",
+            "enabledByDefault": "Not Applicable",
+            "customerActionsDescription": "Use a secure certificate management process"
+          }
+        ],
+        "automatedPolicyAvailability": [],
+        "frameworkControls": [
+          "NIST_SP_800-53_R4_SC-12",
+          "NIST_SP_800-53_R4_IA-5",
+          "NIST_SP_800-53_R4_SC-17",
+          "PCI_DSS_v4.0_4.2.1"
+        ]
+      },
+      "version": "1.0.0",
+      "category": "Regulatory Compliance"
+    },
+    "mode": "All",
+    "policyType": "Custom",
+    "policyRule": {
+      "if": {
+        "allOf": [
+          {
+            "field": "type",
+            "in": [
+              "Microsoft.Resources/subscriptions",
+              "Microsoft.Resources/subscriptions/resourceGroups"
+            ]
+          },
+          {
+            "value": "false",
+            "equals": "true"
+          }
+        ]
+      },
+      "then": {
+        "effect": "Manual",
+        "details": {
+          "defaultState": "Unknown"
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,65 @@
+{
+  "id": "/providers/Microsoft.Authorization/policyDefinitions/2fd3d37a-9c38-40fb-b93c-67a62d157380",
+  "name": "2fd3d37a-9c38-40fb-b93c-67a62d157380",
+  "properties": {
+    "description": "Description Custom Manual - MCSB Baseline item AM-5 for Machine Learning Service",
+    "displayName": "MCSB Baseline item AM-5 for Machine Learning Service",
+    "metadata": {
+      "offeringName": "Machine Learning Service",
+      "offeringId": "72b76e95-fad8-45b8-9888-a61255034d11",
+      "mcsb": {
+        "mcsbId": "AM-5",
+        "features": [
+          {
+            "featureId": "ADAPTIVE_APPLICATION_CONTROLS",
+            "featureName": "Microsoft Defender for Cloud - Adaptive Application Controls",
+            "featureDescription": "Service can limit what customer applications run on the virtual machine using Adaptive Application Controls in Microsoft Defender for Cloud.",
+            "featureSupport": "False",
+            "featureGuidance": "This feature is not supported to secure this service.",
+            "featureReference": "Not Applicable",
+            "enabledByDefault": "Not Applicable",
+            "customerActionsDescription": "Use only approved applications in virtual machine"
+          }
+        ],
+        "automatedPolicyAvailability": [],
+        "frameworkControls": [
+          "CIS_Azure_2.0.0_7.5",
+          "NIST_SP_800-53_R4_CM-11",
+          "NIST_SP_800-53_R4_CM-10",
+          "NIST_SP_800-53_R4_CM-7",
+          "NIST_SP_800-53_R4_CM-8",
+          "PCI_DSS_v4.0_2.2.6",
+          "PCI_DSS_v4.0_2.2.5",
+          "PCI_DSS_v4.0_2.2.4"
+        ]
+      },
+      "version": "1.0.0",
+      "category": "Regulatory Compliance"
+    },
+    "mode": "All",
+    "policyType": "Custom",
+    "policyRule": {
+      "if": {
+        "allOf": [
+          {
+            "field": "type",
+            "in": [
+              "Microsoft.Resources/subscriptions",
+              "Microsoft.Resources/subscriptions/resourceGroups"
+            ]
+          },
+          {
+            "value": "false",
+            "equals": "true"
+          }
+        ]
+      },
+      "then": {
+        "effect": "Manual",
+        "details": {
+          "defaultState": "Unknown"
+        }
+      }
+    }
+  }
+}

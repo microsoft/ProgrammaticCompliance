@@ -1,0 +1,75 @@
+{
+  "id": "/providers/Microsoft.Authorization/policyDefinitions/f10d8da3-265b-4cec-ab74-b7b88434faf3",
+  "name": "f10d8da3-265b-4cec-ab74-b7b88434faf3",
+  "properties": {
+    "description": "Description Custom Manual - MCSB Baseline item IM-3 for Azure Database for MySQL - Flexible Server",
+    "displayName": "MCSB Baseline item IM-3 for Azure Database for MySQL - Flexible Server",
+    "metadata": {
+      "offeringName": "Azure Database for MySQL - Flexible Server",
+      "offeringId": "ffe65641-80b4-4930-8cd4-704eb755936e",
+      "mcsb": {
+        "mcsbId": "IM-3",
+        "features": [
+          {
+            "featureId": "MANAGED_IDENTITIES",
+            "featureName": "Managed Identities",
+            "featureDescription": "Data plane actions support authentication using managed identities.",
+            "featureSupport": "True",
+            "featureGuidance": "No additional configurations are required as this is enabled on a default deployment.",
+            "featureReference": "https://learn.microsoft.com/azure/mysql/flexible-server/concepts-customer-managed-key?source=recommendations",
+            "enabledByDefault": "True",
+            "customerActionsDescription": "Manage application identities securely and automatically"
+          },
+          {
+            "featureId": "SERVICE_PRINCIPAL",
+            "featureName": "Service Principals",
+            "featureDescription": "Data plane supports authentication using service principals.",
+            "featureSupport": "True",
+            "featureGuidance": "No additional configurations are required as this is enabled on a default deployment.",
+            "featureReference": "Not Applicable",
+            "enabledByDefault": "True",
+            "customerActionsDescription": "Manage application identities securely and automatically"
+          }
+        ],
+        "automatedPolicyAvailability": [],
+        "frameworkControls": [
+          "NIST_SP_800-53_R4_IA-5",
+          "NIST_SP_800-53_R4_AC-2",
+          "NIST_SP_800-53_R4_IA-9",
+          "NIST_SP_800-53_R4_IA-4",
+          "NIST_SP_800-53_R4_AC-3",
+          "PCI_DSS_v4.0_8.6.2",
+          "PCI_DSS_v4.0_8.6.3",
+          "PCI_DSS_v4.0_8.6.1"
+        ]
+      },
+      "version": "1.0.0",
+      "category": "Regulatory Compliance"
+    },
+    "mode": "All",
+    "policyType": "Custom",
+    "policyRule": {
+      "if": {
+        "allOf": [
+          {
+            "field": "type",
+            "in": [
+              "Microsoft.Resources/subscriptions",
+              "Microsoft.Resources/subscriptions/resourceGroups"
+            ]
+          },
+          {
+            "value": "false",
+            "equals": "true"
+          }
+        ]
+      },
+      "then": {
+        "effect": "Manual",
+        "details": {
+          "defaultState": "Unknown"
+        }
+      }
+    }
+  }
+}

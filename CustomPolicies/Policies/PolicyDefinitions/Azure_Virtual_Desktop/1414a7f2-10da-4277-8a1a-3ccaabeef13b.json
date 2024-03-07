@@ -1,0 +1,59 @@
+{
+  "id": "/providers/Microsoft.Authorization/policyDefinitions/1414a7f2-10da-4277-8a1a-3ccaabeef13b",
+  "name": "1414a7f2-10da-4277-8a1a-3ccaabeef13b",
+  "properties": {
+    "description": "Description Custom Manual - MCSB Baseline item DP-1 for Azure Virtual Desktop",
+    "displayName": "MCSB Baseline item DP-1 for Azure Virtual Desktop",
+    "metadata": {
+      "offeringName": "Azure Virtual Desktop",
+      "offeringId": "1132b618-fefe-40a0-9256-e685ff575ac7",
+      "mcsb": {
+        "mcsbId": "DP-1",
+        "features": [
+          {
+            "featureId": "SENSITIVE_DATA_DISCOVERY_AND_CLASSIFICATION",
+            "featureName": "Sensitive Data Discovery and Classification",
+            "featureDescription": "Tools (such as Azure Purview or Azure Information Protection) can be used for data discovery and classification in the service.",
+            "featureSupport": "True",
+            "featureGuidance": "Use tools such as Azure Purview, Azure Information Protection, and Azure SQL Data Discovery and Classification to centrally scan, classify and label any sensitive data that resides in Azure, on-premises, Microsoft 365, or other locations.",
+            "featureReference": "Not Applicable",
+            "enabledByDefault": "False",
+            "customerActionsDescription": "Discover, classify, and label sensitive data\n\n"
+          }
+        ],
+        "automatedPolicyAvailability": [],
+        "frameworkControls": [
+          "NIST_SP_800-53_R4_SC-28",
+          "NIST_SP_800-53_R4_RA-2"
+        ]
+      },
+      "version": "1.0.0",
+      "category": "Regulatory Compliance"
+    },
+    "mode": "All",
+    "policyType": "Custom",
+    "policyRule": {
+      "if": {
+        "allOf": [
+          {
+            "field": "type",
+            "in": [
+              "Microsoft.Resources/subscriptions",
+              "Microsoft.Resources/subscriptions/resourceGroups"
+            ]
+          },
+          {
+            "value": "false",
+            "equals": "true"
+          }
+        ]
+      },
+      "then": {
+        "effect": "Manual",
+        "details": {
+          "defaultState": "Unknown"
+        }
+      }
+    }
+  }
+}

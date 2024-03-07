@@ -1,0 +1,62 @@
+{
+  "id": "/providers/Microsoft.Authorization/policyDefinitions/a2a95d07-2601-4176-b674-d97a1b17d683",
+  "name": "a2a95d07-2601-4176-b674-d97a1b17d683",
+  "properties": {
+    "description": "Description Custom Manual - MCSB Baseline item DP-2 for Redis Cache",
+    "displayName": "MCSB Baseline item DP-2 for Redis Cache",
+    "metadata": {
+      "offeringName": "Redis Cache",
+      "offeringId": "36d1891e-40d0-4dc5-bd43-ad946173dcd0",
+      "mcsb": {
+        "mcsbId": "DP-2",
+        "features": [
+          {
+            "featureId": "DATA_LEAKAGE/LOSS_PREVENTION",
+            "featureName": "Data Leakage/Loss Prevention",
+            "featureDescription": "Service supports DLP solution to monitor sensitive data movement (in customer's content).",
+            "featureSupport": "False",
+            "featureGuidance": "This feature is not supported to secure this service.",
+            "featureReference": "Not Applicable",
+            "enabledByDefault": "Not Applicable",
+            "customerActionsDescription": "Monitor anomalies and threats targeting sensitive data"
+          }
+        ],
+        "automatedPolicyAvailability": [],
+        "frameworkControls": [
+          "CIS_Azure_2.0.0_4.2.1",
+          "CIS_Azure_2.0.0_2.1.6",
+          "CIS_Azure_2.0.0_2.1.4",
+          "NIST_SP_800-53_R4_AC-4",
+          "NIST_SP_800-53_R4_SI-4"
+        ]
+      },
+      "version": "1.0.0",
+      "category": "Regulatory Compliance"
+    },
+    "mode": "All",
+    "policyType": "Custom",
+    "policyRule": {
+      "if": {
+        "allOf": [
+          {
+            "field": "type",
+            "in": [
+              "Microsoft.Resources/subscriptions",
+              "Microsoft.Resources/subscriptions/resourceGroups"
+            ]
+          },
+          {
+            "value": "false",
+            "equals": "true"
+          }
+        ]
+      },
+      "then": {
+        "effect": "Manual",
+        "details": {
+          "defaultState": "Unknown"
+        }
+      }
+    }
+  }
+}

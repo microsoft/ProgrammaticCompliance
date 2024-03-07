@@ -1,0 +1,70 @@
+{
+  "id": "/providers/Microsoft.Authorization/policyDefinitions/5edff8d5-04ff-4a76-99a4-3a744f7a8c5c",
+  "name": "5edff8d5-04ff-4a76-99a4-3a744f7a8c5c",
+  "properties": {
+    "description": "Description Custom Manual - MCSB Baseline item PA-7 for Virtual Network NAT",
+    "displayName": "MCSB Baseline item PA-7 for Virtual Network NAT",
+    "metadata": {
+      "offeringName": "Virtual Network NAT",
+      "offeringId": "91684203-36aa-48b0-9b43-87fb7890d169",
+      "mcsb": {
+        "mcsbId": "PA-7",
+        "features": [
+          {
+            "featureId": "AZURE_RBAC_DATAPLANE_SUPPORTED",
+            "featureName": "Azure RBAC for Data Plane",
+            "featureDescription": "Azure Role-Based Access Control (Azure RBAC) can be used to managed access to service's data plane actions.",
+            "featureSupport": "Not Applicable",
+            "featureGuidance": "This feature is not applicable to secure this service.",
+            "featureReference": "Not Applicable",
+            "enabledByDefault": "Not Applicable",
+            "customerActionsDescription": "Follow just enough administration (least privilege) principle"
+          }
+        ],
+        "automatedPolicyAvailability": [],
+        "frameworkControls": [
+          "CIS_Azure_2.0.0_4.5.3",
+          "CIS_Azure_2.0.0_1.24",
+          "NIST_SP_800-53_R4_AC-6",
+          "NIST_SP_800-53_R4_AC-3",
+          "NIST_SP_800-53_R4_AC-2",
+          "PCI_DSS_v4.0_8.2.7",
+          "PCI_DSS_v4.0_7.3.3",
+          "PCI_DSS_v4.0_7.3.2",
+          "PCI_DSS_v4.0_7.3.1",
+          "PCI_DSS_v4.0_7.2.6",
+          "PCI_DSS_v4.0_7.2.5",
+          "PCI_DSS_v4.0_7.2.2",
+          "PCI_DSS_v4.0_7.2.1"
+        ]
+      },
+      "version": "1.0.0",
+      "category": "Regulatory Compliance"
+    },
+    "mode": "All",
+    "policyType": "Custom",
+    "policyRule": {
+      "if": {
+        "allOf": [
+          {
+            "field": "type",
+            "in": [
+              "Microsoft.Resources/subscriptions",
+              "Microsoft.Resources/subscriptions/resourceGroups"
+            ]
+          },
+          {
+            "value": "false",
+            "equals": "true"
+          }
+        ]
+      },
+      "then": {
+        "effect": "Manual",
+        "details": {
+          "defaultState": "Unknown"
+        }
+      }
+    }
+  }
+}

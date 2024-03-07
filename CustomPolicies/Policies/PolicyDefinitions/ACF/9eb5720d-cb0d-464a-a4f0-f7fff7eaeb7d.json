@@ -1,0 +1,40 @@
+{
+  "id": "/providers/Microsoft.Authorization/policyDefinitions/9eb5720d-cb0d-464a-a4f0-f7fff7eaeb7d",
+  "name": "9eb5720d-cb0d-464a-a4f0-f7fff7eaeb7d",
+  "properties": {
+    "description": "Microsoft implements this Security Assessment and Authorization control",
+    "displayName": "Custom - Microsoft Managed Control 1498 - Security Authorization",
+    "metadata": {
+      "version": "1.0.0",
+      "category": "Regulatory Compliance",
+      "additionalMetadataId": "/providers/Microsoft.PolicyInsights/policyMetadata/ACF1498",
+      "standardControlMappings": [
+        "CIS_Azure_2.0.0_1.14",
+        "NIST_SP_800-53_R4_PL-4",
+        "PCI_DSS_v4.0_12.2.1"
+      ]
+    },
+    "mode": "Indexed",
+    "policyType": "Custom",
+    "policyRule": {
+      "if": {
+        "allOf": [
+          {
+            "field": "type",
+            "in": [
+              "Microsoft.Resources/subscriptions",
+              "Microsoft.Resources/subscriptions/resourceGroups"
+            ]
+          },
+          {
+            "value": "false",
+            "equals": "true"
+          }
+        ]
+      },
+      "then": {
+        "effect": "audit"
+      }
+    }
+  }
+}

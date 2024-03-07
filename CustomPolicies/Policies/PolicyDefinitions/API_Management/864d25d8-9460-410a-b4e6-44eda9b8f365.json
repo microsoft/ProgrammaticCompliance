@@ -1,0 +1,70 @@
+{
+  "id": "/providers/Microsoft.Authorization/policyDefinitions/864d25d8-9460-410a-b4e6-44eda9b8f365",
+  "name": "864d25d8-9460-410a-b4e6-44eda9b8f365",
+  "properties": {
+    "description": "Description Custom Manual - MCSB Baseline item BR-1 for API Management",
+    "displayName": "MCSB Baseline item BR-1 for API Management",
+    "metadata": {
+      "offeringName": "API Management",
+      "offeringId": "7e1fb574-eb4a-45d7-8db2-c85445aac53f",
+      "mcsb": {
+        "mcsbId": "BR-1",
+        "features": [
+          {
+            "featureId": "AZURE_BACKUP_SUPPORT",
+            "featureName": "Azure Backup",
+            "featureDescription": "The service can be backed up by the Azure Backup service.",
+            "featureSupport": "False",
+            "featureGuidance": "This feature is not supported to secure this service.",
+            "featureReference": "Not Applicable",
+            "enabledByDefault": "Not Applicable",
+            "customerActionsDescription": "Ensure regular automated backups"
+          },
+          {
+            "featureId": "NATIVE_BACKUP",
+            "featureName": "Service Native Backup Capability",
+            "featureDescription": "Service supports its own native backup capability (if not using Azure Backup).",
+            "featureSupport": "True",
+            "featureGuidance": "Leverage the backup and restore capabilities in Azure API Management service. When leveraging backup capabilities, Azure API Management writes backups to customer-owned Azure Storage accounts. Backup and restore operations are provided by Azure API Management to perform full system backup and restore.",
+            "featureReference": "https://docs.microsoft.com/azure/api-management/api-management-howto-disaster-recovery-backup-restore#calling-the-backup-and-restore-operations",
+            "enabledByDefault": "False",
+            "customerActionsDescription": "Ensure regular automated backups"
+          }
+        ],
+        "automatedPolicyAvailability": [],
+        "frameworkControls": [
+          "NIST_SP_800-53_R4_CP-9",
+          "NIST_SP_800-53_R4_CP-4",
+          "NIST_SP_800-53_R4_CP-2"
+        ]
+      },
+      "version": "1.0.0",
+      "category": "Regulatory Compliance"
+    },
+    "mode": "All",
+    "policyType": "Custom",
+    "policyRule": {
+      "if": {
+        "allOf": [
+          {
+            "field": "type",
+            "in": [
+              "Microsoft.Resources/subscriptions",
+              "Microsoft.Resources/subscriptions/resourceGroups"
+            ]
+          },
+          {
+            "value": "false",
+            "equals": "true"
+          }
+        ]
+      },
+      "then": {
+        "effect": "Manual",
+        "details": {
+          "defaultState": "Unknown"
+        }
+      }
+    }
+  }
+}

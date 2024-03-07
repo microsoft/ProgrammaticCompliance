@@ -1,0 +1,59 @@
+{
+  "id": "/providers/Microsoft.Authorization/policyDefinitions/1dbbc927-9775-4f26-b36f-497d1e5027b9",
+  "name": "1dbbc927-9775-4f26-b36f-497d1e5027b9",
+  "properties": {
+    "description": "Description Custom Manual - MCSB Baseline item DP-1 for Azure DDoS Protection",
+    "displayName": "MCSB Baseline item DP-1 for Azure DDoS Protection",
+    "metadata": {
+      "offeringName": "Azure DDoS Protection",
+      "offeringId": "f6e8fff8-2109-453d-82fd-504fbd213f90",
+      "mcsb": {
+        "mcsbId": "DP-1",
+        "features": [
+          {
+            "featureId": "SENSITIVE_DATA_DISCOVERY_AND_CLASSIFICATION",
+            "featureName": "Sensitive Data Discovery and Classification",
+            "featureDescription": "Tools (such as Azure Purview or Azure Information Protection) can be used for data discovery and classification in the service.",
+            "featureSupport": "Not Applicable",
+            "featureGuidance": "This feature is not applicable to secure this service.",
+            "featureReference": "Not Applicable",
+            "enabledByDefault": "Not Applicable",
+            "customerActionsDescription": "Discover, classify, and label sensitive data\n\n"
+          }
+        ],
+        "automatedPolicyAvailability": [],
+        "frameworkControls": [
+          "NIST_SP_800-53_R4_SC-28",
+          "NIST_SP_800-53_R4_RA-2"
+        ]
+      },
+      "version": "1.0.0",
+      "category": "Regulatory Compliance"
+    },
+    "mode": "All",
+    "policyType": "Custom",
+    "policyRule": {
+      "if": {
+        "allOf": [
+          {
+            "field": "type",
+            "in": [
+              "Microsoft.Resources/subscriptions",
+              "Microsoft.Resources/subscriptions/resourceGroups"
+            ]
+          },
+          {
+            "value": "false",
+            "equals": "true"
+          }
+        ]
+      },
+      "then": {
+        "effect": "Manual",
+        "details": {
+          "defaultState": "Unknown"
+        }
+      }
+    }
+  }
+}

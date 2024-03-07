@@ -1,0 +1,173 @@
+{
+  "id": "/providers/Microsoft.Authorization/policySetDefinitions/4c9a8e8a-6594-4e96-a310-ee9fc9d6285f",
+  "name": "4c9a8e8a-6594-4e96-a310-ee9fc9d6285f",
+  "properties": {
+    "displayName": "MCSB Initiative for Site Recovery",
+    "policyType": "Custom",
+    "description": "This initiative captures the list of MCSB policy definitions for Site Recovery",
+    "policyDefinitions": [
+      {
+        "policyDefinitionId": "/providers/Microsoft.Authorization/policyDefinitions/5430c52c-0c7b-41c0-aa9a-a793de45f69c",
+        "parameters": {},
+        "policyDefinitionReferenceId": "5430c52c-0c7b-41c0-aa9a-a793de45f69c",
+        "groupNames": []
+      },
+      {
+        "policyDefinitionId": "/providers/Microsoft.Authorization/policyDefinitions/70e9e960-5a79-4e49-b837-9f772ebe9a76",
+        "parameters": {},
+        "policyDefinitionReferenceId": "70e9e960-5a79-4e49-b837-9f772ebe9a76",
+        "groupNames": []
+      },
+      {
+        "policyDefinitionId": "/providers/Microsoft.Authorization/policyDefinitions/05bee9a5-3622-4dfd-ad30-b3ff020d3db3",
+        "parameters": {},
+        "policyDefinitionReferenceId": "05bee9a5-3622-4dfd-ad30-b3ff020d3db3",
+        "groupNames": []
+      },
+      {
+        "policyDefinitionId": "/providers/Microsoft.Authorization/policyDefinitions/5f837b6d-0592-4a7b-8dae-0db6f0acceea",
+        "parameters": {},
+        "policyDefinitionReferenceId": "5f837b6d-0592-4a7b-8dae-0db6f0acceea",
+        "groupNames": []
+      },
+      {
+        "policyDefinitionId": "/providers/Microsoft.Authorization/policyDefinitions/69974999-c9eb-4958-921c-6ce481b9aa01",
+        "parameters": {},
+        "policyDefinitionReferenceId": "69974999-c9eb-4958-921c-6ce481b9aa01",
+        "groupNames": []
+      },
+      {
+        "policyDefinitionId": "/providers/Microsoft.Authorization/policyDefinitions/110827a8-3b3c-464c-9302-8a4db23c958d",
+        "parameters": {},
+        "policyDefinitionReferenceId": "110827a8-3b3c-464c-9302-8a4db23c958d",
+        "groupNames": []
+      },
+      {
+        "policyDefinitionId": "/providers/Microsoft.Authorization/policyDefinitions/af9f64d3-2f04-4d31-a0c9-a30b01d4fc6b",
+        "parameters": {},
+        "policyDefinitionReferenceId": "af9f64d3-2f04-4d31-a0c9-a30b01d4fc6b",
+        "groupNames": []
+      },
+      {
+        "policyDefinitionId": "/providers/Microsoft.Authorization/policyDefinitions/94234383-208b-4730-b516-ae6edf117e20",
+        "parameters": {},
+        "policyDefinitionReferenceId": "94234383-208b-4730-b516-ae6edf117e20",
+        "groupNames": []
+      },
+      {
+        "policyDefinitionId": "/providers/Microsoft.Authorization/policyDefinitions/2c2f5add-68ee-4e57-ba7d-6eacb414f663",
+        "parameters": {},
+        "policyDefinitionReferenceId": "2c2f5add-68ee-4e57-ba7d-6eacb414f663",
+        "groupNames": []
+      },
+      {
+        "policyDefinitionId": "/providers/Microsoft.Authorization/policyDefinitions/98d943f8-11c2-4a0d-b282-97b97e746c95",
+        "parameters": {},
+        "policyDefinitionReferenceId": "98d943f8-11c2-4a0d-b282-97b97e746c95",
+        "groupNames": []
+      },
+      {
+        "policyDefinitionId": "/providers/Microsoft.Authorization/policyDefinitions/5d712dcb-d6fe-46e8-bf2a-96a419fd51fd",
+        "parameters": {},
+        "policyDefinitionReferenceId": "5d712dcb-d6fe-46e8-bf2a-96a419fd51fd",
+        "groupNames": []
+      },
+      {
+        "policyDefinitionId": "/providers/Microsoft.Authorization/policyDefinitions/eda81500-d84b-4786-9b4c-0226ddcf22da",
+        "parameters": {},
+        "policyDefinitionReferenceId": "eda81500-d84b-4786-9b4c-0226ddcf22da",
+        "groupNames": []
+      },
+      {
+        "policyDefinitionId": "/providers/Microsoft.Authorization/policyDefinitions/c0081e2e-5286-4d8d-bf66-efd56e286693",
+        "parameters": {},
+        "policyDefinitionReferenceId": "c0081e2e-5286-4d8d-bf66-efd56e286693",
+        "groupNames": []
+      },
+      {
+        "policyDefinitionId": "/providers/Microsoft.Authorization/policyDefinitions/df83ce16-90fa-4907-b26c-7f96910f0d1f",
+        "parameters": {},
+        "policyDefinitionReferenceId": "df83ce16-90fa-4907-b26c-7f96910f0d1f",
+        "groupNames": []
+      },
+      {
+        "policyDefinitionId": "/providers/Microsoft.Authorization/policyDefinitions/14d24d5f-29d8-40d3-a05a-933c7d52b44f",
+        "parameters": {},
+        "policyDefinitionReferenceId": "14d24d5f-29d8-40d3-a05a-933c7d52b44f",
+        "groupNames": []
+      },
+      {
+        "policyDefinitionId": "/providers/Microsoft.Authorization/policyDefinitions/8c8b2f27-333a-47ae-a1e8-35626cd192f9",
+        "parameters": {},
+        "policyDefinitionReferenceId": "8c8b2f27-333a-47ae-a1e8-35626cd192f9",
+        "groupNames": []
+      },
+      {
+        "policyDefinitionId": "/providers/Microsoft.Authorization/policyDefinitions/6c9714ad-8840-4a55-9182-2ff3f03f4119",
+        "parameters": {},
+        "policyDefinitionReferenceId": "6c9714ad-8840-4a55-9182-2ff3f03f4119",
+        "groupNames": []
+      },
+      {
+        "policyDefinitionId": "/providers/Microsoft.Authorization/policyDefinitions/16ec245b-f22d-42ee-b691-55cc07d4749b",
+        "parameters": {},
+        "policyDefinitionReferenceId": "16ec245b-f22d-42ee-b691-55cc07d4749b",
+        "groupNames": []
+      },
+      {
+        "policyDefinitionId": "/providers/Microsoft.Authorization/policyDefinitions/8e8c6ccd-91fb-43b6-ba50-2dd9a957ee24",
+        "parameters": {},
+        "policyDefinitionReferenceId": "8e8c6ccd-91fb-43b6-ba50-2dd9a957ee24",
+        "groupNames": []
+      },
+      {
+        "policyDefinitionId": "/providers/Microsoft.Authorization/policyDefinitions/27107433-f9b4-4943-9417-d2c338cecf69",
+        "parameters": {},
+        "policyDefinitionReferenceId": "27107433-f9b4-4943-9417-d2c338cecf69",
+        "groupNames": []
+      },
+      {
+        "policyDefinitionId": "/providers/Microsoft.Authorization/policyDefinitions/97643e71-4a07-4f11-bbea-78b33cc9c0d2",
+        "parameters": {},
+        "policyDefinitionReferenceId": "97643e71-4a07-4f11-bbea-78b33cc9c0d2",
+        "groupNames": []
+      },
+      {
+        "policyDefinitionId": "/providers/Microsoft.Authorization/policyDefinitions/e6017f5d-d899-4f05-be62-b2aa89cc841e",
+        "parameters": {},
+        "policyDefinitionReferenceId": "e6017f5d-d899-4f05-be62-b2aa89cc841e",
+        "groupNames": []
+      },
+      {
+        "policyDefinitionId": "/providers/Microsoft.Authorization/policyDefinitions/23ddf042-f14f-4146-aa81-d0b516baedf7",
+        "parameters": {},
+        "policyDefinitionReferenceId": "23ddf042-f14f-4146-aa81-d0b516baedf7",
+        "groupNames": []
+      },
+      {
+        "policyDefinitionId": "/providers/Microsoft.Authorization/policyDefinitions/70e4f0d0-8165-4e3e-85ca-a10c23fb9111",
+        "parameters": {},
+        "policyDefinitionReferenceId": "70e4f0d0-8165-4e3e-85ca-a10c23fb9111",
+        "groupNames": []
+      },
+      {
+        "policyDefinitionId": "/providers/Microsoft.Authorization/policyDefinitions/9d28aecf-c0d7-4d4c-a359-4584d8a19c50",
+        "parameters": {},
+        "policyDefinitionReferenceId": "9d28aecf-c0d7-4d4c-a359-4584d8a19c50",
+        "groupNames": []
+      },
+      {
+        "policyDefinitionId": "/providers/Microsoft.Authorization/policyDefinitions/aad650d4-902d-4e30-84c7-728235598850",
+        "parameters": {},
+        "policyDefinitionReferenceId": "aad650d4-902d-4e30-84c7-728235598850",
+        "groupNames": []
+      },
+      {
+        "policyDefinitionId": "/providers/Microsoft.Authorization/policyDefinitions/f6643f49-0686-4afd-a957-029655ebac5f",
+        "parameters": {},
+        "policyDefinitionReferenceId": "f6643f49-0686-4afd-a957-029655ebac5f",
+        "groupNames": []
+      }
+    ]
+  }
+}

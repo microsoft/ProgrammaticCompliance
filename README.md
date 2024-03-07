@@ -78,3 +78,113 @@ Congrats! 🎉 You're in!
 
 ## Troubleshooting 🆘
 If the site fails to load, contact Julia with error logs. Copy & paste the terminal output if there are errors there. If not, "Inspect" the webpage in your browser, navigate to the "Output" tab, and screenshot that.
+
+# Tenant configuration - custom policy definitions creation
+> [!NOTE]
+> The custom policies creation process is strictly for a non-production/testing environment (tenants or subscriptions) and destined for any user allowed in private preview. Once the policies are made available as built-in it is recommended to use the cleanup scripts to delete all the custom policies created during the private preview phase.
+
+
+* Download the latest version of [PowerShell](https://learn.microsoft.com/en-us/powershell/scripting/install/installing-powershell-on-windows?view=powershell-7.4)
+
+## Local Machine configuration
+* Set the working directory to the PowerShell scripts directory
+```
+Set-Location -Path .\CustomPolicies\PowerShell
+```
+* Run the environment set up script with the powershell elevated privileges
+```
+.\EnvConfig.ps1
+```
+
+## Log into the tenant where all the custom policies will be installed
+One can configure a service principal and give it enough privileges to create the custom policies.
+To run the login script with service principal use
+```
+.\Login.ps1 -ApplicationId <Service Principal client ID> -TenantId <Tenant ID>
+```
+To run the login script with the interactive auth run the script with just the tenant id as a parameter as follow
+```
+.\Login.ps1 -TenantId <Tenant ID>
+```
+
+## Create the custom policies
+> [!NOTE]
+> There is a limitation to create 500 policy definitions per subscription or management group. With this in mind, since there are over 4000 policy definitions to create, the intent is to create about 9 management groups that will host the policy definitions. Once the policy definitions are builtin this step will no longer be needed.
+* Create the management groups in which the custom policies will be created
+```
+.\CreateManagementGroup.ps1 -BaseName <base name of choice for the management group> -Start <starting index> -End <end index not inclusive>
+```
+
+* Create the custom policy definitions resources.
+    - with a service principal
+    ```
+    .\PoliciesCreate.ps1 -TenantId <the tenant id> -ApplicationId <the service principal id> -ManagementGroupIds <the array of the created management groups (comma separated)>
+    ```
+    - with an interactive login
+    ```
+    .\PoliciesCreate.ps1 -TenantId <the tenant id> -ManagementGroupIds <the array of the created management groups (comma separated)>
+    ```
+
+* Delete the custom policy definitions resources when they are not needed.
+    - with a service principal
+    ```
+    .\PoliciesCleanUp.ps1 -TenantId <the tenant id> -ApplicationId <the service principal id> -ManagementGroupIds <the array of the created management groups (comma separated)>
+    ```
+    - with an interactive login
+    ```
+    .\PoliciesCleanUp.ps1 -TenantId <the tenant id> -ManagementGroupIds <the array of the created management groups (comma separated)>
+    ```
+# Azure WebApp creation that hosts the UX
+> [!NOTE]
+> Terraform is the infrastructure script deployment tool used to set up the UX. One can use the portal to create the WebApp as well and deploy the UX code as well. 
+
+* Install the latest version of [Terraform](https://developer.hashicorp.com/terraform/install)
+* Install Az CLI [here](https://learn.microsoft.com/en-us/cli/azure/install-azure-cli-windows?tabs=azure-cli)
+* Navigate to the terraform scripts root folder.
+```
+Set-Location -Path .\pipeline\terraform
+```
+* Create a ```.tfvars``` file to set up the terraform variables. Make sure the resource group that hosts the UX webapp is different from the resource group of the storage account created in the next step.
+![alt text](image.png)
+* Create a storage account that hosts the terraform state file (using the bash script code or through the portal) 
+* Create a container in the storage account created above that hosts the terraform state file
+* Login to azure
+```
+az login
+az account set -s <subscription id>
+az account show
+```
+* Initialize the terraform backend
+```
+terraform init -backend-config="resource_group_name=${BACKEND_STORAGE_ACCOUNT_RG}" -backend-config="storage_account_name=${BACKEND_STORAGE_ACCOUNT_NAME}" -backend-config="container_name=${BACKEND_STORAGE_CONTAINER_NAME}"
+```
+BACKEND_STORAGE_ACCOUNT_RG is the resource group of the storage account that hosts the terraform state file
+BACKEND_STORAGE_ACCOUNT_NAME is the storage account that hosts the terraform state file
+BACKEND_STORAGE_CONTAINER_NAME is the container of the storage account that hosts the terraform state file
+
+* Run terraform plan
+```
+terraform plan -out plan.tfplan
+```
+> [!NOTE]
+> It's a good practice to save the terraform plan file so that when one runs the terraform apply command terraform doesn't try to generate another plan.
+
+* Create the infrastructure
+```
+terraform apply plan.tfplan
+```
+
+## Deploy the UX code to the webapp created
+* Create a zip file that contains the source code at the root of the project
+```
+npm install
+npm run build
+Compress-Archive -Path * -DestinationPath deployment.zip
+```
+
+* Deploy the zip file to the webapp
+```
+az webapp deployment source config-zip --resource-group <WEBAPP_RESOURCE_GROUP> --name <WEBAPP_NAME> --src deployment.zip
+```
+
+Congratulations you have successfully deployed the code to the webapp. 

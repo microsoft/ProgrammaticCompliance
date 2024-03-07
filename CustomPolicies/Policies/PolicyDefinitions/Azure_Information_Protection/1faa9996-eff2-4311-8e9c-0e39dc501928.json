@@ -1,0 +1,61 @@
+{
+  "id": "/providers/Microsoft.Authorization/policyDefinitions/1faa9996-eff2-4311-8e9c-0e39dc501928",
+  "name": "1faa9996-eff2-4311-8e9c-0e39dc501928",
+  "properties": {
+    "description": "Description Custom Manual - MCSB Baseline item IM-8 for Azure Information Protection",
+    "displayName": "MCSB Baseline item IM-8 for Azure Information Protection",
+    "metadata": {
+      "offeringName": "Azure Information Protection",
+      "offeringId": "f1e480a3-ad36-4c47-b8f7-f1f3120cc65e",
+      "mcsb": {
+        "mcsbId": "IM-8",
+        "features": [
+          {
+            "featureId": "AKV_SUPPORT_FOR_CREDENTIAL_AND_SECRETS",
+            "featureName": "Service Credential and Secrets Support Integration and Storage in Azure Key Vault",
+            "featureDescription": "Data plane supports native use of Azure Key Vault for credential and secrets store.",
+            "featureSupport": "True",
+            "featureGuidance": "Ensure that secrets and credentials are stored in secure locations such as Azure Key Vault, instead of embedding them into code or configuration files.\r\n\r\nWhen required for regulatory compliance you can bring your own key for AIP encryption and store that key seamlessly in Azure Key Vault.",
+            "featureReference": "https://docs.microsoft.com/azure/information-protection/byok-price-restrictions#azure-key-vault-key-storage",
+            "enabledByDefault": "False",
+            "customerActionsDescription": "Restrict the exposure of credential and secrets"
+          }
+        ],
+        "automatedPolicyAvailability": [],
+        "frameworkControls": [
+          "CIS_Azure_2.0.0_3.3",
+          "NIST_SP_800-53_R4_IA-5",
+          "PCI_DSS_v4.0_3.6.1",
+          "PCI_DSS_v4.0_8.6.2"
+        ]
+      },
+      "version": "1.0.0",
+      "category": "Regulatory Compliance"
+    },
+    "mode": "All",
+    "policyType": "Custom",
+    "policyRule": {
+      "if": {
+        "allOf": [
+          {
+            "field": "type",
+            "in": [
+              "Microsoft.Resources/subscriptions",
+              "Microsoft.Resources/subscriptions/resourceGroups"
+            ]
+          },
+          {
+            "value": "false",
+            "equals": "true"
+          }
+        ]
+      },
+      "then": {
+        "effect": "Manual",
+        "details": {
+          "defaultState": "Unknown"
+        }
+      }
+    }
+  }
+}

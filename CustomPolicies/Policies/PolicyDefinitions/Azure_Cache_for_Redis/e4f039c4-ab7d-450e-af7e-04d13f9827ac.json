@@ -1,0 +1,73 @@
+{
+  "id": "/providers/Microsoft.Authorization/policyDefinitions/e4f039c4-ab7d-450e-af7e-04d13f9827ac",
+  "name": "e4f039c4-ab7d-450e-af7e-04d13f9827ac",
+  "properties": {
+    "description": "Description Custom Manual - MCSB Baseline item DP-3 for Azure Cache for Redis",
+    "displayName": "MCSB Baseline item DP-3 for Azure Cache for Redis",
+    "metadata": {
+      "offeringName": "Azure Cache for Redis",
+      "offeringId": "36d1891e-40d0-4dc5-bd43-ad946173dcd0",
+      "mcsb": {
+        "mcsbId": "DP-3",
+        "features": [
+          {
+            "featureId": "DATA_IN_TRANSIT_ENCRYPTION",
+            "featureName": "Data in Transit Encryption",
+            "featureDescription": "Service supports data in-transit encryption for data plane.",
+            "featureSupport": "True",
+            "featureGuidance": "No additional configurations are required as this is enabled on a default deployment.",
+            "featureReference": "https://docs.microsoft.com/azure/azure-cache-for-redis/cache-configure#access-ports",
+            "enabledByDefault": "True",
+            "customerActionsDescription": "Encrypt sensitive data in transit"
+          }
+        ],
+        "automatedPolicyAvailability": [
+          {
+            "policyId": "22bee202-a82f-4305-9a2a-6d7f44d4dedb",
+            "policyName": "Only secure connections to your Azure Cache for Redis should be enabled",
+            "policyDescription": "Audit enabling of only connections via SSL to Azure Cache for Redis. Use of secure connections ensures authentication between the server and the service and protects data in transit from network layer attacks such as man-in-the-middle, eavesdropping, and session-hijacking",
+            "policyCategory": "Cache"
+          }
+        ],
+        "frameworkControls": [
+          "CIS_Azure_2.0.0_9.3",
+          "CIS_Azure_2.0.0_9.2",
+          "CIS_Azure_2.0.0_4.4.1",
+          "CIS_Azure_2.0.0_3.15",
+          "CIS_Azure_2.0.0_2.1.5",
+          "NIST_SP_800-53_R4_SC-8",
+          "PCI_DSS_v4.0_4.2.2",
+          "PCI_DSS_v4.0_4.2.1.2",
+          "PCI_DSS_v4.0_2.2.7"
+        ]
+      },
+      "version": "1.0.0",
+      "category": "Regulatory Compliance"
+    },
+    "mode": "All",
+    "policyType": "Custom",
+    "policyRule": {
+      "if": {
+        "allOf": [
+          {
+            "field": "type",
+            "in": [
+              "Microsoft.Resources/subscriptions",
+              "Microsoft.Resources/subscriptions/resourceGroups"
+            ]
+          },
+          {
+            "value": "false",
+            "equals": "true"
+          }
+        ]
+      },
+      "then": {
+        "effect": "Manual",
+        "details": {
+          "defaultState": "Unknown"
+        }
+      }
+    }
+  }
+}

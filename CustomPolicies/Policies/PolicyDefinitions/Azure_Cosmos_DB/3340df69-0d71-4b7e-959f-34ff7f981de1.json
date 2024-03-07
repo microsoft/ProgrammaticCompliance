@@ -1,0 +1,75 @@
+{
+  "id": "/providers/Microsoft.Authorization/policyDefinitions/3340df69-0d71-4b7e-959f-34ff7f981de1",
+  "name": "3340df69-0d71-4b7e-959f-34ff7f981de1",
+  "properties": {
+    "description": "Description Custom Manual - MCSB Baseline item LT-4 for Azure Cosmos DB",
+    "displayName": "MCSB Baseline item LT-4 for Azure Cosmos DB",
+    "metadata": {
+      "offeringName": "Azure Cosmos DB",
+      "offeringId": "86ec4e3b-1865-4240-89f6-c2f3553df5ac",
+      "mcsb": {
+        "mcsbId": "LT-4",
+        "features": [
+          {
+            "featureId": "RESOURCE_LOGS_SUPPORTED",
+            "featureName": "Azure Resource Logs",
+            "featureDescription": "Service produces resource logs that can provide enhanced service-specific metrics and logging. The customer can configure these resource logs and send them to their own data sink like a storage account or log analytics workspace.",
+            "featureSupport": "True",
+            "featureGuidance": "Enable resource logs for the service. Azure Cosmos DB lets you monitor your activity through Azure Monitor or custom diagnostic logs that can be analyzed with Azure Log Analytics.",
+            "featureReference": "https://docs.microsoft.com/azure/cosmos-db/monitor-cosmos-db",
+            "enabledByDefault": "False",
+            "customerActionsDescription": "Enable network logging for security investigation\n"
+          }
+        ],
+        "automatedPolicyAvailability": [],
+        "frameworkControls": [
+          "CIS_Azure_2.0.0_5.1.6",
+          "CIS_Azure_2.0.0_4.3.5",
+          "CIS_Azure_2.0.0_4.3.4",
+          "CIS_Azure_2.0.0_4.3.2",
+          "CIS_Azure_2.0.0_3.14",
+          "CIS_Azure_2.0.0_3.5",
+          "NIST_SP_800-53_R4_SI-4",
+          "NIST_SP_800-53_R4_AU-12",
+          "NIST_SP_800-53_R4_AU-6",
+          "NIST_SP_800-53_R4_AU-3",
+          "PCI_DSS_v4.0_10.7.3",
+          "PCI_DSS_v4.0_10.7.2",
+          "PCI_DSS_v4.0_10.7.1",
+          "PCI_DSS_v4.0_10.4.3",
+          "PCI_DSS_v4.0_10.4.2",
+          "PCI_DSS_v4.0_10.4.1",
+          "PCI_DSS_v4.0_10.2.2",
+          "PCI_DSS_v4.0_10.2.1"
+        ]
+      },
+      "version": "1.0.0",
+      "category": "Regulatory Compliance"
+    },
+    "mode": "All",
+    "policyType": "Custom",
+    "policyRule": {
+      "if": {
+        "allOf": [
+          {
+            "field": "type",
+            "in": [
+              "Microsoft.Resources/subscriptions",
+              "Microsoft.Resources/subscriptions/resourceGroups"
+            ]
+          },
+          {
+            "value": "false",
+            "equals": "true"
+          }
+        ]
+      },
+      "then": {
+        "effect": "Manual",
+        "details": {
+          "defaultState": "Unknown"
+        }
+      }
+    }
+  }
+}

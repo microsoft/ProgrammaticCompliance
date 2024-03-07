@@ -1,0 +1,87 @@
+{
+  "id": "/providers/Microsoft.Authorization/policyDefinitions/fdd11bac-92ed-4f92-b712-9368c059857f",
+  "name": "fdd11bac-92ed-4f92-b712-9368c059857f",
+  "properties": {
+    "description": "Description Custom Manual - MCSB Baseline item NS-2 for Azure Kubernetes Service on AzureStack HCI",
+    "displayName": "MCSB Baseline item NS-2 for Azure Kubernetes Service on AzureStack HCI",
+    "metadata": {
+      "offeringName": "Azure Kubernetes Service on AzureStack HCI",
+      "offeringId": "e091c950-4914-44bd-b42b-3a3639824aac",
+      "mcsb": {
+        "mcsbId": "NS-2",
+        "features": [
+          {
+            "featureId": "DISABLE_PUBLIC_NETWORK_ACCESS",
+            "featureName": "Disable Public Network Access",
+            "featureDescription": "Service supports disabling public network access either through using service-level IP ACL filtering rule (not NSG or Azure Firewall) or using a 'Disable Public Network Access' toggle switch.",
+            "featureSupport": "Not Applicable",
+            "featureGuidance": "This feature is not applicable to secure this service.",
+            "featureReference": "Not Applicable",
+            "enabledByDefault": "Not Applicable",
+            "customerActionsDescription": "Secure cloud native services with network controls"
+          },
+          {
+            "featureId": "PRIVATE_LINK_SUPPORT",
+            "featureName": "Azure Private Link",
+            "featureDescription": "Service native IP filtering capability for filtering network traffic (not to be confused with NSG or Azure Firewall).",
+            "featureSupport": "Not Applicable",
+            "featureGuidance": "This feature is not applicable to secure this service.",
+            "featureReference": "Not Applicable",
+            "enabledByDefault": "Not Applicable",
+            "customerActionsDescription": "Secure cloud native services with network controls"
+          }
+        ],
+        "automatedPolicyAvailability": [],
+        "frameworkControls": [
+          "CIS_Azure_2.0.0_6.7",
+          "CIS_Azure_2.0.0_5.1.3",
+          "CIS_Azure_2.0.0_4.5.2",
+          "CIS_Azure_2.0.0_4.5.1",
+          "CIS_Azure_2.0.0_4.1.2",
+          "CIS_Azure_2.0.0_3.10",
+          "CIS_Azure_2.0.0_3.9",
+          "CIS_Azure_2.0.0_3.8",
+          "CIS_Azure_2.0.0_3.7",
+          "NIST_SP_800-53_R4_SC-7",
+          "NIST_SP_800-53_R4_SC-2",
+          "NIST_SP_800-53_R4_AC-4",
+          "PCI_DSS_v4.0_1.4.5",
+          "PCI_DSS_v4.0_1.4.4",
+          "PCI_DSS_v4.0_1.4.3",
+          "PCI_DSS_v4.0_1.4.2",
+          "PCI_DSS_v4.0_1.4.1",
+          "PCI_DSS_v4.0_1.3.2",
+          "PCI_DSS_v4.0_1.3.1",
+          "PCI_DSS_v4.0_1.2.6"
+        ]
+      },
+      "version": "1.0.0",
+      "category": "Regulatory Compliance"
+    },
+    "mode": "All",
+    "policyType": "Custom",
+    "policyRule": {
+      "if": {
+        "allOf": [
+          {
+            "field": "type",
+            "in": [
+              "Microsoft.Resources/subscriptions",
+              "Microsoft.Resources/subscriptions/resourceGroups"
+            ]
+          },
+          {
+            "value": "false",
+            "equals": "true"
+          }
+        ]
+      },
+      "then": {
+        "effect": "Manual",
+        "details": {
+          "defaultState": "Unknown"
+        }
+      }
+    }
+  }
+}

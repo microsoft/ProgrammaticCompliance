@@ -1,0 +1,61 @@
+{
+  "id": "/providers/Microsoft.Authorization/policyDefinitions/42ff288f-e0d4-4f49-8662-996732086bf7",
+  "name": "42ff288f-e0d4-4f49-8662-996732086bf7",
+  "properties": {
+    "description": "Description Custom Manual - MCSB Baseline item DP-7 for Azure Container Apps - Azure Arc",
+    "displayName": "MCSB Baseline item DP-7 for Azure Container Apps - Azure Arc",
+    "metadata": {
+      "offeringName": "Azure Container Apps - Azure Arc",
+      "offeringId": "3e23010a-2619-4292-9998-2cd577305bc2",
+      "mcsb": {
+        "mcsbId": "DP-7",
+        "features": [
+          {
+            "featureId": "CERTIFICATE_MANAGEMENT_IN_AZURE_KEY_VAULT",
+            "featureName": "Certificate Management in Azure Key Vault",
+            "featureDescription": "The service supports Azure Key Vault integration for any customer certificates.",
+            "featureSupport": "False",
+            "featureGuidance": "This feature is not supported to secure this service.",
+            "featureReference": "Not Applicable",
+            "enabledByDefault": "Not Applicable",
+            "customerActionsDescription": "Use a secure certificate management process"
+          }
+        ],
+        "automatedPolicyAvailability": [],
+        "frameworkControls": [
+          "NIST_SP_800-53_R4_SC-12",
+          "NIST_SP_800-53_R4_IA-5",
+          "NIST_SP_800-53_R4_SC-17",
+          "PCI_DSS_v4.0_4.2.1"
+        ]
+      },
+      "version": "1.0.0",
+      "category": "Regulatory Compliance"
+    },
+    "mode": "All",
+    "policyType": "Custom",
+    "policyRule": {
+      "if": {
+        "allOf": [
+          {
+            "field": "type",
+            "in": [
+              "Microsoft.Resources/subscriptions",
+              "Microsoft.Resources/subscriptions/resourceGroups"
+            ]
+          },
+          {
+            "value": "false",
+            "equals": "true"
+          }
+        ]
+      },
+      "then": {
+        "effect": "Manual",
+        "details": {
+          "defaultState": "Unknown"
+        }
+      }
+    }
+  }
+}

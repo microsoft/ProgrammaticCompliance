@@ -1,0 +1,61 @@
+{
+  "id": "/providers/Microsoft.Authorization/policyDefinitions/25de18fa-5b84-47f9-a6c3-c20af533baf4",
+  "name": "25de18fa-5b84-47f9-a6c3-c20af533baf4",
+  "properties": {
+    "description": "Description Custom Manual - MCSB Baseline item DP-7 for HDInsight",
+    "displayName": "MCSB Baseline item DP-7 for HDInsight",
+    "metadata": {
+      "offeringName": "HDInsight",
+      "offeringId": "2ee735d6-5f03-45c3-bf11-fc1dbb1aa135",
+      "mcsb": {
+        "mcsbId": "DP-7",
+        "features": [
+          {
+            "featureId": "CERTIFICATE_MANAGEMENT_IN_AZURE_KEY_VAULT",
+            "featureName": "Certificate Management in Azure Key Vault",
+            "featureDescription": "The service supports Azure Key Vault integration for any customer certificates.",
+            "featureSupport": "True",
+            "featureGuidance": "No additional configurations are required as this is enabled on a default deployment.",
+            "featureReference": "https://learn.microsoft.com/azure/hdinsight/disk-encryption",
+            "enabledByDefault": "True",
+            "customerActionsDescription": "Use a secure certificate management process"
+          }
+        ],
+        "automatedPolicyAvailability": [],
+        "frameworkControls": [
+          "NIST_SP_800-53_R4_IA-5",
+          "NIST_SP_800-53_R4_SC-12",
+          "NIST_SP_800-53_R4_SC-17",
+          "PCI_DSS_v4.0_4.2.1"
+        ]
+      },
+      "version": "1.0.0",
+      "category": "Regulatory Compliance"
+    },
+    "mode": "All",
+    "policyType": "Custom",
+    "policyRule": {
+      "if": {
+        "allOf": [
+          {
+            "field": "type",
+            "in": [
+              "Microsoft.Resources/subscriptions",
+              "Microsoft.Resources/subscriptions/resourceGroups"
+            ]
+          },
+          {
+            "value": "false",
+            "equals": "true"
+          }
+        ]
+      },
+      "then": {
+        "effect": "Manual",
+        "details": {
+          "defaultState": "Unknown"
+        }
+      }
+    }
+  }
+}

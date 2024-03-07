@@ -1,0 +1,61 @@
+{
+  "id": "/providers/Microsoft.Authorization/policyDefinitions/a57d1aaf-3f56-4549-89d4-07562c477b50",
+  "name": "a57d1aaf-3f56-4549-89d4-07562c477b50",
+  "properties": {
+    "description": "Description Custom Manual - MCSB Baseline item PA-8 for Container Registry",
+    "displayName": "MCSB Baseline item PA-8 for Container Registry",
+    "metadata": {
+      "offeringName": "Container Registry",
+      "offeringId": "e3ca8f4d-b86b-41eb-aa82-070498477c56",
+      "mcsb": {
+        "mcsbId": "PA-8",
+        "features": [
+          {
+            "featureId": "CUSTOMER_LOCKBOX_SUPPORTED",
+            "featureName": "Customer Lockbox",
+            "featureDescription": "Customer Lockbox can be used for Microsoft support access.",
+            "featureSupport": "True",
+            "featureGuidance": "In support scenarios where Microsoft needs to access your data, use Customer Lockbox to review, then approve or reject each of Microsoft's data access requests.",
+            "featureReference": "https://docs.microsoft.com/azure/security/fundamentals/customer-lockbox-overview",
+            "enabledByDefault": "False",
+            "customerActionsDescription": "Determine access process for cloud provider support\n\n"
+          }
+        ],
+        "automatedPolicyAvailability": [],
+        "frameworkControls": [
+          "CIS_Azure_2.0.0_1.20",
+          "NIST_SP_800-53_R4_AC-4",
+          "NIST_SP_800-53_R4_AC-3",
+          "NIST_SP_800-53_R4_AC-2"
+        ]
+      },
+      "version": "1.0.0",
+      "category": "Regulatory Compliance"
+    },
+    "mode": "All",
+    "policyType": "Custom",
+    "policyRule": {
+      "if": {
+        "allOf": [
+          {
+            "field": "type",
+            "in": [
+              "Microsoft.Resources/subscriptions",
+              "Microsoft.Resources/subscriptions/resourceGroups"
+            ]
+          },
+          {
+            "value": "false",
+            "equals": "true"
+          }
+        ]
+      },
+      "then": {
+        "effect": "Manual",
+        "details": {
+          "defaultState": "Unknown"
+        }
+      }
+    }
+  }
+}

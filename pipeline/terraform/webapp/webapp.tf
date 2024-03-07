@@ -3,7 +3,7 @@ resource "azurerm_service_plan" "sp" {
   resource_group_name   = var.app_resource_group_name
   location              = var.app_location
   os_type               = "Linux"
-  sku_name             = "P1v3"
+  sku_name              = "P1v3"
   worker_count          = var.worker_count
 }
 
@@ -32,12 +32,15 @@ resource "azurerm_linux_web_app" "webapp" {
     ftps_state                                      = "FtpsOnly"
     health_check_path                               = var.health_check_path
     health_check_eviction_time_in_min               = var.health_check_eviction_time_in_min
-  }
+    app_command_line                                = "pm2 serve /home/site/wwwroot/build --no-daemon --spa"
+  }   
   app_settings = {
     "APPLICATIONINSIGHTS_CONNECTION_STRING"         = var.appinsights_connection_string
     "ApplicationInsightsAgent_EXTENSION_VERSION"    = "~3"
     "XDT_MicrosoftApplicationInsights_Mode"         = "Recommended"
     "WEBSITE_RUN_FROM_PACKAGE"                      = "1"
     "WEBSITE_WEBDEPLOY_USE_SCM"                     = "true"
+    "REACT_APP_CLIENT_ID"                           = var.react_app_client_id
+    "REACT_APP_TENANT_ID"                           = var.react_app_tenant_id
   }
 }

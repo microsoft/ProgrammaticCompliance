@@ -1,0 +1,64 @@
+{
+  "id": "/providers/Microsoft.Authorization/policyDefinitions/28f1a9e9-b3cf-4b55-9131-84e497e6a515",
+  "name": "28f1a9e9-b3cf-4b55-9131-84e497e6a515",
+  "properties": {
+    "description": "Description Custom Manual - MCSB Baseline item AM-2 for Nutanix on Azure",
+    "displayName": "MCSB Baseline item AM-2 for Nutanix on Azure",
+    "metadata": {
+      "offeringName": "Nutanix on Azure",
+      "offeringId": "86fdc88e-b31c-40e9-b327-5c1011a2b53e",
+      "mcsb": {
+        "mcsbId": "AM-2",
+        "features": [
+          {
+            "featureId": "AZURE_POLICY_SUPPORTED",
+            "featureName": "Azure Policy Support",
+            "featureDescription": "Service configurations can be monitored and enforced via Azure Policy.",
+            "featureSupport": "Not Applicable",
+            "featureGuidance": "This feature is not applicable to secure this service.",
+            "featureReference": "Not Applicable",
+            "enabledByDefault": "Not Applicable",
+            "customerActionsDescription": "Use only approved services\n"
+          }
+        ],
+        "automatedPolicyAvailability": [],
+        "frameworkControls": [
+          "CIS_Azure_2.0.0_7.5",
+          "CIS_Azure_2.0.0_5.5",
+          "NIST_SP_800-53_R4_PM-5",
+          "NIST_SP_800-53_R4_CM-8",
+          "PCI_DSS_v4.0_2.2.6",
+          "PCI_DSS_v4.0_2.2.5",
+          "PCI_DSS_v4.0_2.2.4"
+        ]
+      },
+      "version": "1.0.0",
+      "category": "Regulatory Compliance"
+    },
+    "mode": "All",
+    "policyType": "Custom",
+    "policyRule": {
+      "if": {
+        "allOf": [
+          {
+            "field": "type",
+            "in": [
+              "Microsoft.Resources/subscriptions",
+              "Microsoft.Resources/subscriptions/resourceGroups"
+            ]
+          },
+          {
+            "value": "false",
+            "equals": "true"
+          }
+        ]
+      },
+      "then": {
+        "effect": "Manual",
+        "details": {
+          "defaultState": "Unknown"
+        }
+      }
+    }
+  }
+}

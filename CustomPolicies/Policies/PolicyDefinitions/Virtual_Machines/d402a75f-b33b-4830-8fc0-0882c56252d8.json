@@ -1,0 +1,61 @@
+{
+  "id": "/providers/Microsoft.Authorization/policyDefinitions/d402a75f-b33b-4830-8fc0-0882c56252d8",
+  "name": "d402a75f-b33b-4830-8fc0-0882c56252d8",
+  "properties": {
+    "description": "Description Custom Manual - MCSB Baseline item PA-8 for Virtual Machines",
+    "displayName": "MCSB Baseline item PA-8 for Virtual Machines",
+    "metadata": {
+      "offeringName": "Virtual Machines",
+      "offeringId": "07649cbd-2ee4-4992-898b-f5f16bad1b36",
+      "mcsb": {
+        "mcsbId": "PA-8",
+        "features": [
+          {
+            "featureId": "CUSTOMER_LOCKBOX_SUPPORTED",
+            "featureName": "Customer Lockbox",
+            "featureDescription": "Customer Lockbox can be used for Microsoft support access.",
+            "featureSupport": "True",
+            "featureGuidance": "In support scenarios where Microsoft needs to access your data, use Customer Lockbox to review, then approve or reject each of Microsoft's data access requests.",
+            "featureReference": "Not Applicable",
+            "enabledByDefault": "False",
+            "customerActionsDescription": "Determine access process for cloud provider support\n\n"
+          }
+        ],
+        "automatedPolicyAvailability": [],
+        "frameworkControls": [
+          "CIS_Azure_2.0.0_1.20",
+          "NIST_SP_800-53_R4_AC-3",
+          "NIST_SP_800-53_R4_AC-2",
+          "NIST_SP_800-53_R4_AC-4"
+        ]
+      },
+      "version": "1.0.0",
+      "category": "Regulatory Compliance"
+    },
+    "mode": "All",
+    "policyType": "Custom",
+    "policyRule": {
+      "if": {
+        "allOf": [
+          {
+            "field": "type",
+            "in": [
+              "Microsoft.Resources/subscriptions",
+              "Microsoft.Resources/subscriptions/resourceGroups"
+            ]
+          },
+          {
+            "value": "false",
+            "equals": "true"
+          }
+        ]
+      },
+      "then": {
+        "effect": "Manual",
+        "details": {
+          "defaultState": "Unknown"
+        }
+      }
+    }
+  }
+}

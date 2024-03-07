@@ -1,0 +1,88 @@
+{
+  "id": "/providers/Microsoft.Authorization/policyDefinitions/996103eb-b1a4-435e-bd33-01dab0820d7a",
+  "name": "996103eb-b1a4-435e-bd33-01dab0820d7a",
+  "properties": {
+    "description": "Description Custom Manual - MCSB Baseline item LT-4 for Virtual Machines",
+    "displayName": "MCSB Baseline item LT-4 for Virtual Machines",
+    "metadata": {
+      "offeringName": "Virtual Machines",
+      "offeringId": "07649cbd-2ee4-4992-898b-f5f16bad1b36",
+      "mcsb": {
+        "mcsbId": "LT-4",
+        "features": [
+          {
+            "featureId": "RESOURCE_LOGS_SUPPORTED",
+            "featureName": "Azure Resource Logs",
+            "featureDescription": "Service produces resource logs that can provide enhanced service-specific metrics and logging. The customer can configure these resource logs and send them to their own data sink like a storage account or log analytics workspace.",
+            "featureSupport": "True",
+            "featureGuidance": "Azure Monitor starts automatically collecting metric data for your virtual machine host when you create the VM. To collect logs and performance data from the guest operating system of the virtual machine, though, you must install the Azure Monitor agent. You can install the agent and configure collection using either [VM insights](https://learn.microsoft.com/azure/virtual-machines/monitor-vm?toc=https%3A%2F%2Flearn.microsoft.com%2Fen-us%2Fazure%2Fvirtual-machine-scale-sets%2Ftoc.json&bc=https%3A%2F%2Flearn.microsoft.com%2Fen-us%2Fazure%2Fbread%2Ftoc.json#vm-insights) or by [creating a data collection](https://learn.microsoft.com/azure/virtual-machines/monitor-vm?toc=https%3A%2F%2Flearn.microsoft.com%2Fen-us%2Fazure%2Fvirtual-machine-scale-sets%2Ftoc.json&bc=https%3A%2F%2Flearn.microsoft.com%2Fen-us%2Fazure%2Fbread%2Ftoc.json#create-data-collection-rule) rule.",
+            "featureReference": "https://learn.microsoft.com/azure/azure-monitor/agents/log-analytics-agent#data-collected",
+            "enabledByDefault": "False",
+            "customerActionsDescription": "Enable network logging for security investigation\n"
+          }
+        ],
+        "automatedPolicyAvailability": [
+          {
+            "policyId": "2f2ee1de-44aa-4762-b6bd-0893fc3f306d",
+            "policyName": "[Preview]: Network traffic data collection agent should be installed on Windows virtual machines",
+            "policyDescription": "Security Center uses the Microsoft Dependency agent to collect network traffic data from your Azure virtual machines to enable advanced network protection features such as traffic visualization on the network map, network hardening recommendations and specific network threats.",
+            "policyCategory": "Monitoring"
+          },
+          {
+            "policyId": "04c4380f-3fae-46e8-96c9-30193528f602",
+            "policyName": "[Preview]: Network traffic data collection agent should be installed on Linux virtual machines",
+            "policyDescription": "Security Center uses the Microsoft Dependency agent to collect network traffic data from your Azure virtual machines to enable advanced network protection features such as traffic visualization on the network map, network hardening recommendations and specific network threats.",
+            "policyCategory": "Monitoring"
+          }
+        ],
+        "frameworkControls": [
+          "CIS_Azure_2.0.0_5.1.6",
+          "CIS_Azure_2.0.0_4.3.5",
+          "CIS_Azure_2.0.0_4.3.4",
+          "CIS_Azure_2.0.0_4.3.2",
+          "CIS_Azure_2.0.0_3.14",
+          "CIS_Azure_2.0.0_3.5",
+          "NIST_SP_800-53_R4_SI-4",
+          "NIST_SP_800-53_R4_AU-12",
+          "NIST_SP_800-53_R4_AU-6",
+          "NIST_SP_800-53_R4_AU-3",
+          "PCI_DSS_v4.0_10.7.3",
+          "PCI_DSS_v4.0_10.7.2",
+          "PCI_DSS_v4.0_10.7.1",
+          "PCI_DSS_v4.0_10.4.3",
+          "PCI_DSS_v4.0_10.4.2",
+          "PCI_DSS_v4.0_10.4.1",
+          "PCI_DSS_v4.0_10.2.2",
+          "PCI_DSS_v4.0_10.2.1"
+        ]
+      },
+      "version": "1.0.0",
+      "category": "Regulatory Compliance"
+    },
+    "mode": "All",
+    "policyType": "Custom",
+    "policyRule": {
+      "if": {
+        "allOf": [
+          {
+            "field": "type",
+            "in": [
+              "Microsoft.Resources/subscriptions",
+              "Microsoft.Resources/subscriptions/resourceGroups"
+            ]
+          },
+          {
+            "value": "false",
+            "equals": "true"
+          }
+        ]
+      },
+      "then": {
+        "effect": "Manual",
+        "details": {
+          "defaultState": "Unknown"
+        }
+      }
+    }
+  }
+}

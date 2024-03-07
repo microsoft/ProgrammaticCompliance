@@ -1,0 +1,76 @@
+{
+  "id": "/providers/Microsoft.Authorization/policyDefinitions/ac75760b-2ac7-4b3a-b442-a1e31643d91e",
+  "name": "ac75760b-2ac7-4b3a-b442-a1e31643d91e",
+  "properties": {
+    "description": "Description Custom Manual - MCSB Baseline item PA-1 for Azure Stack HCI",
+    "displayName": "MCSB Baseline item PA-1 for Azure Stack HCI",
+    "metadata": {
+      "offeringName": "Azure Stack HCI",
+      "offeringId": "40712a7c-75ad-4d57-b314-d77c9ec45c05",
+      "mcsb": {
+        "mcsbId": "PA-1",
+        "features": [
+          {
+            "featureId": "LOCAL_ADMIN_ACCOUNT",
+            "featureName": "Local Admin Accounts",
+            "featureDescription": "Service has the concept of a local administrative account.",
+            "featureSupport": "False",
+            "featureGuidance": "This feature is not supported to secure this service.",
+            "featureReference": "Not Applicable",
+            "enabledByDefault": "Not Applicable",
+            "customerActionsDescription": "Separate and limit highly privileged/administrative users"
+          }
+        ],
+        "automatedPolicyAvailability": [],
+        "frameworkControls": [
+          "CIS_Azure_2.0.0_3.4",
+          "CIS_Azure_2.0.0_3.3",
+          "CIS_Azure_2.0.0_1.24",
+          "CIS_Azure_2.0.0_1.23",
+          "CIS_Azure_2.0.0_1.21",
+          "CIS_Azure_2.0.0_1.20",
+          "CIS_Azure_2.0.0_1.19",
+          "CIS_Azure_2.0.0_1.18",
+          "CIS_Azure_2.0.0_1.17",
+          "CIS_Azure_2.0.0_1.14",
+          "CIS_Azure_2.0.0_1.13",
+          "CIS_Azure_2.0.0_1.12",
+          "CIS_Azure_2.0.0_1.11",
+          "CIS_Azure_2.0.0_1.10",
+          "NIST_SP_800-53_R4_AC-6",
+          "NIST_SP_800-53_R4_AC-2",
+          "PCI_DSS_v4.0_7.2.5",
+          "PCI_DSS_v4.0_7.2.2",
+          "PCI_DSS_v4.0_7.2.1"
+        ]
+      },
+      "version": "1.0.0",
+      "category": "Regulatory Compliance"
+    },
+    "mode": "All",
+    "policyType": "Custom",
+    "policyRule": {
+      "if": {
+        "allOf": [
+          {
+            "field": "type",
+            "in": [
+              "Microsoft.Resources/subscriptions",
+              "Microsoft.Resources/subscriptions/resourceGroups"
+            ]
+          },
+          {
+            "value": "false",
+            "equals": "true"
+          }
+        ]
+      },
+      "then": {
+        "effect": "Manual",
+        "details": {
+          "defaultState": "Unknown"
+        }
+      }
+    }
+  }
+}

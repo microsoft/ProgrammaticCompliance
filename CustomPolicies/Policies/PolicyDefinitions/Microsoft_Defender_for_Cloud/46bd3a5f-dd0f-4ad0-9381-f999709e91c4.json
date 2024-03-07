@@ -1,0 +1,81 @@
+{
+  "id": "/providers/Microsoft.Authorization/policyDefinitions/46bd3a5f-dd0f-4ad0-9381-f999709e91c4",
+  "name": "46bd3a5f-dd0f-4ad0-9381-f999709e91c4",
+  "properties": {
+    "description": "Description Custom Manual - MCSB Baseline item ES-2 for Microsoft Defender for Cloud",
+    "displayName": "MCSB Baseline item ES-2 for Microsoft Defender for Cloud",
+    "metadata": {
+      "offeringName": "Microsoft Defender for Cloud",
+      "offeringId": "e11311d7-dcf7-4ed0-a4e8-718288227231",
+      "mcsb": {
+        "mcsbId": "ES-2",
+        "features": [
+          {
+            "featureId": "ANTI_MALWARE_SOLUTION",
+            "featureName": "Anti-Malware Solution",
+            "featureDescription": "Anti-malware feature such as Microsoft Defender Antivirus, Microsoft Defender for Endpoint can be deployed on the endpoint.",
+            "featureSupport": "Not Applicable",
+            "featureGuidance": "This feature is not applicable to secure this service.",
+            "featureReference": "Not Applicable",
+            "enabledByDefault": "Not Applicable",
+            "customerActionsDescription": "Use modern anti-malware software"
+          }
+        ],
+        "automatedPolicyAvailability": [
+          {
+            "policyId": "af6cd1bd-1635-48cb-bde7-5b15693900b9",
+            "policyName": "Monitor missing Endpoint Protection in Azure Security Center",
+            "policyDescription": "Servers without an installed Endpoint Protection agent will be monitored by Azure Security Center as recommendations",
+            "policyCategory": "Security Center"
+          }
+        ],
+        "frameworkControls": [
+          "CIS_Azure_2.0.0_7.6",
+          "CIS_Azure_2.0.0_2.1.22",
+          "CIS_Azure_2.0.0_2.1.1",
+          "NIST_SP_800-53_R4_SI-16",
+          "NIST_SP_800-53_R4_SI-3",
+          "NIST_SP_800-53_R4_SI-2",
+          "NIST_SP_800-53_R4_SC-3",
+          "PCI_DSS_v4.0_5.3.5",
+          "PCI_DSS_v4.0_5.3.4",
+          "PCI_DSS_v4.0_5.3.3",
+          "PCI_DSS_v4.0_5.3.2.1",
+          "PCI_DSS_v4.0_5.3.2",
+          "PCI_DSS_v4.0_5.2.3.1",
+          "PCI_DSS_v4.0_5.2.3",
+          "PCI_DSS_v4.0_5.2.2",
+          "PCI_DSS_v4.0_5.2.1",
+          "PCI_DSS_v4.0_1.5.1"
+        ]
+      },
+      "version": "1.0.0",
+      "category": "Regulatory Compliance"
+    },
+    "mode": "All",
+    "policyType": "Custom",
+    "policyRule": {
+      "if": {
+        "allOf": [
+          {
+            "field": "type",
+            "in": [
+              "Microsoft.Resources/subscriptions",
+              "Microsoft.Resources/subscriptions/resourceGroups"
+            ]
+          },
+          {
+            "value": "false",
+            "equals": "true"
+          }
+        ]
+      },
+      "then": {
+        "effect": "Manual",
+        "details": {
+          "defaultState": "Unknown"
+        }
+      }
+    }
+  }
+}
