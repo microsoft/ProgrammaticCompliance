@@ -135,6 +135,20 @@ To run the login script with the interactive auth run the script with just the t
     .\PoliciesCleanUp.ps1 -TenantId <the tenant id> -ManagementGroupIds <the array of the created management groups (comma separated)>
     ```
 # Azure WebApp creation that hosts the UX
+## App registration and roles configurations
+* Select _App registrations_ under _Microsoft Entra ID_
+* Select _New registration_
+* Give a name to the app for instance _myapp_
+* Under _Redirect URI_ select _Web_ and _https://webapp.azurewebsites.net_ as a value. Note that the URI is the URL assigned to the webapp that will be deployed in the subsequent steps. We can come back and update the URI after the webapp is created.
+* Click on _Register_
+![alt text](image-1.png)
+* Elevate your access to manage all the managements groups [here](https://learn.microsoft.com/en-us/azure/role-based-access-control/elevate-access-global-admin?tabs=azure-portal)
+* In case there are users who need access to the app first add them to the [tenant](https://learn.microsoft.com/en-us/azure/role-based-access-control/role-assignments-external-users) then navigate to the root management group portal and assign the reader role to them.  
+> [!IMPORTANT]
+> One can create a custom role to only assign the permissions to read the policy definitions and the policy metadata resources. Assign that custom role to the user so that the user does not have access to all the resources under the root management group.
+![alt text](image-2.png)
+
+## Azure Webapp deployment
 > [!NOTE]
 > Terraform is the infrastructure script deployment tool used to set up the UX. One can use the portal to create the WebApp as well and deploy the UX code as well. 
 
@@ -144,11 +158,11 @@ To run the login script with the interactive auth run the script with just the t
 ```
 Set-Location -Path .\pipeline\terraform
 ```
-* Create a ```.tfvars``` file to set up the terraform variables. Make sure the resource group that hosts the UX webapp is different from the resource group of the storage account created in the next step.
-![alt text](image.png)
 * Create a storage account that hosts the terraform state file (using the bash script code or through the portal) 
 * Create a container in the storage account created above that hosts the terraform state file
-* Login to azure
+* Create a ```.tfvars``` file to set up the terraform variables. Make sure the resource group that hosts the UX webapp is different from the resource group of the storage account created in the next step. The *react_app_client_id* value is the value of the app id configured in the above step. All the other variables values will be your own choice.
+![alt text](image-3.png)
+* Login to your tenant and ensure that you are using the target subscription of your choice
 ```
 az login
 az account set -s <subscription id>
@@ -187,4 +201,4 @@ Compress-Archive -Path * -DestinationPath deployment.zip
 az webapp deployment source config-zip --resource-group <WEBAPP_RESOURCE_GROUP> --name <WEBAPP_NAME> --src deployment.zip
 ```
 
-Congratulations you have successfully deployed the code to the webapp. 
+Congratulations you have successfully deployed the code to the webapp. Let the testing begin
