@@ -187,6 +187,8 @@ terraform plan -out plan.tfplan
 ```
 terraform apply plan.tfplan
 ```
+> [!IMPORTANT]
+> Please update the _Redirect URI_ on the app registration with the actual URL of the webapp created.
 
 ## Deploy the UX code to the webapp created
 * Create a zip file that contains the source code at the root of the project
