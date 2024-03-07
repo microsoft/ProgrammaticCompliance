@@ -573,6 +573,7 @@ const FilterBar = ({ azureToken }) => {
               dropdownWidthAuto={true}
               styles={selectedFramework.length > 0 ? selectedFrameworkStyles : frameworkStyles}
               aria-label="Regulatory framework"
+              label="Regulatory framework"
             />
           </div>
           <div className="select-dropdown">
@@ -594,6 +595,7 @@ const FilterBar = ({ azureToken }) => {
                 );
               }}
               aria-label="Service"
+              label="Service"
             />
           </div>
           <div className="select-dropdown">
@@ -615,6 +617,7 @@ const FilterBar = ({ azureToken }) => {
                 );
               }}
               aria-label="Control domain"
+              label="Control domain"
             />
           </div>
           <div className="select-dropdown">
@@ -636,6 +639,7 @@ const FilterBar = ({ azureToken }) => {
               dropdownWidthAuto={true}
               styles={selectedControls.length > 0 ? selectedControlStyles : controlStyles}
               aria-label="Control ID"
+              label="Control ID"
             />
           </div>
           <div className="exportButton">

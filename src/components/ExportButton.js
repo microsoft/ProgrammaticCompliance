@@ -16,25 +16,40 @@ const ExportButton = ({ apiData, disabled, acfData, controlIDs }) => {
 
     const handleExportJSON = () => {
         const jsonData = JSON.stringify(apiData, null, 2);
-        const blob = new Blob([jsonData], { type: 'application/json' });
-        const url = URL.createObjectURL(blob);
-        const a = document.createElement('a');
+        let blob = new Blob([jsonData], { type: 'application/json' });
+        let url = URL.createObjectURL(blob);
+        let a = document.createElement('a');
         a.href = url;
-        a.download = 'exportedData.json';
+        a.download = 'exportedMCSB.json';
+        document.body.appendChild(a);
+        a.click();
+        URL.revokeObjectURL(url);
+        const jsonAcf = JSON.stringify(acfData, null, 2);
+        blob = new Blob([jsonAcf], { type: 'application/json' });
+        url = URL.createObjectURL(blob);
+        a = document.createElement('a');
+        a.href = url;
+        a.download = 'exportedACF.json';
         document.body.appendChild(a);
         a.click();
         URL.revokeObjectURL(url);
     };
 
     const handleExportCSV = () => {
-        let jsonData = apiData;
-        if (typeof jsonData !== 'object') {
-            try {
-                jsonData = JSON.parse(apiData);
-            } catch (error) {
-                console.error('Error parsing the data:', error);
-                return;
+        if (apiData.length > 0) {
+            let jsonData = apiData;
+            if (typeof jsonData !== 'object') {
+                try {
+                    jsonData = JSON.parse(apiData);
+                } catch (error) {
+                    console.error('Error parsing the data:', error);
+                    return;
+                }
             }
+            const mcsbCsv = mcsbToCsvExporter(jsonData);
+            downloadCsv(mcsbCsv, 'exportedData_MCSB.csv');
+            const policyCsv = policyToCsvExporter(jsonData);
+            downloadCsv(policyCsv, 'exportedData_Policy.csv');
         }
         let acf = acfData;
         if (typeof acf !== 'object') {
@@ -48,14 +63,6 @@ const ExportButton = ({ apiData, disabled, acfData, controlIDs }) => {
         const acfCsv = acfToCsvExporter(acf);
         if (hasMultipleRows(acfCsv)) {
             downloadCsv(acfCsv, 'exportedData_ACF.csv');
-        }
-        const mcsbCsv = mcsbToCsvExporter(jsonData);
-        if (hasMultipleRows(mcsbCsv)) {
-            downloadCsv(mcsbCsv, 'exportedData_MCSB.csv');
-        }
-        const policyCsv = policyToCsvExporter(jsonData);
-        if (hasMultipleRows(policyCsv)) {
-            downloadCsv(policyCsv, 'exportedData_Policy.csv');
         }
     };
 
@@ -80,7 +87,6 @@ const ExportButton = ({ apiData, disabled, acfData, controlIDs }) => {
         const csvRows = [ACFcolumns.join(',')];
         for (const item of data) {
             const controlID = item.ControlID.split("_").pop() || '';
-            // const controlName = sanitizeValue(control["Standard Control Name"]) || '';
             const ACFID = sanitizeValue(item.AzureControlFrameworkID) || '';
             const description = sanitizeValue(item.MicrosoftManagedActionsDescription) || '';
             const details = sanitizeValue(item.MicrosoftManagedActionsDetails) || '';
@@ -100,27 +106,26 @@ const ExportButton = ({ apiData, disabled, acfData, controlIDs }) => {
         const mcsbColumns = ["Control ID", "MCSB ID", "Service", "MCSB Feature", "Feature Supported", "Description", "Configuration Guidance", "Reference"];
         const csvRows = [mcsbColumns.join(',')];
         for (const item of data) {
-            const metadata = item.properties_metadata
+            const metadata = item.properties_metadata;
             metadata.mcsb.frameworkControls.forEach((control) => {
-                controlIDs.forEach((value) => {
-                    if (control.includes(value)) {
-                        metadata.mcsb.features.forEach((feature) => {
-                            const values = [
-                                control.split("_").pop(),
-                                metadata.mcsb.mcsbId,
-                                metadata.offeringName,
-                                feature.featureName,
-                                feature.featureSupport,
-                                feature.featureDescription,
-                                feature.featureGuidance,
-                                feature.featureReference
-                            ];
-                            csvRows.push(values.join(','));
-                        })
-                    }
-                })
-            })
+                if (controlIDs.length === 0 || controlIDs.some(value => control.includes(value))) {
+                    metadata.mcsb.features.forEach((feature) => {
+                        const sanitizedValues = [
+                            control.split("_").pop(),
+                            metadata.mcsb.mcsbId,
+                            metadata.offeringName,
+                            '"' + feature.featureName.replace(/"/g, '""') + '"',
+                            '"' + feature.featureSupport.replace(/"/g, '""') + '"',
+                            '"' + feature.featureDescription.replace(/"/g, '""') + '"',
+                            '"' + feature.featureGuidance.replace(/"/g, '""') + '"',
+                            '"' + feature.featureReference.replace(/"/g, '""') + '"'
+                        ];
+                        csvRows.push(sanitizedValues.join(','));
+                    });
+                }
+            });
         }
+    
         return csvRows.join('\n');
     };
 
@@ -128,25 +133,24 @@ const ExportButton = ({ apiData, disabled, acfData, controlIDs }) => {
         const policyColumns = ["Control ID", "Service", "Policy Name", "Policy Description"];
         const csvRows = [policyColumns.join(',')];
         for (const item of data) {
-            const metadata = item.properties_metadata
+            const metadata = item.properties_metadata;
             metadata.mcsb.frameworkControls.forEach((control) => {
-                controlIDs.forEach((value) => {
-                    if (control.includes(value)) {
-                        metadata.mcsb.automatedPolicyAvailability.forEach((policy) => {
-                            const values = [
-                                control.split("_").pop(),
-                                metadata.offeringName,
-                                policy.policyName,
-                                policy.policyDescription
-                            ];
-                            csvRows.push(values.join(','));
-                        })
-                    }
-                })
-            })
+                if (controlIDs.length === 0 || controlIDs.some(value => control.includes(value))) {
+                    metadata.mcsb.automatedPolicyAvailability.forEach((policy) => {
+                        const sanitizedValues = [
+                            control.split("_").pop(),
+                            metadata.offeringName,
+                            '"' + policy.policyName.replace(/"/g, '""').replace(/\n/g, ' ') + '"',
+                            '"' + policy.policyDescription.replace(/"/g, '""').replace(/\n/g, ' ') + '"'
+                        ];
+                        csvRows.push(sanitizedValues.join(','));
+                    });
+                }
+            });
         }
         return csvRows.join('\n');
     };
+    
 
     const menuProps = {
         items: [

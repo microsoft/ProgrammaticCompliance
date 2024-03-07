@@ -83,22 +83,28 @@ function MainApp() {
 
   return (
     <>
-      <Header />
-      <div className="container">
-        <h1 className="siteTitle">
-          {appText.siteTitle}
-        </h1>
-        <p className="siteDescription" aria-label="Complementary">
-          <em>This experience is for <strong>internal use only</strong> at this moment. Please send any questions, comments, or feedback to <a href="mailto:pcompvteam@microsoft.com">pcompvteam@microsoft.com</a>.</em><p></p>
-          {appText.siteDescription}&nbsp;
-          <Link onClick={toggleIsCalloutVisible} id="readMoreButton">
-            {appText.readMoreButton}
-          </Link>
-        </p>
-        <FilterBar azureToken={azureToken} aria-label="Main"/>
-        <p></p>
-        <p></p>
-      </div>
+      <header role="banner">
+        <Header />
+      </header>
+      <main>
+        <div className="container">
+          <h1 className="siteTitle">
+            {appText.siteTitle}
+          </h1>
+          <section aria-label="Site description">
+            <p className="siteDescription">
+              <em>This experience is for <strong>internal use only</strong> at this moment. Please send any questions, comments, or feedback to <a href="mailto:pcompvteam@microsoft.com">pcompvteam@microsoft.com</a>.</em><p></p>
+              {appText.siteDescription}&nbsp;
+              <Link onClick={toggleIsCalloutVisible} id="readMoreButton">
+                {appText.readMoreButton}
+              </Link>
+            </p>
+          </section>
+          <FilterBar azureToken={azureToken} aria-label="Main" />
+          <p></p>
+          <p></p>
+        </div>
+      </main>
 
       {isCalloutVisible && (
         <Callout
