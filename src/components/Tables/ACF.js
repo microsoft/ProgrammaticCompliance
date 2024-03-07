@@ -390,12 +390,14 @@ const ACF = (props) => {
       } else {
         controlValue = `${row.ControlID.split("_").pop()}: ${props.mapState.get(row.ControlID.split("_").pop())}`
       }
-      temp.push({
-        acfID: row.AzureControlFrameworkID,
-        control: controlValue,
-        description: row.MicrosoftManagedActionsDescription,
-        details: row.MicrosoftManagedActionsDetails,
-      });
+      if (props.mapState.get(row.ControlID.split("_").pop())) {
+        temp.push({
+          acfID: row.AzureControlFrameworkID,
+          control: controlValue,
+          description: row.MicrosoftManagedActionsDescription,
+          details: row.MicrosoftManagedActionsDetails,
+        });
+      }
     });
     return temp;
   }
@@ -419,7 +421,7 @@ const ACF = (props) => {
         <IconButton
           ariaLabel={isTableExpanded ? "Collapse table" : "Expand table"}
           title={isTableExpanded ? "Collapse Microsoft Cloud Compliance Foundation table" : "Expand Microsoft Cloud Compliance Foundation table"}
-          iconProps={{iconName: isTableExpanded ? 'ChevronUp' : 'ChevronDown'}}
+          iconProps={{ iconName: isTableExpanded ? 'ChevronUp' : 'ChevronDown' }}
           onClick={() => setIsTableExpanded(!isTableExpanded)}
           styles={{
             icon: { color: '#0078D4', fontSize: 15, fontWeight: "bold" },

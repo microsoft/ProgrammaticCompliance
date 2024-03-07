@@ -7,14 +7,13 @@ import TableStates from '../Tables/TableStates.js';
 import FilterBadgesContainer from './FilterBadgesContainer.js';
 import ExportButton from '../ExportButton.js';
 import SearchableDropdown from './SearchableDropdown.js';
-
 import { frameworks, apiText } from '../../static/staticStrings.js';
 import { cisDomains, allDomains, allServices, allControls } from '../../queries/Filters.Query.js';
 import { allACFs, filteredACFs } from '../../queries/ACF.Query.js';
 import { filteredMCSB } from '../../queries/MCSB.Query.js';
-
 import { styles, frameworkStyles, selectedFrameworkStyles, serviceStyles, selectedServiceStyles, controlStyles, selectedControlStyles } from '../../styles/DropdownStyles.js';
 import '../../styles/FilterBar.css';
+import cisDOMAINS from '../../static/cisDomains.json';
 
 const FilterBar = ({ azureToken }) => {
   const [selectedFramework, setSelectedFramework] = useState([]);
@@ -23,16 +22,22 @@ const FilterBar = ({ azureToken }) => {
   const [selectedDomains, setSelectedDomains] = useState([]);
   const [controlCount, setControlCount] = useState({});
   const [controlFocus, setControlFocus] = useState("");
+
   const [isLoading, setIsLoading] = useState(false);
   const [isACFLoading, setACFIsLoading] = useState(false);
   const [isOnload, setIsOnload] = useState(true);
+  const [isOverloaded, setIsOverloaded] = useState(false);
+  const [isExportButtonDisabled, setIsExportButtonDisabled] = useState(true);
+
   const [responseData, setResponseData] = useState(null);
   const [acfData, setACFData] = useState(null);
   const [services, setServices] = useState([]);
   const [defaultControls, setDefaultControls] = useState([]);
   const [defaultDomains, setDefaultDomains] = useState([]);
-  const [isExportButtonDisabled, setIsExportButtonDisabled] = useState(true);
-  const [mapState, setMapState] = useState(new Map());
+
+  const [nistMap, setNistMap] = useState(new Map());
+  const [pciMap, setPciMap] = useState(new Map());
+  const [cisMap, setCisMap] = useState(new Map());
 
   // API SETUP
   let TOKEN = `Bearer ${azureToken}`
@@ -97,15 +102,57 @@ const FilterBar = ({ azureToken }) => {
     }
   }
 
+  // FILTER POPULATION FUNCTIONS
+
+  /**
+   * Populates the service filter dropdown
+   */
+  const populateServices = async () => {
+    apiText.requestBody.query = allServices();
+    fetch(apiText.mainEndpoint, {
+      mode: 'cors',
+      method: 'POST',
+      headers: myHeaders,
+      body: JSON.stringify(apiText.requestBody)
+    })
+      .then(response => {
+        if (!response.ok) {
+          throw new Error(`HTTP error! Status: ${response.status}`);
+        }
+        return response.json();
+      })
+      .then(result => {
+        const data = result.data;
+        const transformedData = data.map(item => ({
+          key: item.Service,
+          text: item.Service,
+        }));
+        transformedData.sort((a, b) => a.text.localeCompare(b.text));
+        setServices(transformedData);
+      })
+      .catch(error => {
+        console.error('API Error:', error);
+      });
+  };
+
+
+  /**
+   * Populates the domain filter dropdown depending on what framework is selected
+   * @param {string} framework 
+   */
   const populateDomains = (framework) => {
     let controlID;
     let key;
     let text;
-    if (selectedFramework === "CIS_Azure_2.0.0") {
-      apiText.requestBody.query = cisDomains();
+    if (selectedFramework === "CIS_Azure_2.0.0") { // @TODO Reconnect with below API call once CIS domain names are fixed
+      // apiText.requestBody.query = cisDomains();
+      let currentDomains = cisDOMAINS.map(domain => {
+        return { key: domain.value, text: domain.label };
+      });
+      setDefaultDomains(currentDomains);
     } else {
       apiText.requestBody.query = allDomains(framework);
-    }
+    // }
     fetch(apiText.mainEndpoint, {
       mode: 'cors',
       method: 'POST',
@@ -147,37 +194,17 @@ const FilterBar = ({ azureToken }) => {
       .catch(error => {
         console.error('API Error:', error);
       });
-    // else if (framework === "CIS_Azure_Benchmark_v2.0.0") {
-    //   IDS = cisIDS;
-    //   DOMAINS = cisDOMAINS;
-    //   IDS.forEach((id, _) => {
-    //     const controlPrefix = prefixExtractor(id.value);
-    //     if (controlPrefix !== currentPrefix && !currentControls.some(item => item.text === controlPrefix)) {
-    //       currentControls.push({
-    //         text: `${controlPrefix}`,
-    //         itemType: DropdownMenuItemType.Header,
-    //       });
-    //       currentPrefix = controlPrefix;
-    //     }
-    //     currentControls.push({
-    //       key: sanitizeControlID(id.value),
-    //       text: id.label,
-    //     });
-    //   });
-    //   currentControls.sort((a, b) => {
-    //     const partA = a.text.split(':')[0].trim();
-    //     const partB = b.text.split(':')[0].trim();
-    //     return customSort(partA, partB);
-    //   });
-    //   setDefaultControls(currentControls);
-    // }
+    }
   }
 
+  /**
+   * Populates the control ID filter dropdown depending on what framework is selected
+   * @param {string} framework 
+   */
   const populateControls = (framework) => {
     let currentControls = [];
     let currentPrefix = '';
     let controlID;
-    let IDMap = new Map(mapState)
     apiText.requestBody.query = allControls(framework);
     fetch(apiText.mainEndpoint, {
       mode: 'cors',
@@ -216,7 +243,6 @@ const FilterBar = ({ azureToken }) => {
                 key: sanitizedControlID,
                 text: `${sanitizedControlID}: ${item.properties.title}`,
               });
-              IDMap.set(sanitizedControlID, item.properties.title)
             }
           } else {
             controlID = item.properties.metadataId.split(' ').pop().trim();
@@ -236,12 +262,10 @@ const FilterBar = ({ azureToken }) => {
                 key: controlID,
                 text: `${controlID}: ${item.properties.title}`,
               });
-              IDMap.set(controlID, item.properties.title)
             }
             setDefaultControls(currentControls);
           }
         });
-        setMapState(IDMap)
         currentControls.sort((a, b) => {
           return customSort(a.key, b.key);
         });
@@ -252,17 +276,74 @@ const FilterBar = ({ azureToken }) => {
       });
   }
 
+  /**
+   * Populates the instance cache with the control ID value-name mapping depending on what framework is selected
+   * Used during onload to populate control ID values for all frameworks
+   * @param {string} framework 
+   */
+  const populateControlMaps = (framework) => {
+    let controlID;
+    let currentMap = new Map();
+    let retryCount = 0;
+    apiText.requestBody.query = allControls(framework);
+    fetch(apiText.mainEndpoint, {
+      mode: 'cors',
+      method: 'POST',
+      headers: myHeaders,
+      body: JSON.stringify(apiText.requestBody)
+    })
+      .then(response => {
+        if (!response.ok) {
+          if (response.status === 429 && retryCount < 3) {
+            retryCount++;
+            console.log('Too Many Requests. Retrying...');
+            populateControlMaps(framework)
+            return;
+          } else {
+            throw new Error(`HTTP error! Status: ${response.status}`);
+          }
+        }
+        return response.json();
+      })
+      .then(result => {
+        const data = result.data;
+        data.forEach(item => {
+          if (framework === "NIST_SP_800-53_R4") {
+            if (!item.properties.metadataId.includes("(")) {
+              controlID = item.properties.metadataId.replace(/\([^()]*\)/g, '');
+              controlID = controlID.trim().split(' ').pop();
+              controlID = sanitizeControlID(controlID);
+              currentMap.set(controlID, item.properties.title)
+            }
+          } else {
+            controlID = item.properties.metadataId.split(' ').pop().trim();
+            currentMap.set(controlID, item.properties.title)
+          }
+        });
+        if (framework === "NIST_SP_800-53_R4") {
+          setNistMap(currentMap);
+        } else if (framework === "CIS_Azure_2.0.0") {
+          setCisMap(currentMap);
+        } else {
+          setPciMap(currentMap)
+        }
+      })
+      .catch(error => {
+        console.error('API Error:', error);
+      });
+  }
+
   // USEEFFECT HOOKS
+
   useEffect(() => {
-    setResponseData("onload")
-    setACFData("onload")
-    fetchData();
-    fetchACFData();
-  }, []);
+    populateControlMaps("CIS_Azure_2.0.0")
+    populateControlMaps("NIST_SP_800-53_R4")
+    populateControlMaps("PCI_DSS_v4.0")
+    populateServices();
+  }, [])
 
   useEffect(() => {
     setIsExportButtonDisabled(selectedFramework.length === 0);
-    setMapState(new Map());
     populateDomains(selectedFramework);
     populateControls(selectedFramework);
     setSelectedDomains([]);
@@ -273,14 +354,18 @@ const FilterBar = ({ azureToken }) => {
   }, [selectedFramework]);
 
   useEffect(() => {
-    fetchServices();
-    fetchData();
+    if (selectedServices.length > 0) {
+      fetchMCSBData();
+    }
   }, [selectedFramework, selectedServices, selectedControls]);
 
   useEffect(() => {
     fetchACFData();
   }, [selectedFramework, selectedControls]);
 
+  /**
+   * Controls the linked relationship between the control domain and control IDs filters
+   */
   useEffect(() => {
     if (controlFocus) {
       let controlPrefix = prefixExtractor(controlFocus);
@@ -334,35 +419,9 @@ const FilterBar = ({ azureToken }) => {
     }
   }, [selectedControls]);
 
-  const fetchServices = async () => {
-    apiText.requestBody.query = allServices();
-    fetch(apiText.mainEndpoint, {
-      mode: 'cors',
-      method: 'POST',
-      headers: myHeaders,
-      body: JSON.stringify(apiText.requestBody)
-    })
-      .then(response => {
-        if (!response.ok) {
-          throw new Error(`HTTP error! Status: ${response.status}`);
-        }
-        return response.json();
-      })
-      .then(result => {
-        const data = result.data;
-        const transformedData = data.map(item => ({
-          key: item.Service,
-          text: item.Service,
-        }));
-        transformedData.sort((a, b) => a.text.localeCompare(b.text));
-        setServices(transformedData);
-      })
-      .catch(error => {
-        console.error('API Error:', error);
-      });
-  };
+  // TABLE DATA QUERY FUNCTIONS
 
-  const fetchData = async () => {
+  const fetchMCSBData = async () => {
     setIsLoading(true);
     apiText.requestBody.query = filteredMCSB(selectedFramework, selectedServices, selectedControls);
     fetch(apiText.mainEndpoint, {
@@ -411,8 +470,12 @@ const FilterBar = ({ azureToken }) => {
     })
       .then(response => {
         if (!response.ok) {
+          if (response.status === 429) {
+            setIsOverloaded(true)
+          }
           throw new Error(`HTTP error! Status: ${response.status}`);
         }
+        setIsOverloaded(false)
         return response.json();
       })
       .then(result => {
@@ -426,7 +489,7 @@ const FilterBar = ({ azureToken }) => {
       });
   };
 
-  // ONCHANGE
+  // ONCHANGE FUNCTIONS
   const onClear = async () => {
     setResponseData("onload");
     setIsOnload(true);
@@ -437,7 +500,6 @@ const FilterBar = ({ azureToken }) => {
     setACFData(null)
     setControlCount({});
     setControlFocus("");
-    // setMapState(new Map());
   };
 
   const onFrameworkChange = (_, item) => {
@@ -566,14 +628,15 @@ const FilterBar = ({ azureToken }) => {
         <div className="dropdown-container">
           <div className="select-dropdown">
             <Dropdown
-              placeholder="Regulatory Framework"
+              placeholder={nistMap.size === 0 || pciMap.size === 0 || cisMap.size === 0 || services.length === 0 ? "Loading..." : "Regulatory Framework"}
               selectedKey={selectedFramework}
               onChange={onFrameworkChange}
               options={frameworks}
               dropdownWidthAuto={true}
               styles={selectedFramework.length > 0 ? selectedFrameworkStyles : frameworkStyles}
               aria-label="Regulatory framework"
-              label="Regulatory framework"
+              label={"Regulatory framework"}
+              disabled={nistMap.size === 0 || pciMap.size === 0 || cisMap.size === 0 || services.length === 0}
             />
           </div>
           <div className="select-dropdown">
@@ -643,7 +706,7 @@ const FilterBar = ({ azureToken }) => {
             />
           </div>
           <div className="exportButton">
-            <ExportButton apiData={responseData} disabled={isExportButtonDisabled} acfData={acfData} controlIDs={selectedControls} mapState={mapState} />
+            <ExportButton apiData={responseData} disabled={isExportButtonDisabled} acfData={acfData} controlIDs={selectedControls} mapState={selectedFramework === "NIST_SP_800-53_R4" ? nistMap : selectedFramework === "CIS_Azure_2.0.0" ? cisMap : selectedFramework === "PCI_DSS_v4.0" ? pciMap : null} />
           </div>
         </div>
       </div>
@@ -666,10 +729,10 @@ const FilterBar = ({ azureToken }) => {
           isOnload ? (
             <TableStates type="ACF" variant="Onload" />
           ) : (
-            isACFLoading ? (
+            isACFLoading || isOverloaded ? (
               <TableStates type="ACF" variant="Loading" />
             ) : (
-              acfData && <ACF data={acfData} framework={selectedFramework} mapState={mapState} />
+              acfData && <ACF data={acfData} framework={selectedFramework} mapState={selectedFramework === "NIST_SP_800-53_R4" ? nistMap : selectedFramework === "CIS_Azure_2.0.0" ? cisMap : selectedFramework === "PCI_DSS_v4.0" ? pciMap : null} />
             )
           )
         }
@@ -683,7 +746,7 @@ const FilterBar = ({ azureToken }) => {
             isLoading ? (
               <TableStates type="MCSB" variant="Loading" />
             ) : (
-              responseData && <MCSB data={responseData} framework={selectedFramework} controls={selectedControls} mapState={mapState} />
+              responseData && <MCSB data={responseData} framework={selectedFramework} controls={selectedControls} mapState={selectedFramework === "NIST_SP_800-53_R4" ? nistMap : selectedFramework === "CIS_Azure_2.0.0" ? cisMap : selectedFramework === "PCI_DSS_v4.0" ? pciMap : null} />
             )
           ))
         }
@@ -697,7 +760,7 @@ const FilterBar = ({ azureToken }) => {
             isLoading ? (
               <TableStates type="Policy" variant="Loading" />
             ) : (
-              responseData && <Policies data={responseData} framework={selectedFramework} controls={selectedControls} mapState={mapState} />
+              responseData && <Policies data={responseData} framework={selectedFramework} controls={selectedControls} mapState={selectedFramework === "NIST_SP_800-53_R4" ? nistMap : selectedFramework === "CIS_Azure_2.0.0" ? cisMap : selectedFramework === "PCI_DSS_v4.0" ? pciMap : null} />
             )
           ))
         }

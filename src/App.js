@@ -50,8 +50,12 @@ function MainApp() {
     }
   };
 
+  /**
+   * UNCOMMENT BELOW TO PRINT AZ ACCESS TOKEN
+   */
+  
   // useEffect(() => {
-  //   console.log('UNCOMMENT TO GET TOKEN FOR POSTMAN: ', azureToken);
+  //   console.log('AZURE TOKEN: ', azureToken);
   // }, [azureToken])
 
   useEffect(() => {
@@ -100,7 +104,7 @@ function MainApp() {
               </Link>
             </p>
           </section>
-          <FilterBar azureToken={azureToken} aria-label="Main" />
+          {azureToken && <FilterBar azureToken={azureToken} aria-label="Main" />}
           <p></p>
           <p></p>
         </div>
