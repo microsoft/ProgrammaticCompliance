@@ -160,7 +160,7 @@ Set-Location -Path .\pipeline\terraform
 ```
 * Create a storage account that hosts the terraform state file (using the bash script code or through the portal) 
 * Create a container in the storage account created above that hosts the terraform state file
-* Create a ```.tfvars``` file to set up the terraform variables. Make sure the resource group that hosts the UX webapp is different from the resource group of the storage account created in the next step. The *react_app_client_id* value is the value of the app id configured in the above step. All the other variables values will be your own choice.
+* Create a ```.tfvars``` file to set up the terraform variables. Make sure the resource group that hosts the UX webapp is different from the resource group of the storage account created in the next step. The *react_app_client_id* value is the value of the app id configured in the _App registration and roles configurations_ step. All the other variables values will be your own choice.
 ![alt text](image-3.png)
 * Login to your tenant and ensure that you are using the target subscription of your choice
 ```
@@ -188,7 +188,7 @@ terraform plan -out plan.tfplan
 terraform apply plan.tfplan
 ```
 > [!IMPORTANT]
-> Please update the _Redirect URI_ on the app registration with the actual URL of the webapp created.
+> Please update the _Redirect URI_ in the _App registration and roles configurations_ step with the actual URL assigned to the webapp once it is created.
 
 ## Deploy the UX code to the webapp created
 * Create a zip file that contains the source code at the root of the project
