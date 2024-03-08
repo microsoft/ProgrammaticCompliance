@@ -635,7 +635,7 @@ const FilterBar = ({ azureToken }) => {
               dropdownWidthAuto={true}
               styles={selectedFramework.length > 0 ? selectedFrameworkStyles : frameworkStyles}
               aria-label="Regulatory framework"
-              label={"Regulatory framework"}
+              label="Regulatory framework"
               disabled={nistMap.size === 0 || pciMap.size === 0 || cisMap.size === 0 || services.length === 0}
             />
           </div>
