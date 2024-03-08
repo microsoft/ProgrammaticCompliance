@@ -6,22 +6,22 @@
 * Download the latest version of [PowerShell](https://learn.microsoft.com/en-us/powershell/scripting/install/installing-powershell-on-windows?view=powershell-7.4)
 
 ## Local Machine configuration
-* Set the working directory to the PowerShell scripts directory
+* Set the working directory to the PowerShell scripts directory:
 ```
 Set-Location -Path .\CustomPolicies\PowerShell
 ```
-* Run the environment set up script with the powershell elevated privileges
+* Run the environment set up script with the powershell elevated privileges:
 ```
 .\EnvConfig.ps1
 ```
 
 ## Log into the tenant where all the custom policies will be installed
 You can configure a service principal and give it enough privileges to create the custom policies.
-To run the login script with service principal use:
+* To run the login script with service principal use:
 ```
 .\Login.ps1 -ApplicationId <Service Principal client ID> -TenantId <Tenant ID>
 ```
-To run the login script with the interactive auth, run the script with just the tenant ID as a parameter as follows:
+* To run the login script with the interactive auth, run the script with just the tenant ID as a parameter:
 ```
 .\Login.ps1 -TenantId <Tenant ID>
 ```
@@ -91,11 +91,11 @@ az account show
 ```
 terraform init -backend-config="resource_group_name=${BACKEND_STORAGE_ACCOUNT_RG}" -backend-config="storage_account_name=${BACKEND_STORAGE_ACCOUNT_NAME}" -backend-config="container_name=${BACKEND_STORAGE_CONTAINER_NAME}"
 ```
-BACKEND_STORAGE_ACCOUNT_RG is the resource group of the storage account that hosts the terraform state file
-BACKEND_STORAGE_ACCOUNT_NAME is the storage account that hosts the terraform state file
-BACKEND_STORAGE_CONTAINER_NAME is the container of the storage account that hosts the terraform state file
+`BACKEND_STORAGE_ACCOUNT_RG` is the resource group of the storage account that hosts the terraform state file  
+`BACKEND_STORAGE_ACCOUNT_NAME` is the storage account that hosts the terraform state file  
+`BACKEND_STORAGE_CONTAINER_NAME` is the container of the storage account that hosts the terraform state file
 
-* Run terraform plan:
+* Create the terraform plan:
 ```
 terraform plan -out plan.tfplan
 ```
@@ -111,7 +111,7 @@ terraform apply plan.tfplan
 
 ## Installations prior to webapp deployment
 The following steps should be done in your terminal, from the directory into which you cloned the Git repository.
-* Download and install Node.js, which includes npm, from the [official website](https://nodejs.org/) for your operating system. Use the LTS to avoid any fresh issues with the current version
+* Download and install Node.js, which includes npm, [here](https://nodejs.org/) for your operating system. Use the LTS to avoid any fresh issues with the current version
 * To verify that Node.js and npm are installed correctly, open a terminal and run the following commands to check their versions:
 ```
 node -v
