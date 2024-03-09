@@ -402,3 +402,10 @@ FodyWeavers.xsd
 *.tfvars
 *.terraform.lock.hcl
 .terraform/
+
+#react
+*.env
+*.zip
+build/
+node_modules/
+package-lock.json
