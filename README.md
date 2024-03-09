@@ -79,8 +79,8 @@ Set-Location -Path .\pipeline\terraform
 ```
 * Create a storage account that hosts the terraform state file (using the bash script code or through the portal) 
 * Create a container in the storage account created above that hosts the terraform state file
-* Create a ```.tfvars``` file to set up the terraform variables. Make sure the resource group that hosts the UX webapp is different from the resource group of the storage account created in the next step. The *react_app_client_id* value is the value of the app id configured in the _App registration and roles configurations_ step. All the other variables values will be your own choice.
-![alt text](image-3.png)
+* Create a ```.tfvars``` file to set up the terraform variables. Make sure the resource group that hosts the UX webapp is different from the resource group of the storage account created in the next step. Below is an example of a ```.tfvars``` file. 
+![alt text](image.png)
 * Login to your tenant and ensure that you are using the target subscription of your choice:
 ```
 az login
@@ -119,6 +119,15 @@ npm -v
 ```
 > [!NOTE]
 > This UX was built using Node.js v18.17.1 and npm v9.8.1.
+
+* Create a ```.env``` file with the following contents
+```
+REACT_APP_CLIENT_ID=<your value goes here>
+REACT_APP_TENANT_ID=<your value goes here>
+```
+The above values are the id of the tenant which hosts the webapp and the app registration and the id of the app registration configured in the  _App registration and roles configurations_ step.
+> [!NOTE]
+> The name of the above file is indeed ```.env``` - the name convention for a react environment variables file. 
 
 * After verifying the previous step, use npm to install project dependencies and wait until completion:
 

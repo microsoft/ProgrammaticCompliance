@@ -15,10 +15,6 @@ provider "azurerm" {
   }
 }
 
-data "azurerm_subscription" "sub" {
-  
-}
-
 resource "azurerm_resource_group" "rg" {
   name      = var.resource_group_name
   location  = var.location
@@ -38,8 +34,6 @@ module "webapp" {
   appinsights_connection_string     = module.appinsights.appinsights_connection_string
   health_check_path                 = "/"
   health_check_eviction_time_in_min = 5
-  react_app_client_id               = var.react_app_client_id
-  react_app_tenant_id               = data.azurerm_subscription.sub.tenant_id
 }
 
 

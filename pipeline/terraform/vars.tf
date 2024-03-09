@@ -9,7 +9,3 @@ variable "location" {
 variable "azure_app_name" {
     type = string
 }
-
-variable "react_app_client_id" {
-  type = string
-}
