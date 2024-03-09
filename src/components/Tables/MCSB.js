@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { DetailsList, SelectionMode, DetailsListLayoutMode, Text, Icon, Stack, initializeIcons, TooltipHost, Sticky, StickyPositionType, ConstrainMode, Link } from '@fluentui/react';
+import { DetailsList, SelectionMode, DetailsListLayoutMode, Text, Icon, IconButton, Stack, initializeIcons, TooltipHost, Sticky, StickyPositionType, ConstrainMode, Link } from '@fluentui/react';
 
 import MCSBModal from '../Modals/MCSBModal.js';
 import TableStates from './TableStates.js';
@@ -11,6 +11,8 @@ import { tableText } from '../../static/staticStrings.js';
 initializeIcons();
 
 const MCSB = (props) => {
+
+  let controlIDSet = new Set(props.controls);
 
   const onItemInvoked = (item) => {
     setModalData(item);
@@ -189,9 +191,9 @@ const MCSB = (props) => {
     if (sortableColumn.key === 'control') {
       setIsControlDescending(!isControlDescending);
       const reversedItems = items.reverse();
-      if (props.framework === "NIST_SP_800-53_Rev4") {
+      if (props.framework === "NIST_SP_800-53_R4") {
         groupedArray = groupAndSortNIST(reversedItems, isControlDescending);
-      } else if (props.framework === "CIS_Azure_Benchmark_v2.0.0") {
+      } else if (props.framework === "CIS_Azure_2.0.0") {
         groupedArray = groupAndSortCIS(reversedItems, isControlDescending);
       } else {
         groupedArray = groupAndSortPCI(reversedItems, isControlDescending);
@@ -397,7 +399,6 @@ const MCSB = (props) => {
       }
       return sanitizeControlID(a.control).localeCompare(sanitizeControlID(b.control));
     });
-
     setItems(sortedItems);
     setGroupedItems(groupAndSortCIS(sortedItems, false));
   }
@@ -417,7 +418,7 @@ const MCSB = (props) => {
 
   useEffect(() => {
     const flattenedData = flattenData(props.data);
-    if (props.framework === "NIST_SP_800-53_Rev4") {
+    if (props.framework === "NIST_SP_800-53_R4") {
       nistTableLoad(flattenedData)
     } else if (props.framework === "CIS_Azure_Benchmark_v2.0.0") {
       cisTableLoad(flattenedData)
@@ -428,32 +429,51 @@ const MCSB = (props) => {
 
   function flattenData(dataset) {
     const temp = [];
-    dataset.forEach((service) => {
-      const serviceName = service['Service Name'];
-      service['Standard Controls'].forEach((control) => {
-        const controlID = control['Standard Control ID'];
-        const controlName = control['Standard Control Name'];
-        const mcsbBaseline = control['MCSB Baseline'];
-        const sanitizedControlName = controlName ? controlName.replace(/[^\w.,: ]/g, '') : '';
-
-        mcsbBaseline.forEach((baselineItem) => {
-          const feature = baselineItem['Features'];
-          feature.forEach((feature) => {
-            temp.push({
-              mcsbID: baselineItem['MCSB ID'],
-              control: `${controlID}: ${sanitizedControlName}`,
-              service: serviceName,
-              name: feature['Feature Name'],
-              actions: feature['Customer Actions Description'],
-              supported: feature['Feature Support'],
-              enabled: feature['Enabled by Default'],
-              description: feature['Feature Description'],
-              guidance: feature['Feature Guidance'],
-              reference: feature['Feature Reference'],
+    dataset.forEach((row) => {
+      let rowControls = row.properties_metadata.mcsb.frameworkControls;
+      // if there are user-selected control IDs, then only show those controls
+      // this filters out rows that do not have any user-selected IDs in their controls array
+      if (controlIDSet && controlIDSet.size > 0) {
+        rowControls.forEach((control) => {
+          if (controlIDSet.has(control.split('_').pop())) {
+            row.properties_metadata.mcsb.features.forEach((feature) => {
+              temp.push({
+                mcsbID: row.properties_metadata.mcsb.mcsbId,
+                control: `${control.split("_").pop()}: ${props.mapState.get(sanitizeControlID(control.split("_").pop()))}`,
+                service: row.properties_metadata.offeringName,
+                name: feature.featureName,
+                actions: feature.customerActionsDescription,
+                supported: feature.featureSupport,
+                enabled: feature.enabledByDefault,
+                description: feature.featureDescription,
+                guidance: feature.featureGuidance,
+                reference: feature.featureReference,
+              });
             });
-          });
+          }
         });
-      });
+      // otherwise, since the user didn't limit any controls,
+      // find all of the rows that have our chosen framework instead and show them all
+      } else {
+        rowControls.forEach((control) => {
+          if (control.includes(props.framework)) {
+            row.properties_metadata.mcsb.features.forEach((feature) => {
+              temp.push({
+                mcsbID: row.properties_metadata.mcsb.mcsbId,
+                control: `${control.split("_").pop()}: ${props.mapState.get(sanitizeControlID(control.split("_").pop()))}`,
+                service: row.properties_metadata.offeringName,
+                name: feature.featureName,
+                actions: feature.customerActionsDescription,
+                supported: feature.featureSupport,
+                enabled: feature.enabledByDefault,
+                description: feature.featureDescription,
+                guidance: feature.featureGuidance,
+                reference: feature.featureReference,
+              });
+            })
+          }
+        });
+      }
     });
     return temp;
   }
@@ -474,11 +494,14 @@ const MCSB = (props) => {
             </Text>
           </div>
         </Stack>
-        <Icon
-          aria-label="Expand table"
-          iconName={isTableExpanded ? 'ChevronUp' : 'ChevronDown'}
+        <IconButton
+          ariaLabel={isTableExpanded ? "Collapse table" : "Expand table"}
+          title={isTableExpanded ? "Collapse Compliance Features by Service table" : "Expand Compliance Features by Service table"}
+          iconProps={{iconName: isTableExpanded ? 'ChevronUp' : 'ChevronDown'}}
           onClick={() => setIsTableExpanded(!isTableExpanded)}
-          style={{ fontSize: '15px', cursor: 'pointer', color: '#0078D4', paddingLeft: '15px', fontWeight: 'bold' }}
+          styles={{
+            icon: { color: '#0078D4', fontSize: 15, fontWeight: "bold" },
+          }}
         />
       </Stack>
 

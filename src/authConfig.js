@@ -12,9 +12,9 @@ import { LogLevel } from "@azure/msal-browser";
  */
 export const msalConfig = {
     auth: {
-        clientId: "635d0998-6280-4b16-af89-4a04cc4a0a5b",
-        authority: "https://login.microsoftonline.com/72f988bf-86f1-41af-91ab-2d7cd011db47",
-        redirectUri: "https://progcompliancefe.azurewebsites.net/"
+        clientId: process.env.REACT_APP_CLIENT_ID,
+        authority: `https://login.microsoftonline.com/${process.env.REACT_APP_TENANT_ID}`,
+        redirectUri: "https://programmaticcomplianceapp.azurewebsites.net/"
     },
     cache: {
         cacheLocation: "sessionStorage", // This configures where your cache will be stored
@@ -52,7 +52,7 @@ export const msalConfig = {
  * https://docs.microsoft.com/en-us/azure/active-directory/develop/v2-permissions-and-consent#openid-connect-scopes
  */
 export const loginRequest = {
-    scopes: ["User.Read"]
+    scopes: ["user_impersonation"]
 };
 
 /**
@@ -60,6 +60,5 @@ export const loginRequest = {
  * https://github.com/AzureAD/microsoft-authentication-library-for-js/blob/dev/lib/msal-browser/docs/resources-and-scopes.md
  */
 export const tokenConfig = {
-    graphMeEndpoint: "https://graph.microsoft.com/v1.0/me",
-    apiDataEndpoint: "api://01540a6b-6e38-40b8-b67f-1d9d78dfc691/Compliance.Read"
+    managementEndpoint: "https://management.azure.com/.default"
 };

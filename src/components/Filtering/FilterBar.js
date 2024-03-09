@@ -7,34 +7,44 @@ import TableStates from '../Tables/TableStates.js';
 import FilterBadgesContainer from './FilterBadgesContainer.js';
 import ExportButton from '../ExportButton.js';
 import SearchableDropdown from './SearchableDropdown.js';
-
 import { frameworks, apiText } from '../../static/staticStrings.js';
-import nistIDS from '../../static/nistControls.json';
-import nistDOMAINS from '../../static/nistDomains.json';
-import cisIDS from '../../static/cisControls.json';
-import cisDOMAINS from '../../static/cisDomains.json';
-import pciIDS from '../../static/pciControls.json';
-import pciDOMAINS from '../../static/pciDomains.json';
-
+import { cisDomains, allDomains, allServices, allControls } from '../../queries/Filters.Query.js';
+import { allACFs, filteredACFs } from '../../queries/ACF.Query.js';
+import { filteredMCSB } from '../../queries/MCSB.Query.js';
 import { styles, frameworkStyles, selectedFrameworkStyles, serviceStyles, selectedServiceStyles, controlStyles, selectedControlStyles } from '../../styles/DropdownStyles.js';
 import '../../styles/FilterBar.css';
+import cisDOMAINS from '../../static/cisDomains.json';
 
-const FilterBar = ({ authToken }) => {
+const FilterBar = ({ azureToken }) => {
   const [selectedFramework, setSelectedFramework] = useState([]);
   const [selectedServices, setSelectedServices] = useState([]);
   const [selectedControls, setSelectedControls] = useState([]);
   const [selectedDomains, setSelectedDomains] = useState([]);
   const [controlCount, setControlCount] = useState({});
   const [controlFocus, setControlFocus] = useState("");
+
   const [isLoading, setIsLoading] = useState(false);
   const [isACFLoading, setACFIsLoading] = useState(false);
   const [isOnload, setIsOnload] = useState(true);
+  const [isOverloaded, setIsOverloaded] = useState(false);
+  const [isExportButtonDisabled, setIsExportButtonDisabled] = useState(true);
+
   const [responseData, setResponseData] = useState(null);
   const [acfData, setACFData] = useState(null);
   const [services, setServices] = useState([]);
   const [defaultControls, setDefaultControls] = useState([]);
   const [defaultDomains, setDefaultDomains] = useState([]);
-  const [isExportButtonDisabled, setIsExportButtonDisabled] = useState(true);
+
+  const [nistMap, setNistMap] = useState(new Map());
+  const [pciMap, setPciMap] = useState(new Map());
+  const [cisMap, setCisMap] = useState(new Map());
+
+  // API SETUP
+  let TOKEN = `Bearer ${azureToken}`
+  const myHeaders = new Headers();
+  myHeaders.append('Authorization', TOKEN);
+  myHeaders.append('Accept', '*/*');
+  myHeaders.append('Content-Type', 'application/json');
 
   // UTILITY FUNCTIONS
   const sanitizeControlID = (controlId) => {
@@ -44,18 +54,15 @@ const FilterBar = ({ authToken }) => {
   };
 
   const customSort = (a, b) => {
-    const splitA = a.split('.').map(Number);
-    const splitB = b.split('.').map(Number);
+    const splitA = a.match(/([a-zA-Z]+)(-?\d*)/);
+    const splitB = b.match(/([a-zA-Z]+)(-?\d*)/);
 
-    for (let i = 0; i < Math.max(splitA.length, splitB.length); i++) {
-      const numA = splitA[i] || 0;
-      const numB = splitB[i] || 0;
+    if (splitA[1] < splitB[1]) return -1;
+    if (splitA[1] > splitB[1]) return 1;
 
-      if (numA !== numB) {
-        return numA - numB;
-      }
-    }
-    return a.length - b.length;
+    const numA = parseInt(splitA[2]) || 0;
+    const numB = parseInt(splitB[2]) || 0;
+    return numB - numA;
   };
 
   const countMaxTotal = (seekControl) => {
@@ -87,7 +94,7 @@ const FilterBar = ({ authToken }) => {
 
   const prefixExtractor = (control) => {
     if (control) {
-      if (selectedFramework === "NIST_SP_800-53_Rev4") {
+      if (selectedFramework === "NIST_SP_800-53_R4") {
         return control.split('-')[0];
       } else {
         return control.split('.')[0];
@@ -95,110 +102,270 @@ const FilterBar = ({ authToken }) => {
     }
   }
 
-  const populateFilters = (framework) => {
+  // FILTER POPULATION FUNCTIONS
+
+  /**
+   * Populates the service filter dropdown
+   */
+  const populateServices = async () => {
+    apiText.requestBody.query = allServices();
+    fetch(apiText.mainEndpoint, {
+      mode: 'cors',
+      method: 'POST',
+      headers: myHeaders,
+      body: JSON.stringify(apiText.requestBody)
+    })
+      .then(response => {
+        if (!response.ok) {
+          throw new Error(`HTTP error! Status: ${response.status}`);
+        }
+        return response.json();
+      })
+      .then(result => {
+        const data = result.data;
+        const transformedData = data.map(item => ({
+          key: item.Service,
+          text: item.Service,
+        }));
+        transformedData.sort((a, b) => a.text.localeCompare(b.text));
+        setServices(transformedData);
+      })
+      .catch(error => {
+        console.error('API Error:', error);
+      });
+  };
+
+
+  /**
+   * Populates the domain filter dropdown depending on what framework is selected
+   * @param {string} framework 
+   */
+  const populateDomains = (framework) => {
+    let controlID;
+    let key;
+    let text;
+    if (selectedFramework === "CIS_Azure_2.0.0") { // @TODO Reconnect with below API call once CIS domain names are fixed
+      // apiText.requestBody.query = cisDomains();
+      let currentDomains = cisDOMAINS.map(domain => {
+        return { key: domain.value, text: domain.label };
+      });
+      setDefaultDomains(currentDomains);
+    } else {
+      apiText.requestBody.query = allDomains(framework);
+    // }
+    fetch(apiText.mainEndpoint, {
+      mode: 'cors',
+      method: 'POST',
+      headers: myHeaders,
+      body: JSON.stringify(apiText.requestBody)
+    })
+      .then(response => {
+        if (!response.ok) {
+          throw new Error(`HTTP error! Status: ${response.status}`);
+        }
+        return response.json();
+      })
+      .then(result => {
+        const data = result.data;
+        const domainMap = {};
+        data.forEach(item => {
+          if (framework === "NIST_SP_800-53_R4") {
+            controlID = item.ControlID.split('_').pop().split('-')[0];
+            key = controlID;
+            text = `${controlID}: ${item.ControlDomain}`;
+          } else if (framework === "PCI_DSS_v4.0") {
+            controlID = item.ControlDomain.split(':')[0].split(' ')[1];
+            if (controlID.startsWith('0')) {
+              controlID = controlID.substring(1);
+            }
+            key = controlID;
+            text = `${controlID}: ${item.ControlDomain.split(':')[1]}`;
+          } else if (framework === "CIS_Azure_2.0.0") {
+            key = item.ControlDomain.split(' ')[0];
+            text = `${item.ControlDomain.split(' ')[0]}: ${item.ControlDomain.substring(item.ControlDomain.indexOf(" ") + 1)}`;
+          }
+          if (!domainMap[key]) {
+            domainMap[key] = text;
+          }
+        });
+        const uniqueDomains = Object.values(domainMap).map(text => ({ key: text.split(': ')[0], text }));
+        setDefaultDomains(uniqueDomains);
+      })
+      .catch(error => {
+        console.error('API Error:', error);
+      });
+    }
+  }
+
+  /**
+   * Populates the control ID filter dropdown depending on what framework is selected
+   * @param {string} framework 
+   */
+  const populateControls = (framework) => {
     let currentControls = [];
     let currentPrefix = '';
-    let currentDomains = [];
-    let IDS;
-    let DOMAINS;
-    if (framework === "NIST_SP_800-53_Rev4") {
-      IDS = nistIDS;
-      DOMAINS = nistDOMAINS;
-      IDS.forEach((id, _) => {
-        const controlPrefix = prefixExtractor(id.value);
-        if (controlPrefix !== currentPrefix) {
-          currentControls.push({
-            text: `${controlPrefix}`,
-            itemType: DropdownMenuItemType.Header,
-          });
-          currentPrefix = controlPrefix;
+    let controlID;
+    apiText.requestBody.query = allControls(framework);
+    fetch(apiText.mainEndpoint, {
+      mode: 'cors',
+      method: 'POST',
+      headers: myHeaders,
+      body: JSON.stringify(apiText.requestBody)
+    })
+      .then(response => {
+        if (!response.ok) {
+          throw new Error(`HTTP error! Status: ${response.status}`);
         }
-        currentControls.push({
-          key: sanitizeControlID(id.value),
-          text: id.label,
+        return response.json();
+      })
+      .then(result => {
+        const data = result.data;
+        const controlKeys = new Set();
+        const controlPrefixes = new Set();
+        data.forEach(item => {
+          if (framework === "NIST_SP_800-53_R4") {
+            controlID = item.properties.metadataId.replace(/\([^()]*\)/g, '');
+            controlID = controlID.trim().split(' ').pop();
+            const controlPrefix = prefixExtractor(controlID);
+            if (controlPrefix !== currentPrefix && !controlPrefixes.has(controlPrefix)) {
+              controlPrefixes.add(controlPrefix)
+              currentControls.push({
+                key: `${controlPrefix}`,
+                text: `${controlPrefix}`,
+                itemType: DropdownMenuItemType.Header,
+              });
+              currentPrefix = controlPrefix;
+            }
+            const sanitizedControlID = sanitizeControlID(controlID);
+            if (!controlKeys.has(sanitizedControlID)) {
+              controlKeys.add(sanitizedControlID);
+              currentControls.push({
+                key: sanitizedControlID,
+                text: `${sanitizedControlID}: ${item.properties.title}`,
+              });
+            }
+          } else {
+            controlID = item.properties.metadataId.split(' ').pop().trim();
+            const controlPrefix = prefixExtractor(controlID);
+            if (controlPrefix !== currentPrefix && !controlPrefixes.has(controlPrefix)) {
+              controlPrefixes.add(controlPrefix)
+              currentControls.push({
+                key: `${controlPrefix}`,
+                text: `${controlPrefix}`,
+                itemType: DropdownMenuItemType.Header,
+              });
+              currentPrefix = controlPrefix;
+            }
+            if (!controlKeys.has(controlID)) {
+              controlKeys.add(controlID);
+              currentControls.push({
+                key: controlID,
+                text: `${controlID}: ${item.properties.title}`,
+              });
+            }
+            setDefaultControls(currentControls);
+          }
         });
+        currentControls.sort((a, b) => {
+          return customSort(a.key, b.key);
+        });
+        setDefaultControls(currentControls);
+      })
+      .catch(error => {
+        console.error('API Error:', error);
       });
-      setDefaultControls(currentControls);
-    }
-    else if (framework === "CIS_Azure_Benchmark_v2.0.0") {
-      IDS = cisIDS;
-      DOMAINS = cisDOMAINS;
-      IDS.forEach((id, _) => {
-        const controlPrefix = prefixExtractor(id.value);
-        if (controlPrefix !== currentPrefix && !currentControls.some(item => item.text === controlPrefix)) {
-          currentControls.push({
-            text: `${controlPrefix}`,
-            itemType: DropdownMenuItemType.Header,
-          });
-          currentPrefix = controlPrefix;
+  }
+
+  /**
+   * Populates the instance cache with the control ID value-name mapping depending on what framework is selected
+   * Used during onload to populate control ID values for all frameworks
+   * @param {string} framework 
+   */
+  const populateControlMaps = (framework) => {
+    let controlID;
+    let currentMap = new Map();
+    let retryCount = 0;
+    apiText.requestBody.query = allControls(framework);
+    fetch(apiText.mainEndpoint, {
+      mode: 'cors',
+      method: 'POST',
+      headers: myHeaders,
+      body: JSON.stringify(apiText.requestBody)
+    })
+      .then(response => {
+        if (!response.ok) {
+          if (response.status === 429 && retryCount < 3) {
+            retryCount++;
+            console.log('Too Many Requests. Retrying...');
+            populateControlMaps(framework)
+            return;
+          } else {
+            throw new Error(`HTTP error! Status: ${response.status}`);
+          }
         }
-        currentControls.push({
-          key: sanitizeControlID(id.value),
-          text: id.label,
+        return response.json();
+      })
+      .then(result => {
+        const data = result.data;
+        data.forEach(item => {
+          if (framework === "NIST_SP_800-53_R4") {
+            if (!item.properties.metadataId.includes("(")) {
+              controlID = item.properties.metadataId.replace(/\([^()]*\)/g, '');
+              controlID = controlID.trim().split(' ').pop();
+              controlID = sanitizeControlID(controlID);
+              currentMap.set(controlID, item.properties.title)
+            }
+          } else {
+            controlID = item.properties.metadataId.split(' ').pop().trim();
+            currentMap.set(controlID, item.properties.title)
+          }
         });
-      });
-      currentControls.sort((a, b) => {
-        const partA = a.text.split(':')[0].trim();
-        const partB = b.text.split(':')[0].trim();
-        return customSort(partA, partB);
-      });
-      setDefaultControls(currentControls);
-    }
-    else {
-      IDS = pciIDS;
-      DOMAINS = pciDOMAINS
-      IDS.forEach((id, _) => {
-        const dotIndex = id.value.indexOf('.', id.value.indexOf('.') + 1);
-        const controlPrefix = dotIndex !== -1 ? id.value.slice(0, dotIndex) : id.value;
-        if (controlPrefix !== currentPrefix) {
-          currentControls.push({
-            text: `${controlPrefix}`,
-            itemType: DropdownMenuItemType.Header,
-          });
-          currentPrefix = controlPrefix;
+        if (framework === "NIST_SP_800-53_R4") {
+          setNistMap(currentMap);
+        } else if (framework === "CIS_Azure_2.0.0") {
+          setCisMap(currentMap);
+        } else {
+          setPciMap(currentMap)
         }
-        currentControls.push({
-          key: sanitizeControlID(id.value),
-          text: id.label,
-        });
+      })
+      .catch(error => {
+        console.error('API Error:', error);
       });
-      currentControls.sort((a, b) => {
-        const partA = a.text.split(':')[0].trim();
-        const partB = b.text.split(':')[0].trim();
-        return customSort(partA, partB);
-      });
-      setDefaultControls(currentControls);
-    }
-    currentDomains = DOMAINS.map(domain => {
-      return { key: domain.value, text: domain.label };
-    });
-    setDefaultDomains(currentDomains);
   }
 
   // USEEFFECT HOOKS
+
   useEffect(() => {
-    setResponseData("onload")
-    setACFData("onload")
-    fetchServices()
-    fetchData();
-    fetchACFData();
-  }, []);
+    populateControlMaps("CIS_Azure_2.0.0")
+    populateControlMaps("NIST_SP_800-53_R4")
+    populateControlMaps("PCI_DSS_v4.0")
+    populateServices();
+  }, [])
 
   useEffect(() => {
     setIsExportButtonDisabled(selectedFramework.length === 0);
-    populateFilters(selectedFramework);
+    populateDomains(selectedFramework);
+    populateControls(selectedFramework);
+    setSelectedDomains([]);
+    setSelectedControls([]);
+    setResponseData(null);
+    setControlCount({});
+    setControlFocus("");
   }, [selectedFramework]);
 
   useEffect(() => {
-    fetchServices();
-    fetchData();
+    if (selectedServices.length > 0) {
+      fetchMCSBData();
+    }
   }, [selectedFramework, selectedServices, selectedControls]);
 
   useEffect(() => {
     fetchACFData();
   }, [selectedFramework, selectedControls]);
 
-
+  /**
+   * Controls the linked relationship between the control domain and control IDs filters
+   */
   useEffect(() => {
     if (controlFocus) {
       let controlPrefix = prefixExtractor(controlFocus);
@@ -252,21 +419,16 @@ const FilterBar = ({ authToken }) => {
     }
   }, [selectedControls]);
 
-  // API SETUP / FETCH
-  let KEY = apiText.subscription
-  let TOKEN = `Bearer ${authToken}`
-  const myHeaders = new Headers();
+  // TABLE DATA QUERY FUNCTIONS
 
-  myHeaders.append('Ocp-Apim-Subscription-Key', KEY);
-  myHeaders.append('Authorization', TOKEN);
-  myHeaders.append('Accept', 'application/json');
-
-  const fetchServices = async () => {
-    let servicesURL = apiText.serviceEndpoint;
-    fetch(servicesURL, {
+  const fetchMCSBData = async () => {
+    setIsLoading(true);
+    apiText.requestBody.query = filteredMCSB(selectedFramework, selectedServices, selectedControls);
+    fetch(apiText.mainEndpoint, {
       mode: 'cors',
-      method: 'GET',
+      method: 'POST',
       headers: myHeaders,
+      body: JSON.stringify(apiText.requestBody)
     })
       .then(response => {
         if (!response.ok) {
@@ -274,61 +436,8 @@ const FilterBar = ({ authToken }) => {
         }
         return response.json();
       })
-      .then(data => {
-        const transformedData = data.map(service => ({
-          key: service['Service Name'],
-          text: service['Service Name'],
-        }));
-        transformedData.sort((a, b) => a.text.localeCompare(b.text));
-        setServices(transformedData);
-      })
-      .catch(error => {
-        console.error('API Error:', error);
-      });
-  };
-
-  const fetchData = async () => {
-    let fetchURL = apiText.mainEndpoint;
-    let controlIds = [];
-    if (selectedFramework.length > 0) {
-      setIsOnload(false);
-      setIsLoading(true);
-      fetchURL += "?standardName=";
-      fetchURL += selectedFramework;
-    }
-    if (selectedServices.length > 0) {
-      selectedServices.forEach(service => {
-        fetchURL += "&serviceNames=";
-        fetchURL += service;
-      });
-    }
-    if (selectedControls.length > 0) {
-      selectedControls.forEach(control => {
-        const controlIdWithoutSub = control.replace(/\([^)]*\)/g, '');
-        controlIds.push(controlIdWithoutSub);
-
-      });
-      controlIds = [...new Set(controlIds)];
-      controlIds.forEach(controlId => {
-        fetchURL += "&standardControlIds=";
-        fetchURL += controlId;
-      });
-    } else {
-      fetchURL = fetchURL.replace(/&standardIds=[^&]*/, '');
-    }
-    fetch(fetchURL, {
-      mode: 'cors',
-      method: 'GET',
-      headers: myHeaders,
-    })
       .then(response => {
-        if (!response.ok) {
-          throw new Error(`HTTP error! Status: ${response.status}`);
-        }
-        return response.json();
-      })
-      .then(data => {
-        setResponseData(data);
+        setResponseData(response.data);
       })
       .catch(error => {
         console.error('API Error:', error);
@@ -337,15 +446,13 @@ const FilterBar = ({ authToken }) => {
         setIsLoading(false);
       });
   };
-  
+
   const fetchACFData = async () => {
-    let fetchURL = apiText.mainEndpoint;
     let controlIds = [];
     if (selectedFramework.length > 0) {
       setIsOnload(false);
       setACFIsLoading(true);
-      fetchURL += "?standardName=";
-      fetchURL += selectedFramework;
+      apiText.requestBody.query = allACFs(selectedFramework);
     }
     if (selectedControls.length > 0) {
       selectedControls.forEach(control => {
@@ -353,26 +460,26 @@ const FilterBar = ({ authToken }) => {
         controlIds.push(controlIdWithoutSub);
       });
       controlIds = [...new Set(controlIds)];
-      controlIds.forEach(controlId => {
-        fetchURL += "&standardControlIds=";
-        fetchURL += controlId;
-      });
-    } else {
-      fetchURL = fetchURL.replace(/&standardIds=[^&]*/, '');
+      apiText.requestBody.query = filteredACFs(selectedFramework, controlIds);
     }
-    fetch(fetchURL, {
+    fetch(apiText.mainEndpoint, {
       mode: 'cors',
-      method: 'GET',
+      method: 'POST',
       headers: myHeaders,
+      body: JSON.stringify(apiText.requestBody)
     })
       .then(response => {
         if (!response.ok) {
+          if (response.status === 429) {
+            setIsOverloaded(true)
+          }
           throw new Error(`HTTP error! Status: ${response.status}`);
         }
+        setIsOverloaded(false)
         return response.json();
       })
-      .then(data => {
-        setACFData(data);
+      .then(result => {
+        setACFData(result.data);
       })
       .catch(error => {
         console.error('API Error:', error);
@@ -382,7 +489,7 @@ const FilterBar = ({ authToken }) => {
       });
   };
 
-  // ONCHANGE
+  // ONCHANGE FUNCTIONS
   const onClear = async () => {
     setResponseData("onload");
     setIsOnload(true);
@@ -521,13 +628,15 @@ const FilterBar = ({ authToken }) => {
         <div className="dropdown-container">
           <div className="select-dropdown">
             <Dropdown
-              placeholder="Regulatory Framework"
+              placeholder={nistMap.size === 0 || pciMap.size === 0 || cisMap.size === 0 || services.length === 0 ? "Loading..." : "Regulatory Framework"}
               selectedKey={selectedFramework}
               onChange={onFrameworkChange}
               options={frameworks}
               dropdownWidthAuto={true}
               styles={selectedFramework.length > 0 ? selectedFrameworkStyles : frameworkStyles}
-              aria-label="Regulatory framework dropdown"
+              aria-label="Regulatory framework"
+              label="Regulatory framework"
+              disabled={nistMap.size === 0 || pciMap.size === 0 || cisMap.size === 0 || services.length === 0}
             />
           </div>
           <div className="select-dropdown">
@@ -548,7 +657,8 @@ const FilterBar = ({ authToken }) => {
                   </div>
                 );
               }}
-              aria-label="Service dropdown"
+              aria-label="Service"
+              label="Service"
             />
           </div>
           <div className="select-dropdown">
@@ -569,7 +679,8 @@ const FilterBar = ({ authToken }) => {
                   </div>
                 );
               }}
-              aria-label="Control domain dropdown"
+              aria-label="Control domain"
+              label="Control domain"
             />
           </div>
           <div className="select-dropdown">
@@ -590,11 +701,12 @@ const FilterBar = ({ authToken }) => {
               }}
               dropdownWidthAuto={true}
               styles={selectedControls.length > 0 ? selectedControlStyles : controlStyles}
-              aria-label="Control ID dropdown"
+              aria-label="Control ID"
+              label="Control ID"
             />
           </div>
           <div className="exportButton">
-            <ExportButton apiData={responseData} disabled={isExportButtonDisabled} acfData={acfData}/>
+            <ExportButton apiData={responseData} disabled={isExportButtonDisabled} acfData={acfData} controlIDs={selectedControls} mapState={selectedFramework === "NIST_SP_800-53_R4" ? nistMap : selectedFramework === "CIS_Azure_2.0.0" ? cisMap : selectedFramework === "PCI_DSS_v4.0" ? pciMap : null} />
           </div>
         </div>
       </div>
@@ -617,10 +729,10 @@ const FilterBar = ({ authToken }) => {
           isOnload ? (
             <TableStates type="ACF" variant="Onload" />
           ) : (
-            isACFLoading ? (
+            isACFLoading || isOverloaded ? (
               <TableStates type="ACF" variant="Loading" />
             ) : (
-              acfData && <ACF data={acfData} framework={selectedFramework} />
+              acfData && <ACF data={acfData} framework={selectedFramework} mapState={selectedFramework === "NIST_SP_800-53_R4" ? nistMap : selectedFramework === "CIS_Azure_2.0.0" ? cisMap : selectedFramework === "PCI_DSS_v4.0" ? pciMap : null} />
             )
           )
         }
@@ -634,7 +746,7 @@ const FilterBar = ({ authToken }) => {
             isLoading ? (
               <TableStates type="MCSB" variant="Loading" />
             ) : (
-              responseData && <MCSB data={responseData} framework={selectedFramework} />
+              responseData && <MCSB data={responseData} framework={selectedFramework} controls={selectedControls} mapState={selectedFramework === "NIST_SP_800-53_R4" ? nistMap : selectedFramework === "CIS_Azure_2.0.0" ? cisMap : selectedFramework === "PCI_DSS_v4.0" ? pciMap : null} />
             )
           ))
         }
@@ -648,7 +760,7 @@ const FilterBar = ({ authToken }) => {
             isLoading ? (
               <TableStates type="Policy" variant="Loading" />
             ) : (
-              responseData && <Policies data={responseData} framework={selectedFramework} />
+              responseData && <Policies data={responseData} framework={selectedFramework} controls={selectedControls} mapState={selectedFramework === "NIST_SP_800-53_R4" ? nistMap : selectedFramework === "CIS_Azure_2.0.0" ? cisMap : selectedFramework === "PCI_DSS_v4.0" ? pciMap : null} />
             )
           ))
         }

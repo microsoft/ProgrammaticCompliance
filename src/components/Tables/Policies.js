@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { DetailsList, SelectionMode, DetailsListLayoutMode, Text, Icon, Stack, initializeIcons, TooltipHost, Sticky, StickyPositionType, ConstrainMode, Link } from '@fluentui/react';
+import { DetailsList, SelectionMode, DetailsListLayoutMode, Text, Icon, IconButton, Stack, initializeIcons, TooltipHost, Sticky, StickyPositionType, ConstrainMode, Link } from '@fluentui/react';
 
 import PoliciesModal from '../Modals/PoliciesModal.js';
 import TableStates from './TableStates.js';
@@ -11,6 +11,8 @@ import { tableText } from '../../static/staticStrings.js';
 initializeIcons();
 
 const POLICY = (props) => {
+
+  let controlIDSet = new Set(props.controls);
 
   const onItemInvoked = (item) => {
     setModalData(item);
@@ -204,9 +206,9 @@ const POLICY = (props) => {
     if (sortableColumn.key === 'control') {
       setIsControlDescending(!isControlDescending);
       const reversedItems = items.reverse();
-      if (props.framework === "NIST_SP_800-53_Rev4") {
+      if (props.framework === "NIST_SP_800-53_R4") {
         groupedArray = groupAndSortNIST(reversedItems, isControlDescending);
-      } else if (props.framework === "CIS_Azure_Benchmark_v2.0.0") {
+      } else if (props.framework === "CIS_Azure_2.0.0") {
         groupedArray = groupAndSortCIS(reversedItems, isControlDescending);
       } else {
         groupedArray = groupAndSortPCI(reversedItems, isControlDescending);
@@ -399,7 +401,7 @@ const POLICY = (props) => {
 
   useEffect(() => {
     const flattenedData = flattenData(props.data);
-    if (props.framework === "NIST_SP_800-53_Rev4") {
+    if (props.framework === "NIST_SP_800-53_R4") {
       nistTableLoad(flattenedData)
     } else if (props.framework === "CIS_Azure_Benchmark_v2.0.0") {
       cisTableLoad(flattenedData)
@@ -410,33 +412,73 @@ const POLICY = (props) => {
 
   function flattenData(dataset) {
     const temp = [];
-    dataset.forEach((service) => {
-      const serviceName = service['Service Name'];
-      service['Standard Controls'].forEach((control) => {
-        const controlID = control['Standard Control ID'];
-        const controlName = control['Standard Control Name'];
-        const mcsbBaseline = control['MCSB Baseline'];
-        const sanitizedControlName = controlName ? controlName.replace(/[^\w.,: ]/g, '') : '';
-
-        mcsbBaseline.forEach((baselineItem) => {
-          if (baselineItem['Automated Policy Availability'].length > 0) {
-            baselineItem['Automated Policy Availability'].forEach((policy) => {
-              const ID = policy["Policy ID"]
+    dataset.forEach((row) => {
+      let rowControls = row.properties_metadata.mcsb.frameworkControls;
+      // if there are user-selected control IDs, then only show those controls
+      // this filters out rows that do not have any user-selected IDs in their controls array
+      if (controlIDSet && controlIDSet.size > 0) {
+        rowControls.forEach((control) => {
+          if (controlIDSet.has(control.split('_').pop())) {
+            row.properties_metadata.mcsb.automatedPolicyAvailability.forEach((policy) => {
               temp.push({
-                policyID: ID,
-                mcsbID: baselineItem['MCSB ID'],
-                control: `${controlID}: ${sanitizedControlName}`,
-                service: serviceName,
-                category: policy['Policy Category'],
-                policy: policy['Policy Name'],
-                description: policy['Policy Description'],
+                mcsbID: row.properties_metadata.mcsb.mcsbId,
+                control: `${control.split("_").pop()}: ${props.mapState.get(sanitizeControlID(control.split("_").pop()))}`,
+                service: row.properties_metadata.offeringName,
+                category: policy.policyCategory,
+                policy: policy.policyName,
+                description: policy.policyDescription,
               });
             });
           }
         });
-      });
+        // otherwise, since the user didn't limit any controls,
+        // find all of the rows that have our chosen framework instead and show them all
+      } else {
+        rowControls.forEach((control) => {
+          if (control.includes(props.framework)) {
+            row.properties_metadata.mcsb.automatedPolicyAvailability.forEach((policy) => {
+              temp.push({
+                mcsbID: row.properties_metadata.mcsb.mcsbId,
+                control: `${control.split("_").pop()}: ${props.mapState.get(sanitizeControlID(control.split("_").pop()))}`,
+                service: row.properties_metadata.offeringName,
+                category: policy.policyCategory,
+                policy: policy.policyName,
+                description: policy.policyDescription,
+              });
+            })
+          }
+        });
+      }
     });
     return temp;
+    // const temp = [];
+    // dataset.forEach((service) => {
+    //   const serviceName = service['Service Name'];
+    //   service['Standard Controls'].forEach((control) => {
+    //     const controlID = control['Standard Control ID'];
+    //     const controlName = control['Standard Control Name'];
+    //     const mcsbBaseline = control['MCSB Baseline'];
+    //     const sanitizedControlName = controlName ? controlName.replace(/[^\w.,: ]/g, '') : '';
+
+    //     mcsbBaseline.forEach((baselineItem) => {
+    //       if (baselineItem['Automated Policy Availability'].length > 0) {
+    //         baselineItem['Automated Policy Availability'].forEach((policy) => {
+    //           const ID = policy["Policy ID"]
+    //           temp.push({
+    //             policyID: ID,
+    //             mcsbID: baselineItem['MCSB ID'],
+    //             control: `${controlID}: ${sanitizedControlName}`,
+    //             service: serviceName,
+    //             category: policy['Policy Category'],
+    //             policy: policy['Policy Name'],
+    //             description: policy['Policy Description'],
+    //           });
+    //         });
+    //       }
+    //     });
+    //   });
+    // });
+    // return temp;
   }
 
   return (
@@ -455,11 +497,14 @@ const POLICY = (props) => {
             </Text>
           </div>
         </Stack>
-        <Icon
-          aria-label="Expand table"
-          iconName={isTableExpanded ? 'ChevronUp' : 'ChevronDown'}
+        <IconButton
+          ariaLabel={isTableExpanded ? "Collapse table" : "Expand table"}
+          title={isTableExpanded ? "Collapse Compliance Policies by Service table" : "Expand Compliance Policies by Service table"}
+          iconProps={{iconName: isTableExpanded ? 'ChevronUp' : 'ChevronDown'}}
           onClick={() => setIsTableExpanded(!isTableExpanded)}
-          style={{ fontSize: '15px', cursor: 'pointer', color: '#0078D4', paddingLeft: '15px', fontWeight: 'bold' }}
+          styles={{
+            icon: { color: '#0078D4', fontSize: 15, fontWeight: "bold" },
+          }}
         />
       </Stack>
       {isTableExpanded ? (
