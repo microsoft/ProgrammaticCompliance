@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
-import { DetailsList, SelectionMode, DetailsListLayoutMode, Text, Icon, Stack, initializeIcons, TooltipHost, Sticky, StickyPositionType, ConstrainMode } from '@fluentui/react';
+import { DetailsList, SelectionMode, DetailsListLayoutMode, Text, Icon, IconButton, Stack, initializeIcons, TooltipHost, Sticky, StickyPositionType, ConstrainMode } from '@fluentui/react';
+import { useId } from '@fluentui/react-hooks';
 
 import ACFModal from '../Modals/ACFModal.js';
 import TableStates from './TableStates.js';
@@ -52,6 +53,7 @@ const ACF = (props) => {
       key: 'control',
       name: <>Control ID
         <TooltipHost
+          id={useId('tooltip')}
           content="Identifier for specific control within the selected regulatory framework"
           closeDelay={1000}>
           <Icon styles={{ root: { verticalAlign: "bottom", marginLeft: "5px" } }} iconName="info" aria-label="Tooltip" />
@@ -69,6 +71,7 @@ const ACF = (props) => {
       key: 'acfID',
       name: <>Azure Control Framework ID
         <TooltipHost
+          id={useId('tooltip')}
           content="Identifier for specific control within Azure Control Framework"
           closeDelay={1000}>
           <Icon styles={{ root: { verticalAlign: "bottom", marginLeft: "5px" } }} iconName="info" aria-label="Tooltip" />
@@ -83,6 +86,7 @@ const ACF = (props) => {
       key: 'description',
       name: <>Microsoft Managed Actions - Description
         <TooltipHost
+          id={useId('tooltip')}
           content="Summary of the actions Microsoft takes to help fulfill its compliance responsibilities when developing and operating the Microsoft Cloud"
           closeDelay={1000}>
           <Icon styles={{ root: { verticalAlign: "bottom", marginLeft: "5px" } }} iconName="info" aria-label="Tooltip" />
@@ -97,6 +101,7 @@ const ACF = (props) => {
       key: 'details',
       name: <>Microsoft Managed Actions - Details
         <TooltipHost
+          id={useId('tooltip')}
           content="Additional details about the actions Microsoft takes to help fulfill its compliance responsibilities when developing and operating the Microsoft Cloud"
           closeDelay={1000}>
           <Icon styles={{ root: { verticalAlign: "bottom", marginLeft: "5px" } }} iconName="info" aria-label="Tooltip" />
@@ -116,9 +121,9 @@ const ACF = (props) => {
       setIsControlDescending(!isControlDescending);
       const reversedItems = items.reverse();
 
-      if (props.framework === "NIST_SP_800-53_Rev4") {
+      if (props.framework === "NIST_SP_800-53_R4") {
         groupedArray = groupAndSortNIST(reversedItems, isControlDescending);
-      } else if (props.framework === "CIS_Azure_Benchmark_v2.0.0") {
+      } else if (props.framework === "CIS_Azure_2.0.0") {
         groupedArray = groupAndSortCIS(reversedItems, isControlDescending);
       } else {
         groupedArray = groupAndSortPCI(reversedItems, isControlDescending);
@@ -180,6 +185,7 @@ const ACF = (props) => {
       startIndex: sortedItems.indexOf(groupedItems[key][0]),
       count: groupedItems[key].length,
       isCollapsed: false,
+      level: 0
     }));
 
     groupedArray.sort((a, b) => {
@@ -274,6 +280,13 @@ const ACF = (props) => {
     );
   };
 
+  const onRenderColumn = (item, index, column) => {
+    const value =
+      item && column && column.fieldName ? item[column.fieldName] || '' : '';
+
+    return <div data-is-focusable={true}>{value}</div>;
+  }
+
   const sanitizeControlID = (controlId) => {
     const controlIdWithoutParentheses = controlId.replace(/\([^)]*\)/g, '');
     return controlIdWithoutParentheses.split('|')[0].trim();
@@ -356,9 +369,10 @@ const ACF = (props) => {
     };
   }, []);
 
+  // ENTRY POINT
   useEffect(() => {
     const flattenedData = flattenData(props.data);
-    if (props.framework === "NIST_SP_800-53_Rev4") {
+    if (props.framework === "NIST_SP_800-53_R4") {
       nistTableLoad(flattenedData);
     } else if (props.framework === "CIS_Azure_Benchmark_v2.0.0") {
       cisTableLoad(flattenedData);
@@ -369,25 +383,21 @@ const ACF = (props) => {
 
   function flattenData(dataset) {
     const temp = [];
-    dataset.forEach((service) => {
-      const serviceName = service['Service Name'];
-      service['Standard Controls'].forEach((control) => {
-        const controlID = control['Standard Control ID'];
-        const controlName = control['Standard Control Name'];
-        const acfBaseline = control['ACF Baseline'];
-        const sanitizedControlName = controlName ? controlName.replace(/[^\w.,: ]/g, '') : '';
-
-        acfBaseline.forEach((baselineItem) => {
-          temp.push({
-            acfID: baselineItem['ACF ID'],
-            control: `${controlID}: ${sanitizedControlName}`,
-            responsibility: baselineItem['Compliance | Responsibility'],
-            description: baselineItem['Microsoft Managed Actions - Description'],
-            details: baselineItem['Microsoft Managed Actions - Details'],
-            service: serviceName,
-          });
+    let controlValue;
+    dataset.forEach((row) => {
+      if (props.framework === "NIST_SP_800-53_R4") {
+        controlValue = `${row.ControlID.split("_").pop()}: ${props.mapState.get(sanitizeControlID(row.ControlID.split("_").pop()))}`
+      } else {
+        controlValue = `${row.ControlID.split("_").pop()}: ${props.mapState.get(row.ControlID.split("_").pop())}`
+      }
+      if (props.mapState.get(row.ControlID.split("_").pop())) {
+        temp.push({
+          acfID: row.AzureControlFrameworkID,
+          control: controlValue,
+          description: row.MicrosoftManagedActionsDescription,
+          details: row.MicrosoftManagedActionsDetails,
         });
-      });
+      }
     });
     return temp;
   }
@@ -408,11 +418,14 @@ const ACF = (props) => {
             </Text>
           </div>
         </Stack>
-        <Icon
-          aria-label="Expand table"
-          iconName={isTableExpanded ? 'ChevronUp' : 'ChevronDown'}
+        <IconButton
+          ariaLabel={isTableExpanded ? "Collapse table" : "Expand table"}
+          title={isTableExpanded ? "Collapse Microsoft Cloud Compliance Foundation table" : "Expand Microsoft Cloud Compliance Foundation table"}
+          iconProps={{ iconName: isTableExpanded ? 'ChevronUp' : 'ChevronDown' }}
           onClick={() => setIsTableExpanded(!isTableExpanded)}
-          style={{ fontSize: '15px', cursor: 'pointer', color: '#0078D4', paddingLeft: '15px', fontWeight: 'bold' }}
+          styles={{
+            icon: { color: '#0078D4', fontSize: 15, fontWeight: "bold" },
+          }}
         />
       </Stack>
 
@@ -425,6 +438,7 @@ const ACF = (props) => {
               onColumnHeaderClick={onColumnClick}
               selectionMode={SelectionMode.none}
               onItemInvoked={onItemInvoked}
+              onRenderItemColumn={onRenderColumn}
               onRenderDetailsHeader={onRenderDetailsHeader}
               onRenderRow={(props, defaultRender) => {
                 if (!props) return null;
@@ -448,6 +462,9 @@ const ACF = (props) => {
                 return defaultRender ? defaultRender(props) : <></>;
               }}
               groups={groupedItems}
+              groupProps={{
+                showEmptyGroups: true,
+              }}
               layoutMode={DetailsListLayoutMode.justified}
               styles={gridStyles}
               focusZoneProps={focusZoneProps}

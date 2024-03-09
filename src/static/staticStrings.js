@@ -10,9 +10,9 @@ export const appText = {
 };
 
 export const apiText = {
-  mainEndpoint: "https://progcompliancebackendapim.azure-api.net/api/Compliance",
-  serviceEndpoint: "https://progcompliancebackendapim.azure-api.net/api/Compliance/supportedOfferings",
-  subscription: "0d74cae36efc4bd3aa1722432e708165",
+  mainEndpoint: "https://management.azure.com/providers/Microsoft.ResourceGraph/resources?api-version=2022-10-01",
+  requestBody: {
+  },
 };
 
 export const tableText = {
@@ -30,7 +30,7 @@ export const tableText = {
 };
 
 export const frameworks = [
-  { key: 'CIS_Azure_Benchmark_v2.0.0', text: 'CIS 2.0.0' },
-  { key: 'NIST_SP_800-53_Rev4', text: 'NIST SP 800-53 Rev. 4' },
+  { key: 'CIS_Azure_2.0.0', text: 'CIS 2.0.0' },
+  { key: 'NIST_SP_800-53_R4', text: 'NIST SP 800-53 Rev. 4' },
   { key: 'PCI_DSS_v4.0', text: 'PCI DSS 4.0' },
 ];

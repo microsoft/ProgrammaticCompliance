@@ -1,9 +1,9 @@
 import React from 'react';
 import { DefaultButton } from '@fluentui/react';
 
-const addIcon = { iconName: 'Add'};
+const addIcon = { iconName: 'Add' };
 
-const ExportButton = ({ apiData, disabled }) => {
+const ExportButton = ({ apiData, disabled, acfData, controlIDs }) => {
     const sanitizeValue = (value) => {
         if (typeof value === 'string') {
             value = value.replace(/(\r\n|\r|\n)/g, ' ');
@@ -16,37 +16,53 @@ const ExportButton = ({ apiData, disabled }) => {
 
     const handleExportJSON = () => {
         const jsonData = JSON.stringify(apiData, null, 2);
-        const blob = new Blob([jsonData], { type: 'application/json' });
-        const url = URL.createObjectURL(blob);
-        const a = document.createElement('a');
+        let blob = new Blob([jsonData], { type: 'application/json' });
+        let url = URL.createObjectURL(blob);
+        let a = document.createElement('a');
         a.href = url;
-        a.download = 'exportedData.json';
+        a.download = 'exportedMCSB.json';
+        document.body.appendChild(a);
+        a.click();
+        URL.revokeObjectURL(url);
+        const jsonAcf = JSON.stringify(acfData, null, 2);
+        blob = new Blob([jsonAcf], { type: 'application/json' });
+        url = URL.createObjectURL(blob);
+        a = document.createElement('a');
+        a.href = url;
+        a.download = 'exportedACF.json';
         document.body.appendChild(a);
         a.click();
         URL.revokeObjectURL(url);
     };
 
     const handleExportCSV = () => {
-        let jsonData = apiData;
-        if (typeof jsonData !== 'object') {
+        if (apiData.length > 0) {
+            let jsonData = apiData;
+            if (typeof jsonData !== 'object') {
+                try {
+                    jsonData = JSON.parse(apiData);
+                } catch (error) {
+                    console.error('Error parsing the data:', error);
+                    return;
+                }
+            }
+            const mcsbCsv = mcsbToCsvExporter(jsonData);
+            downloadCsv(mcsbCsv, 'exportedData_MCSB.csv');
+            const policyCsv = policyToCsvExporter(jsonData);
+            downloadCsv(policyCsv, 'exportedData_Policy.csv');
+        }
+        let acf = acfData;
+        if (typeof acf !== 'object') {
             try {
-                jsonData = JSON.parse(apiData);
+                acf = JSON.parse(acfData);
             } catch (error) {
                 console.error('Error parsing the data:', error);
                 return;
             }
         }
-        const acfCsv = acfToCsvExporter(jsonData);
+        const acfCsv = acfToCsvExporter(acf);
         if (hasMultipleRows(acfCsv)) {
             downloadCsv(acfCsv, 'exportedData_ACF.csv');
-        }
-        const mcsbCsv = mcsbToCsvExporter(jsonData);
-        if (hasMultipleRows(mcsbCsv)) {
-            downloadCsv(mcsbCsv, 'exportedData_MCSB.csv');
-        }
-        const policyCsv = policyToCsvExporter(jsonData);
-        if (hasMultipleRows(policyCsv)) {
-            downloadCsv(policyCsv, 'exportedData_Policy.csv');
         }
     };
 
@@ -70,23 +86,18 @@ const ExportButton = ({ apiData, disabled }) => {
         const ACFcolumns = ["Standard", "ACF ID", "Control ID", "Microsoft Managed Actions - Description", "Microsoft Managed Actions - Details"];
         const csvRows = [ACFcolumns.join(',')];
         for (const item of data) {
-            for (const control of item["Standard Controls"]) {
-                for (const baseline of control["ACF Baseline"]) {
-                    const controlID = sanitizeValue(control["Standard Control ID"]) || '';
-                    const controlName = sanitizeValue(control["Standard Control Name"]) || '';
-                    const ACFID = sanitizeValue(baseline["ACF ID"]) || '';
-                    const description = sanitizeValue(baseline["Microsoft Managed Actions - Description"]) || '';
-                    const details = sanitizeValue(baseline["Microsoft Managed Actions - Details"]) || '';
-                    const values = [
-                        sanitizeValue(item["Standard Name"]) || '',
-                        ACFID,
-                        `${controlID}: ${controlName}`,
-                        description,
-                        details
-                    ];
-                    csvRows.push(values.join(','));
-                }
-            }
+            const controlID = item.ControlID.split("_").pop() || '';
+            const ACFID = sanitizeValue(item.AzureControlFrameworkID) || '';
+            const description = sanitizeValue(item.MicrosoftManagedActionsDescription) || '';
+            const details = sanitizeValue(item.MicrosoftManagedActionsDetails) || '';
+            const values = [
+                sanitizeValue(item.ControlID.lastIndexOf("_") !== -1 ? item.ControlID.slice(0, item.ControlID.lastIndexOf("_")) : item.ControlID) || '',
+                ACFID,
+                controlID,
+                description,
+                details
+            ];
+            csvRows.push(values.join(','));
         }
         return csvRows.join('\n');
     };
@@ -95,27 +106,26 @@ const ExportButton = ({ apiData, disabled }) => {
         const mcsbColumns = ["Control ID", "MCSB ID", "Service", "MCSB Feature", "Feature Supported", "Description", "Configuration Guidance", "Reference"];
         const csvRows = [mcsbColumns.join(',')];
         for (const item of data) {
-            for (const control of item["Standard Controls"]) {
-                for (const baseline of control["MCSB Baseline"]) {
-                    const controlID = sanitizeValue(control["Standard Control ID"]) || '';
-                    const controlName = sanitizeValue(control["Standard Control Name"]) || '';
-                    const mcsbId = sanitizeValue(baseline["MCSB ID"]) || '';
-                    for (const feature of baseline["Features"]) {
-                        const values = [
-                            `${controlID}: ${controlName}`,
-                            mcsbId,
-                            sanitizeValue(item["Service Name"]) || '',
-                            sanitizeValue(feature["Feature Name"]) || '',
-                            sanitizeValue(feature["Feature Support"]) || '',
-                            sanitizeValue(feature["Feature Description"]) || '',
-                            sanitizeValue(feature["Feature Guidance"]) || '',
-                            sanitizeValue(feature["Feature Reference"]) || '',
+            const metadata = item.properties_metadata;
+            metadata.mcsb.frameworkControls.forEach((control) => {
+                if (controlIDs.length === 0 || controlIDs.some(value => control.includes(value))) {
+                    metadata.mcsb.features.forEach((feature) => {
+                        const sanitizedValues = [
+                            control.split("_").pop(),
+                            metadata.mcsb.mcsbId,
+                            metadata.offeringName,
+                            '"' + feature.featureName.replace(/"/g, '""') + '"',
+                            '"' + feature.featureSupport.replace(/"/g, '""') + '"',
+                            '"' + feature.featureDescription.replace(/"/g, '""') + '"',
+                            '"' + feature.featureGuidance.replace(/"/g, '""') + '"',
+                            '"' + feature.featureReference.replace(/"/g, '""') + '"'
                         ];
-                        csvRows.push(values.join(','));
-                    }
+                        csvRows.push(sanitizedValues.join(','));
+                    });
                 }
-            }
+            });
         }
+    
         return csvRows.join('\n');
     };
 
@@ -123,28 +133,24 @@ const ExportButton = ({ apiData, disabled }) => {
         const policyColumns = ["Control ID", "Service", "Policy Name", "Policy Description"];
         const csvRows = [policyColumns.join(',')];
         for (const item of data) {
-            for (const control of item["Standard Controls"]) {
-                for (const baseline of control["MCSB Baseline"]) {
-                    const controlID = sanitizeValue(control["Standard Control ID"]) || '';
-                    const controlName = sanitizeValue(control["Standard Control Name"]) || '';
-                    const values = [
-                        `${controlID}: ${controlName}`,
-                        sanitizeValue(item["Service Name"]) || '',
-                    ];
-                    if (baseline['Automated Policy Availability'].length > 0) {
-                        baseline['Automated Policy Availability'].forEach((policy) => {
-                            const policyValues = [
-                                sanitizeValue(policy['Policy Name']),
-                                sanitizeValue(policy['Policy Description']),
-                            ];
-                            csvRows.push([...values, ...policyValues].join(','));
-                        });
-                    }
+            const metadata = item.properties_metadata;
+            metadata.mcsb.frameworkControls.forEach((control) => {
+                if (controlIDs.length === 0 || controlIDs.some(value => control.includes(value))) {
+                    metadata.mcsb.automatedPolicyAvailability.forEach((policy) => {
+                        const sanitizedValues = [
+                            control.split("_").pop(),
+                            metadata.offeringName,
+                            '"' + policy.policyName.replace(/"/g, '""').replace(/\n/g, ' ') + '"',
+                            '"' + policy.policyDescription.replace(/"/g, '""').replace(/\n/g, ' ') + '"'
+                        ];
+                        csvRows.push(sanitizedValues.join(','));
+                    });
                 }
-            }
+            });
         }
         return csvRows.join('\n');
     };
+    
 
     const menuProps = {
         items: [
