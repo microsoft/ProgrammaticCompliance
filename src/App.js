@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { useMsal, useIsAuthenticated } from "@azure/msal-react";
 import { InteractionStatus } from '@azure/msal-browser';
 import { BrowserRouter, Route, Routes } from "react-router-dom";
@@ -19,8 +19,8 @@ function MainApp() {
   const [isCalloutVisible, { toggle: toggleIsCalloutVisible }] = useBoolean(false);
   const isAuthenticated = useIsAuthenticated();
   const { inProgress, instance, accounts } = useMsal();
-  const [userToken, setUserToken] = useState("");   // Who am I?
-  const { azureToken } = useAuthorizeUser({ isAuthenticated, inProgress, accounts, instance }); // ARG API auth token
+  const [userToken, setUserToken] = useState("");
+  const { azureToken } = useAuthorizeUser({ isAuthenticated, inProgress, accounts, instance });
 
   const getUserToken = async () => {
     try {
@@ -67,6 +67,42 @@ function MainApp() {
 
     getUserTokenIfAuthenticated();
   }, [isAuthenticated, inProgress, accounts, instance]);
+
+
+  /**
+   * The site will automatically refresh to keep data fresh after 15 minutes of inactivity
+   */
+  const idleTimeoutRef = useRef(null);
+
+  const resetIdleTimeout = () => {
+    if (idleTimeoutRef.current) {
+      clearTimeout(idleTimeoutRef.current);
+    }
+    idleTimeoutRef.current = setTimeout(() => {
+      window.location.reload();
+    }, 900000);
+  };
+
+  useEffect(() => {
+    const events = ['mousemove', 'keydown', 'mousedown', 'touchstart'];
+
+    const handleUserActivity = () => {
+      resetIdleTimeout();
+    };
+
+    for (const event of events) {
+      document.addEventListener(event, handleUserActivity);
+    }
+
+    resetIdleTimeout();
+
+    return () => {
+      for (const event of events) {
+        document.removeEventListener(event, handleUserActivity);
+      }
+      clearTimeout(idleTimeoutRef.current);
+    };
+  }, []);
 
   const styles = mergeStyleSets({
     callout: {
@@ -125,7 +161,7 @@ function MainApp() {
           <Text as="h1" block variant="large" className={styles.title}>
             Disclaimer
           </Text>
-          <Text block variant="small">
+          <Text block variant="small" style={{ fontSize: 14 }}>
             {appText.disclaimer1} <br></br><br></br>
             {appText.disclaimer2} <br></br><br></br>
             {appText.disclaimer3}
