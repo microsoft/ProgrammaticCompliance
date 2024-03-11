@@ -152,48 +152,48 @@ const FilterBar = ({ azureToken }) => {
       setDefaultDomains(currentDomains);
     } else {
       apiText.requestBody.query = allDomains(framework);
-    // }
-    fetch(apiText.mainEndpoint, {
-      mode: 'cors',
-      method: 'POST',
-      headers: myHeaders,
-      body: JSON.stringify(apiText.requestBody)
-    })
-      .then(response => {
-        if (!response.ok) {
-          throw new Error(`HTTP error! Status: ${response.status}`);
-        }
-        return response.json();
+      // }
+      fetch(apiText.mainEndpoint, {
+        mode: 'cors',
+        method: 'POST',
+        headers: myHeaders,
+        body: JSON.stringify(apiText.requestBody)
       })
-      .then(result => {
-        const data = result.data;
-        const domainMap = {};
-        data.forEach(item => {
-          if (framework === "NIST_SP_800-53_R4") {
-            controlID = item.ControlID.split('_').pop().split('-')[0];
-            key = controlID;
-            text = `${controlID}: ${item.ControlDomain}`;
-          } else if (framework === "PCI_DSS_v4.0") {
-            controlID = item.ControlDomain.split(':')[0].split(' ')[1];
-            if (controlID.startsWith('0')) {
-              controlID = controlID.substring(1);
+        .then(response => {
+          if (!response.ok) {
+            throw new Error(`HTTP error! Status: ${response.status}`);
+          }
+          return response.json();
+        })
+        .then(result => {
+          const data = result.data;
+          const domainMap = {};
+          data.forEach(item => {
+            if (framework === "NIST_SP_800-53_R4") {
+              controlID = item.ControlID.split('_').pop().split('-')[0];
+              key = controlID;
+              text = `${controlID}: ${item.ControlDomain}`;
+            } else if (framework === "PCI_DSS_v4.0") {
+              controlID = item.ControlDomain.split(':')[0].split(' ')[1];
+              if (controlID.startsWith('0')) {
+                controlID = controlID.substring(1);
+              }
+              key = controlID;
+              text = `${controlID}: ${item.ControlDomain.split(':')[1]}`;
+            } else if (framework === "CIS_Azure_2.0.0") {
+              key = item.ControlDomain.split(' ')[0];
+              text = `${item.ControlDomain.split(' ')[0]}: ${item.ControlDomain.substring(item.ControlDomain.indexOf(" ") + 1)}`;
             }
-            key = controlID;
-            text = `${controlID}: ${item.ControlDomain.split(':')[1]}`;
-          } else if (framework === "CIS_Azure_2.0.0") {
-            key = item.ControlDomain.split(' ')[0];
-            text = `${item.ControlDomain.split(' ')[0]}: ${item.ControlDomain.substring(item.ControlDomain.indexOf(" ") + 1)}`;
-          }
-          if (!domainMap[key]) {
-            domainMap[key] = text;
-          }
+            if (!domainMap[key]) {
+              domainMap[key] = text;
+            }
+          });
+          const uniqueDomains = Object.values(domainMap).map(text => ({ key: text.split(': ')[0], text }));
+          setDefaultDomains(uniqueDomains);
+        })
+        .catch(error => {
+          console.error('API Error:', error);
         });
-        const uniqueDomains = Object.values(domainMap).map(text => ({ key: text.split(': ')[0], text }));
-        setDefaultDomains(uniqueDomains);
-      })
-      .catch(error => {
-        console.error('API Error:', error);
-      });
     }
   }
 

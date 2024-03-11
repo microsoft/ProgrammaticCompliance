@@ -427,6 +427,7 @@ const POLICY = (props) => {
                 category: policy.policyCategory,
                 policy: policy.policyName,
                 description: policy.policyDescription,
+                policyID: policy.policyId,
               });
             });
           }
@@ -444,6 +445,7 @@ const POLICY = (props) => {
                 category: policy.policyCategory,
                 policy: policy.policyName,
                 description: policy.policyDescription,
+                policyID: policy.policyId,
               });
             })
           }
