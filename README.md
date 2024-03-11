@@ -5,6 +5,22 @@
 
 * Download the latest version of [PowerShell](https://learn.microsoft.com/en-us/powershell/scripting/install/installing-powershell-on-windows?view=powershell-7.4)
 
+* Clone the project to your local repository
+> [!NOTE]
+> Just in case that you don't have git downloaded. Execute the following command
+> ```
+> winget search Git.Git
+> winget install --id Git.Git -e --source winget
+> ```
+
+```
+git clone git@github.com:microsoft/ProgrammaticCompliance.git
+Set-Location -Path .\ProgrammaticCompliance
+git checkout develop
+git branch
+```
+You should be under _develop_ branch.
+
 ## Local Machine configuration
 * Set the working directory to the PowerShell scripts directory:
 ```
