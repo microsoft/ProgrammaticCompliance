@@ -14,7 +14,7 @@ export const msalConfig = {
     auth: {
         clientId: process.env.REACT_APP_CLIENT_ID,
         authority: `https://login.microsoftonline.com/${process.env.REACT_APP_TENANT_ID}`,
-        redirectUri: "https://programmaticcomplianceapp.azurewebsites.net/"
+        redirectUri: process.env.REACT_WEBAPP_URL
     },
     cache: {
         cacheLocation: "sessionStorage", // This configures where your cache will be stored
