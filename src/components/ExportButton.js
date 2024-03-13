@@ -108,7 +108,7 @@ const ExportButton = ({ apiData, disabled, acfData, controlIDs }) => {
         for (const item of data) {
             const metadata = item.properties_metadata;
             metadata.mcsb.frameworkControls.forEach((control) => {
-                if (controlIDs.length === 0 || controlIDs.some(value => control.includes(value))) {
+                if (controlIDs.length === 0) {
                     metadata.mcsb.features.forEach((feature) => {
                         const sanitizedValues = [
                             control.split("_").pop(),
@@ -122,10 +122,26 @@ const ExportButton = ({ apiData, disabled, acfData, controlIDs }) => {
                         ];
                         csvRows.push(sanitizedValues.join(','));
                     });
+                } else {
+                    if (controlIDs.includes(control.split("_").pop())) {
+                        metadata.mcsb.features.forEach((feature) => {
+                            const sanitizedValues = [
+                                '"' + control.split("_").pop() + '"',
+                                metadata.mcsb.mcsbId,
+                                metadata.offeringName,
+                                '"' + feature.featureName.replace(/"/g, '""') + '"',
+                                '"' + feature.featureSupport.replace(/"/g, '""') + '"',
+                                '"' + feature.featureDescription.replace(/"/g, '""') + '"',
+                                '"' + feature.featureGuidance.replace(/"/g, '""') + '"',
+                                '"' + feature.featureReference.replace(/"/g, '""') + '"'
+                            ];
+                            csvRows.push(sanitizedValues.join(','));
+                        });
+                    }
                 }
             });
         }
-    
+
         return csvRows.join('\n');
     };
 
@@ -135,7 +151,7 @@ const ExportButton = ({ apiData, disabled, acfData, controlIDs }) => {
         for (const item of data) {
             const metadata = item.properties_metadata;
             metadata.mcsb.frameworkControls.forEach((control) => {
-                if (controlIDs.length === 0 || controlIDs.some(value => control.includes(value))) {
+                if (controlIDs.length === 0) {
                     metadata.mcsb.automatedPolicyAvailability.forEach((policy) => {
                         const sanitizedValues = [
                             control.split("_").pop(),
@@ -145,12 +161,24 @@ const ExportButton = ({ apiData, disabled, acfData, controlIDs }) => {
                         ];
                         csvRows.push(sanitizedValues.join(','));
                     });
+                } else {
+                    if (controlIDs.includes(control.split("_").pop())) {
+                        metadata.mcsb.automatedPolicyAvailability.forEach((policy) => {
+                            const sanitizedValues = [
+                                control.split("_").pop(),
+                                metadata.offeringName,
+                                '"' + policy.policyName.replace(/"/g, '""').replace(/\n/g, ' ') + '"',
+                                '"' + policy.policyDescription.replace(/"/g, '""').replace(/\n/g, ' ') + '"'
+                            ];
+                            csvRows.push(sanitizedValues.join(','));
+                        });
+                    }
                 }
             });
         }
         return csvRows.join('\n');
     };
-    
+
 
     const menuProps = {
         items: [
