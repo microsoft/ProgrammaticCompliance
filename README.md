@@ -5,7 +5,7 @@
 
 * Download the latest version of [PowerShell](https://learn.microsoft.com/en-us/powershell/scripting/install/installing-powershell-on-windows?view=powershell-7.4)
 
-* Clone the project to your local repository
+* Clone the project to your local repository.
 > [!NOTE]
 > Just in case that you don't have git downloaded. Execute the following command
 > ```
@@ -140,6 +140,7 @@ npm -v
 ```
 REACT_APP_CLIENT_ID=<your value goes here>
 REACT_APP_TENANT_ID=<your value goes here>
+REACT_WEBAPP_URL=<your value goes here>
 ```
 The above values are the id of the tenant which hosts the webapp and the app registration and the id of the app registration configured in the  _App registration and roles configurations_ step.
 > [!NOTE]
