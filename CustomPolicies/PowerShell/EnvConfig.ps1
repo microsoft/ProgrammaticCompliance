@@ -1,8 +1,6 @@
 Write-Host "===== ENVIRONMENT CONFIGURATION ====="
 $CurrentErrorActionPreference = $ErrorActionPreference
 
-Set-ExecutionPolicy Bypass -Scope Process -Force
-
 $ErrorActionPreference = 'Stop'
 try {
     
