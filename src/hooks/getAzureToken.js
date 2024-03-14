@@ -21,7 +21,7 @@ const loginRedirectIfNotAuthenticated = async ({ isAuthenticated, inProgress, ac
 
 const getAzureToken = async ({ accounts, instance}) => {
     const params = {
-        authority: `https://login.microsoftonline.com/2b9c99c2-a72e-42e2-b97e-8fad5a0dee02`,
+        authority: `https://login.microsoftonline.com/${process.env.REACT_APP_TENANT_ID}`,
         scopes: [`https://management.azure.com/.default`],
         account: accounts[0],
       }

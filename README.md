@@ -74,9 +74,14 @@ You can configure a service principal and give it enough privileges to create th
 * Select _App registrations_ under _Microsoft Entra ID_
 * Select _New registration_
 * Give a name to the app e.g. _myapp_
-* Under _Redirect URI_ select _Web_ and input _https://webapp.azurewebsites.net_ as a value. Note that the URI is the URL assigned to the webapp that will be deployed in the subsequent steps. We can come back and update the URI after the webapp is created.
+* Under _Redirect URI_ select _Single-Page application(SPA)_ and input _https://webapp.azurewebsites.net_ as a value. Note that the URI is the URL assigned to the webapp that will be deployed in the subsequent steps. We can come back and update the URI after the webapp is created.
+    - Remember to check the boxes _Access token_ and _ID tokens_
 * Click on _Register_
-![alt text](image-1.png)
+![alt text](image-3.png)
+* Navigate to _API permissions_ select _Add a permission_. We will be adding the following permissions:
+    - _Azure Service Management_ with *user_impersonation* permissions.
+    - _Microsoft Graph_ with the _User.Read_ permissions.
+    - Click on _Grant admin consent for Microsoft_
 * Elevate your access to manage all the management groups by following the steps [here](https://learn.microsoft.com/en-us/azure/role-based-access-control/elevate-access-global-admin?tabs=azure-portal)
 * In case there are other users who need access to the app, first add them to your [tenant](https://learn.microsoft.com/en-us/azure/role-based-access-control/role-assignments-external-users) if they aren't members already, then navigate to the root management group portal and assign the "Reader" role to them.  
 > [!IMPORTANT]
