@@ -22,6 +22,9 @@ git branch
 You should be under _develop_ branch.
 
 ## Local Machine configuration
+> [!NOTE]
+> Before running the environment configuration let's make sure that we have downloaded the current version of [Az](https://learn.microsoft.com/en-us/powershell/azure/install-azps-windows?view=azps-11.4.0&tabs=powershell&pivots=windows-psgallery#update-the-az-powershell-module) PowerShell. Update the module if needed.
+
 * Set the working directory to the PowerShell scripts directory:
 ```
 Set-Location -Path .\CustomPolicies\PowerShell
@@ -45,10 +48,8 @@ You can configure a service principal and give it enough privileges to create th
 ## Create the custom policies
 > [!NOTE]
 > There is a limitation to create 500 policy definitions per subscription or management group. With this in mind, since there are over 4000 policy definitions to create, the intent is to create about 9 management groups that will host the policy definitions. Once the policy definitions are built-in this step will no longer be needed.
-* Create the management groups in which the custom policies will be created:
-```
-.\CreateManagementGroup.ps1 -BaseName <Base name of choice for the management group> -Start <Start index> -End <End index (not inclusive)>
-```
+* Create the management groups in which the custom policies will be created (about 9 management groups are needed to host the custom policy definitions)
+![alt text](image-1.png)
 
 * Create the custom policy definitions resources
     - with a service principal:
