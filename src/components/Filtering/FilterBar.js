@@ -571,7 +571,7 @@ const FilterBar = ({ azureToken }) => {
             let controlPrefix = prefixExtractor(control.key);
             updateControlCount(controlPrefix, true);
           });
-          for (let control of newDomainSelectedControls) {
+          for (let control of newDomainSelectedControls.slice(1)) {
             if (!resultSelectedControls.includes(control)) {
               resultSelectedControls.push(control.key);
             }
