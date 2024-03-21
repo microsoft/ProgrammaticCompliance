@@ -18,7 +18,7 @@ const FilterBadgesContainer = (props) => {
   };
 
   const sortedSelectedServices = sortSelectedItems(selectedServices);
-  const sortedSelectedControls = sortSelectedItems(selectedControls).slice(1);
+  const sortedSelectedControls = sortSelectedItems(selectedControls);
 
   return (
     <>
