@@ -452,8 +452,8 @@ const MCSB = (props) => {
             });
           }
         });
-      // otherwise, since the user didn't limit any controls,
-      // find all of the rows that have our chosen framework instead and show them all
+        // otherwise, since the user didn't limit any controls,
+        // find all of the rows that have our chosen framework instead and show them all
       } else {
         rowControls.forEach((control) => {
           if (control.includes(props.framework)) {
@@ -484,26 +484,22 @@ const MCSB = (props) => {
         horizontal
         verticalAlign="center"
         horizontalAlign="space-between">
-        <Stack horizontal verticalAlign="center">
-          <div>
-            <h2 className="titleStyle">
-              {tableText.mcsbTitle}
-            </h2>
-            <Text variant="medium" className="subtitleStyle">
-              {tableText.mcsbDescription}
-            </Text>
-          </div>
-        </Stack>
+        <h2 className="titleStyle">
+          {tableText.mcsbTitle}
+        </h2>
         <IconButton
           ariaLabel={isTableExpanded ? "Collapse table" : "Expand table"}
           title={isTableExpanded ? "Collapse Compliance Features by Service table" : "Expand Compliance Features by Service table"}
-          iconProps={{iconName: isTableExpanded ? 'ChevronUp' : 'ChevronDown'}}
+          iconProps={{ iconName: isTableExpanded ? 'ChevronUp' : 'ChevronDown' }}
           onClick={() => setIsTableExpanded(!isTableExpanded)}
           styles={{
             icon: { color: '#0078D4', fontSize: 15, fontWeight: "bold" },
           }}
         />
       </Stack>
+      <Text variant="medium" className="subtitleStyle">
+        {tableText.mcsbDescription}
+      </Text>
 
       {isTableExpanded ? (
         <div className={isSmallScreen ? classNames.scrollable : ''}>

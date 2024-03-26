@@ -408,16 +408,9 @@ const ACF = (props) => {
         horizontal
         verticalAlign="center"
         horizontalAlign="space-between">
-        <Stack horizontal verticalAlign="center">
-          <div>
-            <h2 className="titleStyle">
-              {tableText.acfTitle}
-            </h2>
-            <Text variant="medium" className="subtitleStyle">
-              {tableText.acfDescription}
-            </Text>
-          </div>
-        </Stack>
+        <h2 className="titleStyle">
+          {tableText.acfTitle}
+        </h2>
         <IconButton
           ariaLabel={isTableExpanded ? "Collapse table" : "Expand table"}
           title={isTableExpanded ? "Collapse Microsoft Cloud Compliance Foundation table" : "Expand Microsoft Cloud Compliance Foundation table"}
@@ -428,6 +421,9 @@ const ACF = (props) => {
           }}
         />
       </Stack>
+      <Text variant="medium" className="subtitleStyle">
+        {tableText.acfDescription}
+      </Text>
 
       {isTableExpanded ? (
         <div className={isSmallScreen ? classNames.scrollable : ''}>
