@@ -489,26 +489,23 @@ const POLICY = (props) => {
         horizontal
         verticalAlign="center"
         horizontalAlign="space-between">
-        <Stack horizontal verticalAlign="center">
-          <div>
-            <h2 className="titleStyle">
-              {tableText.policyTitle}
-            </h2>
-            <Text variant="medium" className="subtitleStyle">
-              {tableText.policyDescription}
-            </Text>
-          </div>
-        </Stack>
+        <h2 className="titleStyle">
+          {tableText.policyTitle}
+        </h2>
         <IconButton
           ariaLabel={isTableExpanded ? "Collapse table" : "Expand table"}
           title={isTableExpanded ? "Collapse Compliance Policies by Service table" : "Expand Compliance Policies by Service table"}
-          iconProps={{iconName: isTableExpanded ? 'ChevronUp' : 'ChevronDown'}}
+          iconProps={{ iconName: isTableExpanded ? 'ChevronUp' : 'ChevronDown' }}
           onClick={() => setIsTableExpanded(!isTableExpanded)}
           styles={{
             icon: { color: '#0078D4', fontSize: 15, fontWeight: "bold" },
           }}
         />
       </Stack>
+      <Text variant="medium" className="subtitleStyle">
+        {tableText.policyDescription}
+      </Text>
+
       {isTableExpanded ? (
         <div className={isSmallScreen ? classNames.scrollable : ''}>
           {items.length > 0 ? (
