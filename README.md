@@ -197,4 +197,4 @@ Compress-Archive -Path * -DestinationPath deployment.zip
 az webapp deployment source config-zip --resource-group <WEBAPP_RESOURCE_GROUP> --name <WEBAPP_NAME> --src deployment.zip
 ```
 
-Congratulations! You have now successfully deployed the code to your webapp. Let the testing begin!
+Congratulations! You have now successfully configured and deployed your Programmatic Compliance website. Let the testing begin!

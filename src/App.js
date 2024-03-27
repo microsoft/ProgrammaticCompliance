@@ -133,7 +133,6 @@ function MainApp() {
           </h1>
           <section aria-label="Site description">
             <p className="siteDescription">
-              {/* <em>This experience is for <strong>internal use only</strong> at this moment. Please send any questions, comments, or feedback to <a href="mailto:pcompvteam@microsoft.com">pcompvteam@microsoft.com</a>.</em><p></p> */}
               {appText.siteDescription}&nbsp;
               <Link onClick={toggleIsCalloutVisible} id="readMoreButton">
                 {appText.readMoreButton}
