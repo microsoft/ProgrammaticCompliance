@@ -50,9 +50,3 @@ stages:
         PublishProcessedResults: true
         AllTools: true
         ToolLogsNotFoundAction: 'Standard'
-    
-- stage: Deploy
-  jobs:
-  - job: Deploy
-    pool:
-      vmImage: 'ubuntu-latest'
