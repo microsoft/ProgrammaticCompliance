@@ -169,11 +169,9 @@ function MainApp() {
             {appText.disclaimer1} <br></br><br></br>
             {appText.disclaimer2} <br></br><br></br>
             {appText.disclaimer3} <br></br><br></br>
-            {appText.disclaimer4 && (
               <a href="https://privacy.microsoft.com/en-us/privacystatement" target="_blank" rel="noopener noreferrer">
-                {appText.disclaimer4}
+                {Microsoft Privacy Statement}
               </a>
-            )}
           </Text>
           <FocusZone handleTabKey={FocusZoneTabbableElements.all} isCircularNavigation>
             <Stack className={styles.buttons} gap={8} horizontal>
