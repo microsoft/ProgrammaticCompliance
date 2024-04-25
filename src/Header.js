@@ -82,48 +82,6 @@ const Header = () => {
                         },
                     }}
                 >
-                    {/* <IconButton
-                        iconProps={{ iconName: "Ringer" }}
-                        title="Notifications"
-                        ariaLabel="Notifications"
-                        disabled={false}
-                        checked={false}
-                        styles={{
-                            root: {
-                                color: "white",
-                            },
-                        }}
-                    />
-                    <IconButton
-                        iconProps={{ iconName: "Settings" }}
-                        title="Settings"
-                        ariaLabel="Settings"
-                        disabled={false}
-                        checked={false}
-                        styles={{
-                            root: {
-                                color: "white",
-                            },
-                        }}
-                    />
-                    <IconButton
-                        iconProps={{ iconName: "Help" }}
-                        title="Help"
-                        ariaLabel="Help"
-                        disabled={false}
-                        checked={false}
-                        styles={{
-                            root: {
-                                color: "white",
-                            },
-                        }}
-                    /> */}
-                    {/* <Persona
-                        {...examplePersona}
-                        size={PersonaSize.size32}
-                        hidePersonaDetails={true}
-                        presence={PersonaPresence.online}
-                    /> */}
                 </Stack>
             </Stack.Item>
         </Stack>
