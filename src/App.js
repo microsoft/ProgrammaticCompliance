@@ -143,7 +143,7 @@ function MainApp() {
           <br></br>
           <br></br>
           <Link
-            href={"https://privacy.microsoft.com/en-us/privacystatement"} target="_blank" rel="noopener noreferrer"
+            href={"https://go.microsoft.com/fwlink/?LinkId=521839"} target="_blank" rel="noopener noreferrer"
           >
             Microsoft Privacy Statement
           </Link>
@@ -169,8 +169,8 @@ function MainApp() {
             {appText.disclaimer1} <br></br><br></br>
             {appText.disclaimer2} <br></br><br></br>
             {appText.disclaimer3} <br></br><br></br>
-              <a href="https://privacy.microsoft.com/en-us/privacystatement" target="_blank" rel="noopener noreferrer">
-                {Microsoft Privacy Statement}
+              <a href="https://go.microsoft.com/fwlink/?LinkId=521839" target="_blank" rel="noopener noreferrer">
+                {"Microsoft Privacy Statement"}
               </a>
           </Text>
           <FocusZone handleTabKey={FocusZoneTabbableElements.all} isCircularNavigation>
