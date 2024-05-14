@@ -161,6 +161,10 @@ const FilterBar = ({ azureToken }) => {
 
   // FILTER POPULATION FUNCTIONS
 
+  const populateServicesWithDelay = () => {
+    setTimeout(populateServices, 1000); // 2000 milliseconds = 2 seconds
+  };
+
   /**
    * Populates the service filter dropdown
    */
@@ -399,7 +403,7 @@ const FilterBar = ({ azureToken }) => {
 
   useEffect(() => {
     populateControlMaps(selectedFramework)
-    populateServices();
+    populateServicesWithDelay();
     setIsExportButtonDisabled(selectedFramework.length === 0);
     populateDomains(selectedFramework);
     populateControls(selectedFramework);
@@ -701,6 +705,7 @@ const FilterBar = ({ azureToken }) => {
                   styles={selectedFramework.length > 0 ? selectedFrameworkStyles : frameworkStyles}
                   aria-label="Regulatory framework"
                   label="Regulatory framework"
+                  disabled={!(services.length > 0)}
                 />
               </div>
               <div className="select-dropdown">
