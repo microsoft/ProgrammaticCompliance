@@ -43,6 +43,11 @@ stages:
       displayName: 'Publish npm artifact'
     - task: ComponentGovernanceComponentDetection@0
 
+    - task: accessibility-insights.prod.task.accessibility-insights@3
+      inputs:
+        # Replace the url value below with your canary/staging/pre-production URL:
+        url: 'https://programmatic-compliance-gh1.azurewebsites.net'
+
     - task: PublishSecurityAnalysisLogs@3
       inputs:
         ArtifactName: 'CodeAnalysisLogs'
