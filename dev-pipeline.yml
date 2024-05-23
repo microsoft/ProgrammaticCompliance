@@ -43,10 +43,20 @@ stages:
       displayName: 'Publish npm artifact'
     - task: ComponentGovernanceComponentDetection@0
 
+    - task: AzureKeyVault@2
+      inputs:
+        azureSubscription: "MCI-ProgrammaticCompliance-JOELOTOUDE" ## Update this value with your Azure subscription
+        keyVaultName: "pc-accessibility-alias" ## Update this value with the name of the key vault
+        secretsFilter: "serviceAccountName,serviceAccountPassword" ## Update this value with the labels for the key vault secrets, they will be come variables names that you will use in the next task
+        runAsPreJob: false ## Make the secrets available to the whole job
+
     - task: accessibility-insights.prod.task.accessibility-insights@3
       inputs:
         # Replace the url value below with your canary/staging/pre-production URL:
         url: 'https://programmatic-compliance-gh1.azurewebsites.net'
+        serviceAccountName: $(serviceAccountName) # Replace this value with the service account label name in `secretsFilter` in the previous step
+        serviceAccountPassword: $(serviceAccountPassword) # Replace this value with the service account password label name in `secretsFilter` in the previous step
+        authType: "AAD" # The authentication type, we only support Entra (AAD) at this time.
 
     - task: PublishSecurityAnalysisLogs@3
       inputs:
