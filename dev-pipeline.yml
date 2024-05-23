@@ -45,7 +45,7 @@ stages:
 
     - task: AzureKeyVault@2
       inputs:
-        azureSubscription: "MCI-ProgrammaticCompliance-JOELOTOUDE(cbc4d8f4-0020-4539-97bf-5cb81bbbc640)" ## Update this value with your Azure subscription
+        azureSubscription: "MCI-ProgrammaticCompliance-JOELOTOUDE" ## Update this value with your Azure subscription
         keyVaultName: "pc-accessibility-alias" ## Update this value with the name of the key vault
         secretsFilter: "serviceAccountName,serviceAccountPassword" ## Update this value with the labels for the key vault secrets, they will be come variables names that you will use in the next task
         runAsPreJob: false ## Make the secrets available to the whole job
