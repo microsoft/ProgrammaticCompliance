@@ -1,9 +1,9 @@
 export const allDomains = (framework) => {
-    return `policyresources | where type == 'microsoft.policyinsights/policymetadata' | where name contains '${framework}' | project ControlID = name, properties.metadataId, properties.description, ControlDomain = tostring(properties.category), properties | distinct ControlID, ControlDomain`;
+    return `policyresources | where type == 'microsoft.policyinsights/policymetadata' | where name contains '${framework}' | project ControlID = name, properties.metadataId, properties.description, ControlDomain = tostring(properties.Category), properties | distinct ControlID, ControlDomain`;
 };
 
 export const cisDomains = () => {
-    return `policyresources | where type == 'microsoft.policyinsights/policymetadata' | where name contains 'CIS_Azure_1.4.0' | project ControlID = name, properties.metadataId, properties.description, ControlDomain = tostring(properties.category), properties | distinct ControlID, ControlDomain`;
+    return `policyresources | where type == 'microsoft.policyinsights/policymetadata' | where name contains 'CIS_Azure_1.4.0' | project ControlID = name, properties.metadataId, properties.description, ControlDomain = tostring(properties.Category), properties | distinct ControlID, ControlDomain`;
 };
 
 export const allServices = () => {

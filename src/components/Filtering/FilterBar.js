@@ -284,7 +284,7 @@ const FilterBar = ({ azureToken }) => {
         const controlPrefixes = new Set();
         data.forEach(item => {
           if (framework === "NIST_SP_800-53_R4") {
-            controlID = item.properties.metadataId.replace(/\([^()]*\)/g, '');
+            controlID = item.properties.MetadataId.replace(/\([^()]*\)/g, '');
             controlID = controlID.trim().split(' ').pop();
             const controlPrefix = prefixExtractor(controlID);
             if (controlPrefix !== currentPrefix && !controlPrefixes.has(controlPrefix)) {
@@ -301,11 +301,11 @@ const FilterBar = ({ azureToken }) => {
               controlKeys.add(sanitizedControlID);
               currentControls.push({
                 key: sanitizedControlID,
-                text: `${sanitizedControlID}: ${item.properties.title}`,
+                text: `${sanitizedControlID}: ${item.properties.Title}`,
               });
             }
           } else {
-            controlID = item.properties.metadataId.split(' ').pop().trim();
+            controlID = item.properties.MetadataId.split(' ').pop().trim();
             const controlPrefix = prefixExtractor(controlID);
             if (controlPrefix !== currentPrefix && !controlPrefixes.has(controlPrefix)) {
               controlPrefixes.add(controlPrefix)
@@ -320,7 +320,7 @@ const FilterBar = ({ azureToken }) => {
               controlKeys.add(controlID);
               currentControls.push({
                 key: controlID,
-                text: `${controlID}: ${item.properties.title}`,
+                text: `${controlID}: ${item.properties.Title}`,
               });
             }
             setDefaultControls(currentControls);
@@ -332,7 +332,7 @@ const FilterBar = ({ azureToken }) => {
         setDefaultControls(currentControls);
       })
       .catch(error => {
-        console.error('API Error:', error);
+        console.error('API Error in control IDs:', error);
       });
   }
 
@@ -369,15 +369,15 @@ const FilterBar = ({ azureToken }) => {
         const data = result.data;
         data.forEach(item => {
           if (framework === "NIST_SP_800-53_R4") {
-            if (!item.properties.metadataId.includes("(")) {
-              controlID = item.properties.metadataId.replace(/\([^()]*\)/g, '');
+            if (!item.properties.MetadataId.includes("(")) {
+              controlID = item.properties.MetadataId.replace(/\([^()]*\)/g, '');
               controlID = controlID.trim().split(' ').pop();
               controlID = sanitizeControlID(controlID);
-              currentMap.set(controlID, item.properties.title)
+              currentMap.set(controlID, item.properties.Title)
             }
           } else {
-            controlID = item.properties.metadataId.split(' ').pop().trim();
-            currentMap.set(controlID, item.properties.title)
+            controlID = item.properties.MetadataId.split(' ').pop().trim();
+            currentMap.set(controlID, item.properties.Title)
           }
         });
         if (framework === "NIST_SP_800-53_R4") {
