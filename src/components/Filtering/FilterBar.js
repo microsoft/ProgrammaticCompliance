@@ -3,6 +3,7 @@ import { DropdownMenuItemType, Dropdown } from '@fluentui/react';
 import ACF from '../Tables/ACF.js';
 import MCSB from '../Tables/MCSB.js';
 import Policies from '../Tables/Policies.js';
+// import Initiatives from '../Tables/Initiatives.js';
 import TableStates from '../Tables/TableStates.js';
 import FilterBadgesContainer from './FilterBadgesContainer.js';
 import ExportButton from '../ExportButton.js';
@@ -67,6 +68,12 @@ const FilterBar = ({ azureToken }) => {
     const numA = parseInt(splitA[2]) || 0;
     const numB = parseInt(splitB[2]) || 0;
     return numB - numA;
+  };
+
+  const numberSort = (a, b) => {
+    const numA = parseFloat(a) || 0;
+    const numB = parseFloat(b) || 0;
+    return numA - numB;
   };
 
   const countMaxTotal = (seekControl) => {
@@ -149,7 +156,6 @@ const FilterBar = ({ azureToken }) => {
         return response.json();
       })
       .then(response => {
-        console.log(response.data)
         let json = response.data[0]
         if (!json.hasOwnProperty("AzureControlFrameworkID") || !json.hasOwnProperty("ControlDomain") || !json.hasOwnProperty("ControlID")
           || !json.hasOwnProperty("MicrosoftManagedActionsDescription") || !json.hasOwnProperty("MicrosoftManagedActionsDetails")) {
@@ -304,6 +310,9 @@ const FilterBar = ({ azureToken }) => {
                 text: `${sanitizedControlID}: ${item.properties.Title}`,
               });
             }
+            currentControls.sort((a, b) => {
+              return customSort(a.key, b.key);
+            });
           } else {
             controlID = item.properties.MetadataId.split(' ').pop().trim();
             const controlPrefix = prefixExtractor(controlID);
@@ -325,10 +334,11 @@ const FilterBar = ({ azureToken }) => {
             }
             setDefaultControls(currentControls);
           }
+          currentControls.sort((a, b) => {
+            return numberSort(a.key, b.key);
+          });
         });
-        currentControls.sort((a, b) => {
-          return customSort(a.key, b.key);
-        });
+
         setDefaultControls(currentControls);
       })
       .catch(error => {
@@ -774,7 +784,8 @@ const FilterBar = ({ azureToken }) => {
                 />
               </div>
               <div className="exportButton">
-                <ExportButton apiData={responseData} disabled={isExportButtonDisabled} acfData={acfData} controlIDs={selectedControls} mapState={selectedFramework === "NIST_SP_800-53_R4" ? nistMap : selectedFramework === "CIS_Azure_2.0.0" ? cisMap : selectedFramework === "PCI_DSS_v4.0" ? pciMap : null} />
+                {/* policyTable={<Initiatives data={responseData} framework={selectedFramework} controls={selectedControls} mapState={selectedFramework === "NIST_SP_800-53_R4" ? nistMap : selectedFramework === "CIS_Azure_2.0.0" ? cisMap : selectedFramework === "PCI_DSS_v4.0" ? pciMap : null} />} */}
+                <ExportButton services={selectedServices} apiData={responseData} disabled={isExportButtonDisabled} acfData={acfData} controlIDs={selectedControls} mapState={selectedFramework === "NIST_SP_800-53_R4" ? nistMap : selectedFramework === "CIS_Azure_2.0.0" ? cisMap : selectedFramework === "PCI_DSS_v4.0" ? pciMap : null} />
               </div>
             </div>
           </div>
