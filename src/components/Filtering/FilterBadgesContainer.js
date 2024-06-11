@@ -24,7 +24,6 @@ const FilterBadgesContainer = (props) => {
       setIsSmallScreen(window.innerWidth < 400);
     };
 
-    // Set initial state synchronously
     setIsSmallScreen(window.innerWidth < 400);
 
     window.addEventListener('resize', handleResize);

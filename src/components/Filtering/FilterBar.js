@@ -13,6 +13,7 @@ import { cisDomains, allDomains, allServices, allControls } from '../../queries/
 import { allACFs, filteredACFs } from '../../queries/ACF.Query.js';
 import { filteredMCSB } from '../../queries/MCSB.Query.js';
 import { styles, frameworkStyles, selectedFrameworkStyles, serviceStyles, selectedServiceStyles, controlStyles, selectedControlStyles } from '../../styles/DropdownStyles.js';
+import { appText } from '../../static/staticStrings.js';
 import '../../styles/FilterBar.css';
 import '../../styles/index.css';
 
@@ -52,12 +53,21 @@ const FilterBar = ({ azureToken }) => {
   myHeaders.append('Content-Type', 'application/json');
 
   // UTILITY FUNCTIONS
+  /**
+   * @param {string} controlId 
+   * @returns the controlID string without the control name (e.g. AC-2: Account Management -> AC-2)
+   */
   const sanitizeControlID = (controlId) => {
     const prefixMatch = controlId.match(/^[^:()]+/);
     const prefix = prefixMatch ? prefixMatch[0].trim() : '';
     return prefix;
   };
 
+  /**
+   * @param {string} a 
+   * @param {string} b 
+   * @returns AC before AU, AU before SC
+   */
   const customSort = (a, b) => {
     const splitA = a.match(/([a-zA-Z]+)(-?\d*)/);
     const splitB = b.match(/([a-zA-Z]+)(-?\d*)/);
@@ -70,12 +80,21 @@ const FilterBar = ({ azureToken }) => {
     return numB - numA;
   };
 
+  /**
+   * @param {string} a 
+   * @param {string} b 
+   * @returns 1.2 before 2.1, 2.1 before 10.1
+   */
   const numberSort = (a, b) => {
     const numA = parseFloat(a) || 0;
     const numB = parseFloat(b) || 0;
     return numA - numB;
   };
 
+  /**
+   * @param {string} seekControl the control key to count the total for
+   * @returns the total number of controls with the same prefix as seekControl
+   */
   const countMaxTotal = (seekControl) => {
     let total = 0;
     for (let control of defaultControls) {
@@ -89,6 +108,10 @@ const FilterBar = ({ azureToken }) => {
     return total;
   }
 
+  /**
+   * @param {string} key the control prefix to update the count for
+   * @param {boolean} increment whether the total control count should be incremented (true) or decremented (false)
+   */
   const updateControlCount = (key, increment = true) => {
     setControlCount((prevDictionary) => {
       let total = countMaxTotal(key);
@@ -103,6 +126,10 @@ const FilterBar = ({ azureToken }) => {
     });
   };
 
+  /**
+   * @param {string} control to extract the prefix from
+   * @returns "AC", "AU" etc. if NIST, "1.1", "2.1" etc. if PCI or CIS
+   */
   const prefixExtractor = (control) => {
     if (control) {
       if (selectedFramework === "NIST_SP_800-53_R4") {
@@ -113,6 +140,7 @@ const FilterBar = ({ azureToken }) => {
     }
   }
 
+  // Sanity checks if the mcsb data is malformed / fields cannot be found, if errors, displays user-friendly error message
   const checkMCSBDataValid = async () => {
     apiText.requestBody.query = filteredMCSB("NIST_SP_800-53_R4", ["Azure Kubernetes Service (AKS)"], ["AC-2"]);
     await fetch(apiText.mainEndpoint, {
@@ -141,6 +169,7 @@ const FilterBar = ({ azureToken }) => {
       })
   }
 
+  // Sanity checks if the acf data is malformed / fields cannot be found, if errors, displays user-friendly error message
   const checkACFDataValid = async () => {
     apiText.requestBody.query = filteredACFs("NIST_SP_800-53_R4", ["AC-2"]);
     await fetch(apiText.mainEndpoint, {
@@ -166,13 +195,12 @@ const FilterBar = ({ azureToken }) => {
 
   // FILTER POPULATION FUNCTIONS
 
+  // Provides a loading time delay for the services dropdown
   const populateServicesWithDelay = () => {
-    setTimeout(populateServices, 1000); // 2000 milliseconds = 2 seconds
+    setTimeout(populateServices, 1000);
   };
 
-  /**
-   * Populates the service filter dropdown
-   */
+  // Populates the service filter dropdown
   const populateServices = async () => {
     apiText.requestBody.query = allServices();
     fetch(apiText.mainEndpoint, {
@@ -203,8 +231,8 @@ const FilterBar = ({ azureToken }) => {
 
 
   /**
+   * @param {string} framework that is selected
    * Populates the domain filter dropdown depending on what framework is selected
-   * @param {string} framework 
    */
   const populateDomains = (framework) => {
     let controlID;
@@ -264,8 +292,8 @@ const FilterBar = ({ azureToken }) => {
   }
 
   /**
+   * @param {string} framework that is selected
    * Populates the control ID filter dropdown depending on what framework is selected
-   * @param {string} framework 
    */
   const populateControls = (framework) => {
     let currentControls = [];
@@ -280,7 +308,7 @@ const FilterBar = ({ azureToken }) => {
     })
       .then(response => {
         if (!response.ok) {
-          throw new Error(`HTTP error!Going too fast. Please try again in a little bit.`);
+          throw new Error(`HTTP error! Going too fast. Please try again in a little bit.`);
         }
         return response.json();
       })
@@ -293,7 +321,7 @@ const FilterBar = ({ azureToken }) => {
             controlID = item.properties.MetadataId.replace(/\([^()]*\)/g, '');
             controlID = controlID.trim().split(' ').pop();
             const controlPrefix = prefixExtractor(controlID);
-            if (controlPrefix !== currentPrefix && !controlPrefixes.has(controlPrefix)) {
+            if (controlPrefix !== currentPrefix && !controlPrefixes.has(controlPrefix)) { // add unique domain headers
               controlPrefixes.add(controlPrefix)
               currentControls.push({
                 key: `${controlPrefix}`,
@@ -302,7 +330,7 @@ const FilterBar = ({ azureToken }) => {
               });
               currentPrefix = controlPrefix;
             }
-            const sanitizedControlID = sanitizeControlID(controlID);
+            const sanitizedControlID = sanitizeControlID(controlID); // add control IDs with descriptions
             if (!controlKeys.has(sanitizedControlID)) {
               controlKeys.add(sanitizedControlID);
               currentControls.push({
@@ -310,7 +338,7 @@ const FilterBar = ({ azureToken }) => {
                 text: `${sanitizedControlID}: ${item.properties.Title}`,
               });
             }
-            currentControls.sort((a, b) => {
+            currentControls.sort((a, b) => { // sort controls and domain headers
               return customSort(a.key, b.key);
             });
           } else {
@@ -332,7 +360,6 @@ const FilterBar = ({ azureToken }) => {
                 text: `${controlID}: ${item.properties.Title}`,
               });
             }
-            setDefaultControls(currentControls);
           }
           currentControls.sort((a, b) => {
             return numberSort(a.key, b.key);
@@ -347,9 +374,9 @@ const FilterBar = ({ azureToken }) => {
   }
 
   /**
+   * @param {string} framework that is selected
    * Populates the instance cache with the control ID value-name mapping depending on what framework is selected
    * Used during onload to populate control ID values for all frameworks
-   * @param {string} framework 
    */
   const populateControlMaps = (framework) => {
     let controlID;
@@ -433,9 +460,7 @@ const FilterBar = ({ azureToken }) => {
     fetchACFData();
   }, [selectedFramework, selectedControls]);
 
-  /**
-   * Controls the linked relationship between the control domain and control IDs filters
-   */
+  // Controls the linked relationship between the control domain and control IDs filters
   useEffect(() => {
     if (controlFocus) {
       let controlPrefix = prefixExtractor(controlFocus);
@@ -603,7 +628,6 @@ const FilterBar = ({ azureToken }) => {
             const key = control.key;
             if (key) {
               const domainKey = prefixExtractor(key);
-
               if (domainKey === item.key) {
                 newDomainSelectedControls.push(control);
               }
@@ -676,6 +700,7 @@ const FilterBar = ({ azureToken }) => {
     }
   };
 
+  // deleting the filter via clicking the badge
   const removeFilter = (filterText, filterType) => {
     if (filterType === 'service') {
       setSelectedServices((prevSelectedServices) =>
@@ -697,7 +722,7 @@ const FilterBar = ({ azureToken }) => {
       {error ? (
         <div>
           <br></br>
-          <h1 className="siteTitle">🚨 Programmatic Compliance needs repair. Please try again later! 🚨</h1>
+          <h1 className="siteTitle">{appText.unhealthy}</h1>
           <h1 className="siteTitle">Error message: "{error}"</h1>
         </div>
       ) : (
