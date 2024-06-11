@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { DetailsList, SelectionMode, DetailsListLayoutMode, Text, Icon, IconButton, Stack, initializeIcons, TooltipHost, Sticky, StickyPositionType, ConstrainMode, Link } from '@fluentui/react';
 
-import PoliciesModal from '../Modals/PoliciesModal.js';
+import PoliciesModal from '../../components/Modals/PoliciesModal.js';
 import TableStates from './TableStates.js';
 
 import '../../styles/Tables.css';

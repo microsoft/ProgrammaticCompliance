@@ -404,7 +404,7 @@ FodyWeavers.xsd
 .terraform/
 
 #react
-*.env
+**/*.env
 *.zip
 build/
 node_modules/

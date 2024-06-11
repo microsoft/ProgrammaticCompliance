@@ -50,5 +50,6 @@ export const msalConfig = {
  * https://github.com/AzureAD/microsoft-authentication-library-for-js/blob/dev/lib/msal-browser/docs/resources-and-scopes.md
  */
 export const tokenConfig = {
-    managementEndpoint: "https://management.azure.com/.default"
+    managementEndpoint: "https://management.azure.com/.default",
+    appPermissionScope: "https://graph.microsoft.com/.default"
 };

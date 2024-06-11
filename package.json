@@ -4,28 +4,33 @@
   "private": true,
   "dependencies": {
     "@azure/arm-resourcegraph": "^4.2.1",
-    "@azure/identity": "^4.0.1",
+    "@azure/identity": "^4.1.0",
     "@azure/msal-browser": "^3.1.0",
+    "@azure/msal-node": "^2.7.0",
     "@azure/msal-react": "^2.0.3",
     "@emotion/react": "^11.11.1",
     "@emotion/styled": "^11.11.0",
     "@fluentui/react": "^8.111.2",
     "@fluentui/theme": "^2.6.35",
+    "@microsoft/microsoft-graph-client": "^3.0.7",
     "@testing-library/jest-dom": "^5.17.0",
     "@testing-library/react": "12.1.5",
     "@testing-library/user-event": "^13.5.0",
+    "dotenv": "^16.4.5",
+    "path": "^0.12.7",
     "react": "^17.0.2",
     "react-bootstrap": "^2.7.2",
     "react-dom": "^17.0.2",
-    "react-router-dom": "^6.20.1",
+    "react-router-dom": "^6.22.3",
     "react-scripts": "^5.0.1",
     "react-select": "^5.7.4",
+    "stream": "^0.0.2",
     "web-vitals": "^2.1.4"
   },
   "scripts": {
     "start": "react-scripts start",
     "build": "react-scripts build",
-    "test": "jest",
+    "test": "react-app-rewired test",
     "eject": "react-scripts eject"
   },
   "eslintConfig": {
@@ -33,6 +38,10 @@
       "react-app",
       "react-app/jest"
     ]
+  },
+  "browser": {
+    "path": false,
+    "stream": false
   },
   "browserslist": {
     "production": [
@@ -47,7 +56,17 @@
     ]
   },
   "devDependencies": {
-    "@babel/plugin-proposal-private-property-in-object": "^7.21.11"
+    "@babel/plugin-proposal-private-property-in-object": "^7.21.11",
+    "assert": "^2.1.0",
+    "buffer": "^6.0.3",
+    "crypto-browserify": "^3.12.0",
+    "https-browserify": "^1.0.0",
+    "os-browserify": "^0.3.0",
+    "process": "^0.11.10",
+    "react-app-rewired": "^2.2.1",
+    "stream-browserify": "^3.0.0",
+    "stream-http": "^3.2.0",
+    "url": "^0.11.3"
   },
   "description": "This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).",
   "main": "index.js",

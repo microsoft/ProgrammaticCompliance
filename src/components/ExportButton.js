@@ -1,9 +1,13 @@
-import React from 'react';
-import { DefaultButton } from '@fluentui/react';
+import React, { useEffect, useState } from 'react';
+import { DefaultButton, PrimaryButton, TextField, Checkbox, Panel,PanelType } from '@fluentui/react';
 
 const addIcon = { iconName: 'Add' };
+const downloadIcon = { iconName: 'Download' };
 
-const ExportButton = ({ apiData, disabled, acfData, controlIDs }) => {
+const ExportButton = ({ services, policyTable, apiData, disabled, acfData, controlIDs }) => {
+
+    const [isPaneOpen, setIsPaneOpen] = useState(false);
+
     const sanitizeValue = (value) => {
         if (typeof value === 'string') {
             value = value.replace(/(\r\n|\r|\n)/g, ' ');
@@ -36,7 +40,7 @@ const ExportButton = ({ apiData, disabled, acfData, controlIDs }) => {
     };
 
     const handleExportCSV = () => {
-        if (apiData.length > 0) {
+        if (apiData) {
             let jsonData = apiData;
             if (typeof jsonData !== 'object') {
                 try {
@@ -179,6 +183,52 @@ const ExportButton = ({ apiData, disabled, acfData, controlIDs }) => {
         return csvRows.join('\n');
     };
 
+    const handleExportInitiative = () => {
+        setIsPaneOpen(true);
+    };
+
+    const closePane = () => {
+        setIsPaneOpen(false);
+    };
+
+    const onRenderFooterContent = React.useCallback(
+        () => (
+            <div>
+                <DefaultButton
+                    text="Download"
+                    primary
+                    iconProps={downloadIcon}
+                />
+            </div>
+        ),
+        [closePane],
+    );
+
+    const Pane = () => (
+        <div>
+            <Panel
+                headerText="Export Custom Initiative"
+                // this prop makes the panel non-modal
+                type={PanelType.extraLarge}
+                isOpen={isPaneOpen}
+                onDismiss={closePane}
+                closeButtonAriaLabel="Close"
+                onRenderFooterContent={onRenderFooterContent}
+                isFooterAtBottom={true}
+                isLightDismiss
+            >
+                <p>Select policies to export using the checkboxes below or the individual table row selectors for more fine-grained control.</p>
+                <Checkbox label="Manual Policies" />
+                <p></p>
+                <Checkbox label="Automated Policies" />
+                <br />
+                {policyTable}
+                <TextField label="Initiative filename" placeholder="e.g. AKS_Manual_Initiative.json" required />
+                <br />
+                <br />
+            </Panel>
+        </div>
+    );
 
     const menuProps = {
         items: [
@@ -194,17 +244,27 @@ const ExportButton = ({ apiData, disabled, acfData, controlIDs }) => {
                 iconProps: { iconName: 'GridViewSmall' },
                 onClick: handleExportCSV,
             },
+            // {
+            //     key: 'initiative',
+            //     text: 'Custom Initiative',
+            //     iconProps: { iconName: 'CustomList' },
+            //     onClick: handleExportInitiative,
+            //     disabled: services.length == 0, // only allows exporting to initiative if a service is present, otherwise no policies
+            // },
         ],
     };
 
     return (
-        <DefaultButton
-            text="Export"
-            primary
-            iconProps={addIcon}
-            menuProps={menuProps}
-            disabled={disabled}
-        />
+        <>
+            <DefaultButton
+                text="Export"
+                primary
+                iconProps={addIcon}
+                menuProps={menuProps}
+                disabled={disabled}
+            />
+            {isPaneOpen && <Pane />}
+        </>
     );
 }
 
