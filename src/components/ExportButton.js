@@ -64,10 +64,8 @@ const ExportButton = ({ services, policyTable, apiData, disabled, acfData, contr
                 return;
             }
         }
-        console.log('i am here')
         const acfCsv = acfToCsvExporter(acf);
         if (hasMultipleRows(acfCsv)) {
-            console.log('trying to download')
             downloadCsv(acfCsv, 'exportedData_ACF.csv');
         }
     };
