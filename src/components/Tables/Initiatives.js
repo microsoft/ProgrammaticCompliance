@@ -1,0 +1,570 @@
+import React, { useState, useEffect, useRef } from 'react';
+import { DetailsList, SelectionMode, Selection, DetailsListLayoutMode, Text, Icon, IconButton, Stack, initializeIcons, TooltipHost, Sticky, StickyPositionType, ConstrainMode, Link } from '@fluentui/react';
+
+import PoliciesModal from '../Modals/PoliciesModal.js';
+import TableStates from './TableStates.js';
+
+import '../../styles/Tables.css';
+import { gridStyles, focusZoneProps, classNames } from '../../styles/TablesStyles.js';
+import { tableText } from '../../static/staticStrings.js';
+
+initializeIcons();
+
+const INITIATIVES = (props) => {
+
+    let controlIDSet = new Set(props.controls);
+
+    const onItemInvoked = (item) => {
+        setModalData(item);
+        setIsModalOpen(true);
+    };
+
+    const closeModal = () => {
+        setIsModalOpen(false);
+    };
+
+    const [items, setItems] = useState([]);
+    const [groupedItems, setGroupedItems] = useState([]);
+    const [isModalOpen, setIsModalOpen] = useState(false);
+    const [modalData, setModalData] = useState({});
+    const [isTableExpanded, setIsTableExpanded] = useState(true);
+    const [isControlDescending, setIsControlDescending] = useState(true);
+    const [isSmallScreen, setIsSmallScreen] = useState(window.innerWidth <= 1300);
+    const [, setRefresh] = useState(true);
+    const [selection] = useState(
+        new Selection({
+            onSelectionChanged: () => selectionChangedHandler(),
+        })
+    );
+    const selectedKeys = useRef([]);
+
+    const selectionChangedHandler = () => {
+        const previousSelectedKeys = selectedKeys.current;
+        const keysInSelection = selection.getItems().map(({ key }) => key);
+        const currentSelectedKeys = selection.getSelection().map(({ key }) => key);
+        console.log("PREVIOUS: ", previousSelectedKeys)
+        console.log("IN SELECTION: ", keysInSelection)
+        console.log("CURRENT SELECTED KEYS: ", currentSelectedKeys)
+
+        const newSelectedKeys = [
+            ...currentSelectedKeys,
+            ...previousSelectedKeys.filter(
+                (
+                    key // keep previously selected keys if
+                ) =>
+                    !keysInSelection.includes(key) || // not in current selection
+                    (keysInSelection.includes(key) && currentSelectedKeys.includes(key)) // or in current selection and is selected
+            )
+        ];
+        const newUniqueKeys = [...new Set(newSelectedKeys)];
+
+        selectedKeys.current = newUniqueKeys;
+        setRefresh((prevValue) => !prevValue);
+    };
+
+    const columns = [
+        {
+            key: 'expand',
+            name: '',
+            fieldName: 'expand',
+            minWidth: 12,
+            maxWidth: 12,
+            onRender: (item) => (
+                <div>
+                    <Icon
+                        aria-label="Expand fullscreen"
+                        iconName="ChromeFullScreen"
+                        style={{ cursor: 'pointer', width: "20px", color: '#0078D4', fontSize: '14px' }}
+                        onClick={() => onItemInvoked(item)}
+                    />
+                </div>
+            ),
+        },
+        {
+            key: 'control',
+            name: <>Control ID
+                <TooltipHost
+                    content="Identifier for specific control within the selected regulatory framework"
+                    closeDelay={1000}>
+                    <Icon styles={{ root: { verticalAlign: "bottom", marginLeft: "5px" } }} iconName="info" aria-label="Tooltip" />
+                </TooltipHost>
+            </>,
+            fieldName: 'control',
+            minWidth: 105,
+            maxWidth: 150,
+            isResizable: true,
+            isSorted: true,
+            isSortedDescending: isControlDescending,
+            isSortable: true,
+        },
+        {
+            key: 'mcsbID',
+            name: (
+                <>Microsoft Cloud Security Benchmark ID
+                    <TooltipHost
+                        content={
+                            <>
+                                Identifier for specific control within{" "}
+                                <Link href={"https://learn.microsoft.com/security/benchmark/azure/overview"} target="_blank" rel="noopener noreferrer">Microsoft Cloud Security Benchmark</Link>
+                            </>
+                        }
+                        closeDelay={1000}
+                    >
+                        <Icon styles={{ root: { verticalAlign: "bottom", marginLeft: "5px" } }} iconName="info" aria-label="Tooltip" />
+                    </TooltipHost>
+                </>
+            ),
+            fieldName: 'mcsbID',
+            minWidth: 175,
+            maxWidth: 175,
+            isResizable: true,
+        },
+        {
+            key: 'service',
+            name: <>Service
+                <TooltipHost
+                    content=<Link href={'https://azure.microsoft.com/products/'} target="_blank" rel="noopener noreferrer">Microsoft Cloud product</Link>
+                    closeDelay={1000}>
+                    <Icon styles={{ root: { verticalAlign: "bottom", marginLeft: "5px" } }} iconName="info" aria-label="Tooltip" />
+                </TooltipHost>
+            </>,
+            fieldName: 'service',
+            minWidth: 100,
+            maxWidth: 120,
+            isResizable: true,
+        },
+        {
+            key: 'policy',
+            name: <>Azure Policy Name
+                <TooltipHost
+                    content={
+                        <>
+                            Title of the{" "}
+                            <Link href={"https://learn.microsoft.com/azure/governance/policy/overview"} target="_blank" rel="noopener noreferrer"> Azure Policy</Link>
+                            {" "}used to help measure compliance with a given regulatory framework
+                        </>
+                    }
+                    closeDelay={1000}>
+                    <Icon styles={{ root: { verticalAlign: "bottom", marginLeft: "5px" } }} iconName="info" aria-label="Tooltip" />
+                </TooltipHost>
+            </>,
+            fieldName: 'policy',
+            minWidth: 200,
+            maxWidth: 400,
+            isResizable: true,
+        },
+        {
+            key: 'description',
+            name: <>Azure Policy Description
+                <TooltipHost
+                    content={
+                        <>
+                            More details about the{" "}
+                            <Link href={"https://learn.microsoft.com/azure/governance/policy/overview"} target="_blank" rel="noopener noreferrer"> Azure Policy</Link>
+                            {" "}used to help measure compliance with a given regulatory framework
+                        </>
+                    }
+                    closeDelay={1000}>
+                    <Icon styles={{ root: { verticalAlign: "bottom", marginLeft: "5px" } }} iconName="info" aria-label="Tooltip" />
+                </TooltipHost>
+            </>,
+            fieldName: 'description',
+            minWidth: 200,
+            maxWidth: 800,
+            isResizable: true,
+        },
+        {
+            key: 'policyID',
+            name: <>Reference
+                <TooltipHost
+                    content={
+                        <>
+                            Link to more information about the{" "}
+                            <Link href={"https://learn.microsoft.com/azure/governance/policy/overview"} target="_blank" rel="noopener noreferrer"> Azure Policy</Link>
+                            {" "}used to help measure compliance with a given regulatory framework
+                        </>
+                    }
+                    closeDelay={1000}>
+                    <Icon styles={{ root: { verticalAlign: "bottom", marginLeft: "5px" } }} iconName="info" aria-label="Tooltip" />
+                </TooltipHost>
+            </>,
+            fieldName: 'policyID',
+            minWidth: 90,
+            maxWidth: 90,
+            isResizable: true,
+            onRender: (item) => (
+                <Link href={"https://ms.portal.azure.com/#view/Microsoft_Azure_Policy/PolicyDetailBlade/definitionId/%2Fproviders%2FMicrosoft.Authorization%2FpolicyDefinitions%2F" + item.policyID} target="_blank" rel="noopener noreferrer">
+                    <Icon iconName="OpenInNewWindow" style={{ marginRight: '4px', fontSize: '14px' }} aria-label="Open in new tab" />
+                    See Docs
+                </Link>
+            ),
+        },
+    ];
+
+    const onRenderDetailsHeader = (headerProps, defaultRender) => {
+        if (!headerProps || !defaultRender) {
+            return null;
+        }
+        return (
+            <Sticky isScrollSynced stickyPosition={StickyPositionType.Header}>
+                {defaultRender({
+                    ...headerProps,
+                    styles: {
+                        root: {
+                            height: '50px',
+                            selectors: {
+                                '.ms-DetailsHeader-cell': {
+                                    whiteSpace: 'normal',
+                                    textOverflow: 'clip',
+                                    lineHeight: 'normal',
+                                    height: '50px',
+                                },
+                                '.ms-DetailsHeader-cellTitle': {
+                                    height: '100%',
+                                    alignItems: 'center',
+                                },
+                            },
+                        },
+                    },
+                })}
+            </Sticky>
+        );
+    };
+
+    const onColumnClick = (ev, column) => {
+        let groupedArray;
+        const sortableColumn = column;
+        if (sortableColumn.key === 'control') {
+            setIsControlDescending(!isControlDescending);
+            const reversedItems = items.reverse();
+            if (props.framework === "NIST_SP_800-53_R4") {
+                groupedArray = groupAndSortNIST(reversedItems, isControlDescending);
+            } else if (props.framework === "CIS_Azure_2.0.0") {
+                groupedArray = groupAndSortCIS(reversedItems, isControlDescending);
+            } else {
+                groupedArray = groupAndSortPCI(reversedItems, isControlDescending);
+            }
+            setItems(reversedItems);
+            setGroupedItems(groupedArray);
+        }
+    }
+
+    const sanitizeControlID = (controlId) => {
+        const controlIdWithoutParentheses = controlId.replace(/\([^)]*\)/g, '');
+        return controlIdWithoutParentheses.split('|')[0].trim();
+    };
+
+    const groupAndSortNIST = (sortedItems, descending) => {
+        const groupedItems = sortedItems.reduce((groups, item) => {
+            const controlId = sanitizeControlID(item.control).trim();
+            if (!groups[controlId]) {
+                groups[controlId] = [];
+            }
+            groups[controlId].push(item);
+            return groups;
+        }, {});
+
+        const groupedArray = Object.keys(groupedItems).map((key) => ({
+            key,
+            name: key,
+            startIndex: sortedItems.indexOf(groupedItems[key][0]),
+            count: groupedItems[key].length,
+            isCollapsed: false,
+        }));
+
+        groupedArray.sort((a, b) => {
+            const [alphaA, numA] = [a.name.match(/[A-Za-z]+/)[0], parseInt(a.name.match(/\d+/)[0], 10)];
+            const [alphaB, numB] = [b.name.match(/[A-Za-z]+/)[0], parseInt(b.name.match(/\d+/)[0], 10)];
+
+            return alphaA !== alphaB ? alphaA.localeCompare(alphaB) : numA - numB;
+        });
+
+        if (descending) {
+            groupedArray.reverse();
+        }
+
+        return groupedArray;
+    };
+
+    const groupAndSortCIS = (sortedItems, descending) => {
+        const groupedItems = sortedItems.reduce((groups, item) => {
+            const controlId = sanitizeControlID(item.control).trim();
+            if (!groups[controlId]) {
+                groups[controlId] = [];
+            }
+            groups[controlId].push(item);
+            return groups;
+        }, {});
+
+        const groupedArray = Object.keys(groupedItems).map((key) => ({
+            key,
+            name: key,
+            startIndex: sortedItems.indexOf(groupedItems[key][0]),
+            count: groupedItems[key].length,
+            isCollapsed: false,
+        }));
+
+        groupedArray.sort((a, b) => {
+            const [alphaA, numA] = [a.name.match(/[A-Za-z]+/)[0], parseInt(a.name.match(/\d+/)[0], 10)];
+            const [alphaB, numB] = [b.name.match(/[A-Za-z]+/)[0], parseInt(b.name.match(/\d+/)[0], 10)];
+
+            return alphaA !== alphaB
+                ? alphaA.localeCompare(alphaB)
+                : (!descending ? numA - numB : numB - numA);
+
+        });
+        return groupedArray
+    }
+
+    const groupAndSortPCI = (sortedItems, descending) => {
+        const groupedItems = sortedItems.reduce((groups, item) => {
+            const controlIdArray = sanitizeControlID(item.control).split('.');
+            const controlId = controlIdArray.slice(0, 2).join('.');
+            let groupHeaderText
+            if (controlIdArray.length === 3) {
+                groupHeaderText = `${controlId}: ${controlIdArray.slice(2).join('. ').substring(3)}`;
+            } else {
+                groupHeaderText = `${controlId}: ${controlIdArray.slice(2).join('. ').substring(6)}`;
+            }
+
+            if (!groups[controlId]) {
+                groups[controlId] = {
+                    items: [],
+                    groupHeaderText,
+                };
+            }
+            groups[controlId].items.push(item);
+            return groups;
+        }, {});
+
+        const groupedArray = Object.keys(groupedItems).map((key) => ({
+            key,
+            name: groupedItems[key].groupHeaderText,
+            startIndex: sortedItems.indexOf(groupedItems[key].items[0]),
+            count: groupedItems[key].items.length,
+            isCollapsed: false,
+        }));
+
+        groupedArray.sort((a, b) => {
+            const controlIDA = sanitizeControlID(a.name).split('.').map(part => parseInt(part, 10));
+            const controlIDB = sanitizeControlID(b.name).split('.').map(part => parseInt(part, 10));
+
+            for (let i = 0; i < Math.min(controlIDA.length, controlIDB.length); i++) {
+                const numA = controlIDA[i];
+                const numB = controlIDB[i];
+
+                return (!descending ? 1 : -1) * (numA - numB);
+            }
+            return controlIDA.length - controlIDB.length;
+        });
+        return groupedArray;
+    }
+
+    const nistTableLoad = (flattenedData) => {
+        let sortedItems = flattenedData.sort((a, b) => {
+            const numA = parseInt(sanitizeControlID(a.control).match(/\d+/)[0], 10);
+            const numB = parseInt(sanitizeControlID(b.control).match(/\d+/)[0], 10);
+
+            if (numA < numB) {
+                return -1;
+            } else if (numA > numB) {
+                return 1;
+            } else {
+                return sanitizeControlID(a.control).localeCompare(sanitizeControlID(b.control));
+            }
+        });
+        setItems(sortedItems);
+        setGroupedItems(groupAndSortNIST(sortedItems, false));
+    }
+
+    const pciTableLoad = (flattenedData) => {
+        let sortedItems = flattenedData.sort((a, b) => {
+            const controlIDA = sanitizeControlID(a.control).split('.').map(part => parseInt(part, 10));
+            const controlIDB = sanitizeControlID(b.control).split('.').map(part => parseInt(part, 10));
+
+            for (let i = 0; i < Math.min(controlIDA.length, controlIDB.length); i++) {
+                const numA = controlIDA[i];
+                const numB = controlIDB[i];
+
+                if (numA < numB) {
+                    return -1;
+                } else if (numA > numB) {
+                    return 1;
+                }
+            }
+            return controlIDA.length - controlIDB.length;
+        });
+        setItems(sortedItems);
+        setGroupedItems(groupAndSortPCI(sortedItems, false));
+    };
+
+    const cisTableLoad = (flattenedData) => {
+        let sortedItems = flattenedData.sort((a, b) => {
+            const partsA = sanitizeControlID(a.control).split('.').map(part => isNaN(part) ? part : parseInt(part, 10));
+            const partsB = sanitizeControlID(b.control).split('.').map(part => isNaN(part) ? part : parseInt(part, 10));
+
+            for (let i = 0; i < Math.max(partsA.length, partsB.length); i++) {
+                const partA = partsA[i] || 0;
+                const partB = partsB[i] || 0;
+
+                if (partA < partB) {
+                    return -1;
+                } else if (partA > partB) {
+                    return 1;
+                }
+            }
+            return sanitizeControlID(a.control).localeCompare(sanitizeControlID(b.control));
+        });
+    }
+
+    useEffect(() => {
+        const handleResize = () => {
+            setIsSmallScreen(window.innerWidth < 1300);
+        };
+
+        window.addEventListener('resize', handleResize);
+
+        return () => {
+            <div className={isSmallScreen ? classNames.scrollable : ''}></div>
+            window.removeEventListener('resize', handleResize);
+        };
+    }, []);
+
+    useEffect(() => {
+        const flattenedData = flattenData(props.data);
+        if (props.framework === "NIST_SP_800-53_R4") {
+            nistTableLoad(flattenedData)
+        } else if (props.framework === "CIS_Azure_Benchmark_v2.0.0") {
+            cisTableLoad(flattenedData)
+        } else {
+            pciTableLoad(flattenedData)
+        }
+    }, [props]);
+
+    function flattenData(dataset) {
+        const temp = [];
+        dataset.forEach((row) => {
+            let rowControls = row.properties_metadata.mcsb.frameworkControls;
+            // if there are user-selected control IDs, then only show those controls
+            // this filters out rows that do not have any user-selected IDs in their controls array
+            if (controlIDSet && controlIDSet.size > 0) {
+                rowControls.forEach((control) => {
+                    if (controlIDSet.has(control.split('_').pop())) {
+                        row.properties_metadata.mcsb.automatedPolicyAvailability.forEach((policy) => {
+                            temp.push({
+                                mcsbID: row.properties_metadata.mcsb.mcsbId,
+                                control: `${control.split("_").pop()}: ${props.mapState.get(sanitizeControlID(control.split("_").pop()))}`,
+                                service: row.properties_metadata.offeringName,
+                                category: policy.policyCategory,
+                                policy: policy.policyName,
+                                description: policy.policyDescription,
+                                policyID: policy.policyId,
+                            });
+                        });
+                    }
+                });
+                // otherwise, since the user didn't limit any controls,
+                // find all of the rows that have our chosen framework instead and show them all
+            } else {
+                rowControls.forEach((control) => {
+                    if (control.includes(props.framework)) {
+                        row.properties_metadata.mcsb.automatedPolicyAvailability.forEach((policy) => {
+                            temp.push({
+                                mcsbID: row.properties_metadata.mcsb.mcsbId,
+                                control: `${control.split("_").pop()}: ${props.mapState.get(sanitizeControlID(control.split("_").pop()))}`,
+                                service: row.properties_metadata.offeringName,
+                                category: policy.policyCategory,
+                                policy: policy.policyName,
+                                description: policy.policyDescription,
+                                policyID: policy.policyId,
+                            });
+                        })
+                    }
+                });
+            }
+        });
+        return temp;
+    }
+
+    return (
+        <div className="cardStyle">
+            <Stack
+                horizontal
+                verticalAlign="center"
+                horizontalAlign="space-between">
+                <h2 className="titleStyle">
+                    {"Export to Custom Initiative"}
+                </h2>
+                <IconButton
+                    ariaLabel={isTableExpanded ? "Collapse table" : "Expand table"}
+                    title={isTableExpanded ? "Collapse Compliance Policies by Service table" : "Expand Compliance Policies by Service table"}
+                    iconProps={{ iconName: isTableExpanded ? 'ChevronUp' : 'ChevronDown' }}
+                    onClick={() => setIsTableExpanded(!isTableExpanded)}
+                    styles={{
+                        icon: { color: '#0078D4', fontSize: 15, fontWeight: "bold" },
+                    }}
+                />
+            </Stack>
+            <Text variant="medium" className="subtitleStyle">
+                {"The policy definitions selected below will be added to the custom initiative file."}
+            </Text>
+
+            {isTableExpanded ? (
+                <div className={isSmallScreen ? classNames.scrollable : ''}>
+                    {items.length > 0 ? (
+                        <>
+                            <p>
+                                {/* Count of selected rows: <strong>{selectedKeys.current.length}</strong> */}
+                            </p>
+                            <DetailsList
+                                setKey="multiple"
+                                items={items}
+                                columns={columns}
+                                onColumnHeaderClick={onColumnClick}
+                                selectionMode={SelectionMode.multiple}
+                                // selectionPreservedOnEmptyClick
+                                selection={selection}
+                                onItemInvoked={onItemInvoked}
+                                onRenderDetailsHeader={onRenderDetailsHeader}
+                                onRenderRow={(props, defaultRender) => {
+                                    if (!props) return null;
+
+                                    props.styles = {
+                                        cell: {
+                                            height: 65,
+                                            whiteSpace: 'normal',
+                                            lineHeight: '1.69',
+                                            fontSize: '14.1px',
+                                            fontFamily: 'SegoeUI-Regular-final, -apple-system, BlinkMacSystemFont, \'Segoe UI\', Roboto, Oxygen, Ubuntu, Cantarell, \'Fira Sans\', \'Droid Sans\', \'Helvetica Neue\', sans-serif',
+                                        },
+                                        root: {
+                                            height: 70,
+                                        },
+                                        checkCell: {
+                                            height: 66,
+                                        },
+                                    };
+
+                                    return defaultRender ? defaultRender(props) : <></>;
+                                }}
+                                groups={groupedItems}
+                                layoutMode={DetailsListLayoutMode.justified}
+                                styles={gridStyles}
+                                focusZoneProps={focusZoneProps}
+                                selectionZoneProps={{
+                                    className: classNames.selectionZone,
+                                }}
+                                constrainMode={ConstrainMode.unconstrained}
+                            />
+                        </>
+                    ) : (
+                        <TableStates type="Policy" variant="EmptyLoad" />
+                    )}
+                </div>
+            ) : null}
+            <PoliciesModal isLightDismiss isOpen={isModalOpen} onClose={closeModal} rowData={modalData} />
+        </div>
+    );
+};
+
+export default INITIATIVES;
