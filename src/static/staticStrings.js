@@ -6,7 +6,8 @@ export const appText = {
   disclaimer1: `Microsoft is responsible for the security of its cloud infrastructure and provides additional security controls which customers can enable and/or configure to further customize the Microsoft Cloud’s world-class security. The customer is responsible for configuring applications’ technical controls within the Microsoft Cloud, including but not limited to managing access controls, setting data protections, and complying with regulatory requirements that are applicable to the customer. The Microsoft Cloud provides a number of technical capabilities to support customers in their regulatory compliance journey.`,
   disclaimer2: 'This tool helps illustrate how customers can leverage, enable, and configure various features and capabilities in support of achieving their regulatory requirements. It is the customer’s responsibility to determine whether these technical capabilities, if properly employed, meet their compliance needs.',
   disclaimer3: 'MICROSOFT MAKES NO WARRANTY THAT THE DATA AND CONTENT PROVIDED AS PART OF THE PROGRAMMATIC COMPLIANCE TOOL IS ACCURATE, UP-TO-DATE, OR COMPLETE.',
-  healthy: 'Programmatic Compliance site host is alive and well 🌼'
+  healthy: 'Programmatic Compliance site host is alive and well 🌼',
+  unhealthy: '🚨 Programmatic Compliance needs repair. Please try again later! 🚨'
 };
 
 export const apiText = {
