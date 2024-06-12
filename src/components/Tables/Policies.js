@@ -29,6 +29,7 @@ const POLICY = (props) => {
   const [modalData, setModalData] = useState({});
   const [isTableExpanded, setIsTableExpanded] = useState(true);
   const [isControlDescending, setIsControlDescending] = useState(true);
+  const [isMCSBDescending, setIsMCSBDescending] = useState(true);
   const [isSmallScreen, setIsSmallScreen] = useState(window.innerWidth <= 1300);
 
   const columns = [
@@ -87,6 +88,9 @@ const POLICY = (props) => {
       minWidth: 175,
       maxWidth: 175,
       isResizable: true,
+      isSorted: true,
+      isSortedDescending: isMCSBDescending,
+      isSortable: true,
     },
     {
       key: 'service',
@@ -206,15 +210,93 @@ const POLICY = (props) => {
     if (sortableColumn.key === 'control') {
       setIsControlDescending(!isControlDescending);
       const reversedItems = items.reverse();
-      if (props.framework === "NIST_SP_800-53_R4") {
-        groupedArray = groupAndSortNIST(reversedItems, isControlDescending);
+      if (props.framework === "NIST_SP_800-53_R4") { // TODO: make these sorts into functions
+        let sortedItems = items.sort((a, b) => {
+          const getNumericParts = (str) => str.match(/\d+/g).map(Number) || [0];
+
+          const [alphaA, numsA] = [a.control.match(/[A-Za-z]+/)[0], getNumericParts(a.control)];
+          const [alphaB, numsB] = [b.control.match(/[A-Za-z]+/)[0], getNumericParts(b.control)];
+
+          for (let i = 0; i < Math.max(numsA.length, numsB.length); i++) {
+            const diff = numsA[i] - numsB[i];
+            if (diff !== 0) {
+              return diff;
+            }
+          }
+          return alphaA.localeCompare(alphaB);
+        });
+        if (isControlDescending) {
+          sortedItems = sortedItems.reverse();
+        }
+        groupedArray = groupAndSortNIST(sortedItems, isControlDescending);
       } else if (props.framework === "CIS_Azure_2.0.0") {
-        groupedArray = groupAndSortCIS(reversedItems, isControlDescending);
+        let sortedItems = items.sort((a, b) => {
+          const partsA = sanitizeControlID(a.control).split('.').map(part => isNaN(part) ? part : parseInt(part, 10));
+          const partsB = sanitizeControlID(b.control).split('.').map(part => isNaN(part) ? part : parseInt(part, 10));
+    
+          for (let i = 0; i < Math.max(partsA.length, partsB.length); i++) {
+            const partA = partsA[i] || 0;
+            const partB = partsB[i] || 0;
+    
+            if (partA < partB) {
+              return -1;
+            } else if (partA > partB) {
+              return 1;
+            }
+          }
+          return sanitizeControlID(a.control).localeCompare(sanitizeControlID(b.control));
+        });
+        if (isControlDescending) {
+          sortedItems = sortedItems.reverse();
+        }
+        groupedArray = groupAndSortCIS(sortedItems, isControlDescending);
       } else {
-        groupedArray = groupAndSortPCI(reversedItems, isControlDescending);
+        let sortedItems = items.sort((a, b) => {
+          const controlIDA = sanitizeControlID(a.control).split('.').map(part => parseInt(part, 10));
+          const controlIDB = sanitizeControlID(b.control).split('.').map(part => parseInt(part, 10));
+    
+          for (let i = 0; i < Math.min(controlIDA.length, controlIDB.length); i++) {
+            const numA = controlIDA[i];
+            const numB = controlIDB[i];
+    
+            if (numA < numB) {
+              return -1;
+            } else if (numA > numB) {
+              return 1;
+            }
+          }
+          return controlIDA.length - controlIDB.length;
+        });
+        if (isControlDescending) {
+          sortedItems = sortedItems.reverse();
+        }
+        groupedArray = groupAndSortPCI(sortedItems, isControlDescending);
       }
       setItems(reversedItems);
       setGroupedItems(groupedArray);
+    }
+    if (sortableColumn.key === 'mcsbID') {
+      setIsMCSBDescending(!isMCSBDescending);
+      let sortedItems = items.sort((a, b) => {
+        const getNumericParts = (str) => str.match(/\d+/g).map(Number) || [0];
+        const [alphaA, numsA] = [a.mcsbID.match(/[A-Za-z]+/)[0], getNumericParts(a.mcsbID)];
+        const [alphaB, numsB] = [b.mcsbID.match(/[A-Za-z]+/)[0], getNumericParts(b.mcsbID)];
+
+        if (alphaA.localeCompare(alphaB) !== 0) {
+          return alphaA.localeCompare(alphaB);
+        }
+        for (let i = 0; i < Math.max(numsA.length, numsB.length); i++) {
+          const diff = numsA[i] - numsB[i];
+          if (diff !== 0) {
+            return diff;
+          }
+        }
+      });
+      if (isMCSBDescending) {
+        sortedItems = sortedItems.reverse();
+      }
+      setItems(sortedItems);
+      setGroupedItems([])
     }
   }
 
@@ -509,48 +591,88 @@ const POLICY = (props) => {
       {isTableExpanded ? (
         <div className={isSmallScreen ? classNames.scrollable : ''}>
           {items.length > 0 ? (
-            <DetailsList
-              items={items}
-              columns={columns}
-              onColumnHeaderClick={onColumnClick}
-              selectionMode={SelectionMode.none}
-              onItemInvoked={onItemInvoked}
-              onRenderDetailsHeader={onRenderDetailsHeader}
-              onRenderRow={(props, defaultRender) => {
-                if (!props) return null;
+            groupedItems && groupedItems.length > 0 ? (
+              <DetailsList
+                items={items}
+                columns={columns}
+                onColumnHeaderClick={onColumnClick}
+                selectionMode={SelectionMode.none}
+                onItemInvoked={onItemInvoked}
+                onRenderDetailsHeader={onRenderDetailsHeader}
+                onRenderRow={(props, defaultRender) => {
+                  if (!props) return null;
 
-                props.styles = {
-                  cell: {
-                    height: 65,
-                    whiteSpace: 'normal',
-                    lineHeight: '1.69',
-                    fontSize: '14.1px',
-                    fontFamily: 'SegoeUI-Regular-final, -apple-system, BlinkMacSystemFont, \'Segoe UI\', Roboto, Oxygen, Ubuntu, Cantarell, \'Fira Sans\', \'Droid Sans\', \'Helvetica Neue\', sans-serif',
-                  },
-                  root: {
-                    height: 70,
-                  },
-                  checkCell: {
-                    height: 66,
-                  },
-                };
+                  props.styles = {
+                    cell: {
+                      height: 65,
+                      whiteSpace: 'normal',
+                      lineHeight: '1.69',
+                      fontSize: '14.1px',
+                      fontFamily: 'SegoeUI-Regular-final, -apple-system, BlinkMacSystemFont, \'Segoe UI\', Roboto, Oxygen, Ubuntu, Cantarell, \'Fira Sans\', \'Droid Sans\', \'Helvetica Neue\', sans-serif',
+                    },
+                    root: {
+                      height: 70,
+                    },
+                    checkCell: {
+                      height: 66,
+                    },
+                  };
 
-                return defaultRender ? defaultRender(props) : <></>;
-              }}
-              groups={groupedItems}
-              layoutMode={DetailsListLayoutMode.justified}
-              styles={gridStyles}
-              focusZoneProps={focusZoneProps}
-              selectionZoneProps={{
-                className: classNames.selectionZone,
-              }}
-              constrainMode={ConstrainMode.unconstrained}
-            />
+                  return defaultRender ? defaultRender(props) : <></>;
+                }}
+                groups={groupedItems}
+                layoutMode={DetailsListLayoutMode.justified}
+                styles={gridStyles}
+                focusZoneProps={focusZoneProps}
+                selectionZoneProps={{
+                  className: classNames.selectionZone,
+                }}
+                constrainMode={ConstrainMode.unconstrained}
+              />
+            ) : (
+              <DetailsList
+                items={items}
+                columns={columns}
+                onColumnHeaderClick={onColumnClick}
+                selectionMode={SelectionMode.none}
+                onItemInvoked={onItemInvoked}
+                onRenderDetailsHeader={onRenderDetailsHeader}
+                onRenderRow={(props, defaultRender) => {
+                  if (!props) return null;
+
+                  props.styles = {
+                    cell: {
+                      height: 65,
+                      whiteSpace: 'normal',
+                      lineHeight: '1.69',
+                      fontSize: '14.1px',
+                      fontFamily: 'SegoeUI-Regular-final, -apple-system, BlinkMacSystemFont, \'Segoe UI\', Roboto, Oxygen, Ubuntu, Cantarell, \'Fira Sans\', \'Droid Sans\', \'Helvetica Neue\', sans-serif',
+                    },
+                    root: {
+                      height: 70,
+                    },
+                    checkCell: {
+                      height: 66,
+                    },
+                  };
+
+                  return defaultRender ? defaultRender(props) : <></>;
+                }}
+                layoutMode={DetailsListLayoutMode.justified}
+                styles={gridStyles}
+                focusZoneProps={focusZoneProps}
+                selectionZoneProps={{
+                  className: classNames.selectionZone,
+                }}
+                constrainMode={ConstrainMode.unconstrained}
+              />
+            )
           ) : (
             <TableStates type="Policy" variant="EmptyLoad" />
           )}
         </div>
       ) : null}
+
       <PoliciesModal isLightDismiss isOpen={isModalOpen} onClose={closeModal} rowData={modalData} />
     </div>
   );
