@@ -7,18 +7,16 @@ const FilterBadges = ({ filterItems, filterType, onRemoveFilter }) => {
   }
 
   return (
-    <div>
-      <p>
-        {filterItems.map((filterItem, index) => (
-          <SelectedFilterLabel
-            key={index}
-            text={filterItem}
-            filterType={filterType}
-            onRemoveFilter={onRemoveFilter}
-          />
-        ))}
-      </p>
-    </div>
+    <>
+      {filterItems.map((filterItem, index) => (
+        <SelectedFilterLabel
+          key={index}
+          text={filterItem}
+          filterType={filterType}
+          onRemoveFilter={onRemoveFilter}
+        />
+      ))}
+    </>
   );
 };
 

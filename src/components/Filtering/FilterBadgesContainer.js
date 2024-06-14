@@ -3,7 +3,7 @@ import FilterBadges from './FilterBadges';
 import { ActionButton } from '@fluentui/react';
 
 const CustomSeparator = () => (
-  <span style={{ fontSize: '18px', paddingLeft: '10px', paddingTop: '27px', color: '#9C9C9C' }}>|</span>
+  <span style={{ fontSize: '18px', paddingLeft: '10px', paddingTop: '4px', color: '#9C9C9C' }}>|</span>
 );
 
 const FilterBadgesContainer = (props) => {
@@ -41,7 +41,7 @@ const FilterBadgesContainer = (props) => {
       {isSmallScreen ? (
         <div style={{ flexWrap: 'wrap', display: 'flex' }}>
           {(sortedSelectedControls.length > 0 || sortedSelectedServices.length > 0) && (
-            <>
+            <div>
               <p style={{
                 display: 'inline-block',
                 padding: '3px',
@@ -52,6 +52,7 @@ const FilterBadgesContainer = (props) => {
                 lineHeight: '20px',
                 textAlign: 'left',
                 marginTop: '25px',
+                marginBottom: '0px',
                 whiteSpace: 'nowrap',
               }}>Filtered by:</p>
               <FilterBadges
@@ -78,18 +79,18 @@ const FilterBadgesContainer = (props) => {
                   fontWeight: '400',
                   lineHeight: '20px',
                   textAlign: 'left',
-                  marginTop: '20px',
+                  marginTop: '2px',
                   whiteSpace: 'nowrap',
                 }}>
                 Clear all filters
               </ActionButton>
-            </>
+            </div>
           )}
         </div>
       ) : (
         <>
           {(sortedSelectedControls.length > 0 || sortedSelectedServices.length > 0) && (
-            <>
+            <div>
               <p style={{
                 display: 'inline-block',
                 padding: '3px',
@@ -100,6 +101,7 @@ const FilterBadgesContainer = (props) => {
                 lineHeight: '20px',
                 textAlign: 'left',
                 marginTop: '25px',
+                marginBottom: '0px',
                 whiteSpace: 'nowrap',
               }}>Filtered by:</p>
               <FilterBadges
@@ -126,12 +128,12 @@ const FilterBadgesContainer = (props) => {
                   fontWeight: '400',
                   lineHeight: '20px',
                   textAlign: 'left',
-                  marginTop: '20px',
+                  marginTop: '2px',
                   whiteSpace: 'nowrap',
                 }}>
                 Clear all filters
               </ActionButton>
-            </>
+            </div>
           )}
         </>
       )}
