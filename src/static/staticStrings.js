@@ -34,4 +34,6 @@ export const frameworks = [
   { key: 'CIS_Azure_2.0.0', text: 'CIS 2.0.0' },
   { key: 'NIST_SP_800-53_R4', text: 'NIST SP 800-53 Rev. 4' },
   { key: 'PCI_DSS_v4.0', text: 'PCI DSS 4.0' },
+  // { key: 'ISO 27001:2013', text: 'ISO 27001' },
+  // { key: 'SOC 2 Type 2', text: 'SOC 2 Type 2' },
 ];

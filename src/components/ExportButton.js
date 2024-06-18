@@ -249,7 +249,7 @@ const ExportButton = ({ services, policyTable, apiData, disabled, acfData, contr
             //     text: 'Custom Initiative',
             //     iconProps: { iconName: 'CustomList' },
             //     onClick: handleExportInitiative,
-            //     disabled: services.length == 0, // only allows exporting to initiative if a service is present, otherwise no policies
+            //     disabled: services.length == 0 || controlIDs.length > 0 // only allows exporting to initiative if services are selected without controls
             // },
         ],
     };
