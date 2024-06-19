@@ -8,7 +8,7 @@ import '../../styles/Tables.css';
 import { gridStyles, focusZoneProps, classNames } from '../../styles/TablesStyles.js';
 import { tableText } from '../../static/staticStrings.js';
 import { sortRows, groupAndSortRows } from '../../utils/tableSortUtils.js';
-import {sanitizeControlID} from '../../utils/controlIdUtils.js';
+import { sanitizeControlID } from '../../utils/controlIdUtils.js';
 
 initializeIcons();
 
@@ -197,7 +197,7 @@ const MCSB = (props) => {
     if (sortableColumn.key === 'control') {
       setIsControlDescending(!isControlDescending);
       const reversedItems = items.reverse();
-      let sortedItems = sortRows(items, isControlDescending, props.framework);
+      let sortedItems = sortRows(items, props.framework);
       if (isControlDescending) {
         sortedItems = sortedItems.reverse();
       }
@@ -274,7 +274,7 @@ const MCSB = (props) => {
   }, []);
 
   const initTableLoad = (flattenedData) => {
-    let sortedItems = sortRows(flattenedData, isControlDescending, props.framework);
+    let sortedItems = sortRows(flattenedData, props.framework);
     setItems(sortedItems);
     setGroupedItems(groupAndSortRows(sortedItems, false, props.framework));
   };
