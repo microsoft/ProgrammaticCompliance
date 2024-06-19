@@ -24,11 +24,10 @@ const INITIATIVES = (props) => {
     };
 
     const [items, setItems] = useState([]);
-    const [groupedItems, setGroupedItems] = useState([]);
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [modalData, setModalData] = useState({});
     const [isTableExpanded, setIsTableExpanded] = useState(true);
-    const [isControlDescending, setIsControlDescending] = useState(true);
+    const [isMCSBDescending, setIsMCSBDescending] = useState(true);
     const [isSmallScreen, setIsSmallScreen] = useState(window.innerWidth <= 1300);
     const [, setRefresh] = useState(true);
     const [selection] = useState(
@@ -63,40 +62,23 @@ const INITIATIVES = (props) => {
     };
 
     const columns = [
-        {
-            key: 'expand',
-            name: '',
-            fieldName: 'expand',
-            minWidth: 12,
-            maxWidth: 12,
-            onRender: (item) => (
-                <div>
-                    <Icon
-                        aria-label="Expand fullscreen"
-                        iconName="ChromeFullScreen"
-                        style={{ cursor: 'pointer', width: "20px", color: '#0078D4', fontSize: '14px' }}
-                        onClick={() => onItemInvoked(item)}
-                    />
-                </div>
-            ),
-        },
-        {
-            key: 'control',
-            name: <>Control ID
-                <TooltipHost
-                    content="Identifier for specific control within the selected regulatory framework"
-                    closeDelay={1000}>
-                    <Icon styles={{ root: { verticalAlign: "bottom", marginLeft: "5px" } }} iconName="info" aria-label="Tooltip" />
-                </TooltipHost>
-            </>,
-            fieldName: 'control',
-            minWidth: 105,
-            maxWidth: 150,
-            isResizable: true,
-            isSorted: true,
-            isSortedDescending: isControlDescending,
-            isSortable: true,
-        },
+        // {
+        //     key: 'expand',
+        //     name: '',
+        //     fieldName: 'expand',
+        //     minWidth: 12,
+        //     maxWidth: 12,
+        //     onRender: (item) => (
+        //         <div>
+        //             <Icon
+        //                 aria-label="Expand fullscreen"
+        //                 iconName="ChromeFullScreen"
+        //                 style={{ cursor: 'pointer', width: "20px", color: '#0078D4', fontSize: '14px' }}
+        //                 onClick={() => onItemInvoked(item)}
+        //             />
+        //         </div>
+        //     ),
+        // },
         {
             key: 'mcsbID',
             name: (
@@ -118,6 +100,9 @@ const INITIATIVES = (props) => {
             minWidth: 175,
             maxWidth: 175,
             isResizable: true,
+            isSorted: true,
+            isSortedDescending: isMCSBDescending,
+            isSortable: true,
         },
         {
             key: 'service',
@@ -173,32 +158,6 @@ const INITIATIVES = (props) => {
             maxWidth: 800,
             isResizable: true,
         },
-        {
-            key: 'policyID',
-            name: <>Reference
-                <TooltipHost
-                    content={
-                        <>
-                            Link to more information about the{" "}
-                            <Link href={"https://learn.microsoft.com/azure/governance/policy/overview"} target="_blank" rel="noopener noreferrer"> Azure Policy</Link>
-                            {" "}used to help measure compliance with a given regulatory framework
-                        </>
-                    }
-                    closeDelay={1000}>
-                    <Icon styles={{ root: { verticalAlign: "bottom", marginLeft: "5px" } }} iconName="info" aria-label="Tooltip" />
-                </TooltipHost>
-            </>,
-            fieldName: 'policyID',
-            minWidth: 90,
-            maxWidth: 90,
-            isResizable: true,
-            onRender: (item) => (
-                <Link href={"https://ms.portal.azure.com/#view/Microsoft_Azure_Policy/PolicyDetailBlade/definitionId/%2Fproviders%2FMicrosoft.Authorization%2FpolicyDefinitions%2F" + item.policyID} target="_blank" rel="noopener noreferrer">
-                    <Icon iconName="OpenInNewWindow" style={{ marginRight: '4px', fontSize: '14px' }} aria-label="Open in new tab" />
-                    See Docs
-                </Link>
-            ),
-        },
     ];
 
     const onRenderDetailsHeader = (headerProps, defaultRender) => {
@@ -232,20 +191,28 @@ const INITIATIVES = (props) => {
     };
 
     const onColumnClick = (ev, column) => {
-        let groupedArray;
         const sortableColumn = column;
-        if (sortableColumn.key === 'control') {
-            setIsControlDescending(!isControlDescending);
-            const reversedItems = items.reverse();
-            if (props.framework === "NIST_SP_800-53_R4") {
-                groupedArray = groupAndSortNIST(reversedItems, isControlDescending);
-            } else if (props.framework === "CIS_Azure_2.0.0") {
-                groupedArray = groupAndSortCIS(reversedItems, isControlDescending);
-            } else {
-                groupedArray = groupAndSortPCI(reversedItems, isControlDescending);
+        if (sortableColumn.key === 'mcsbID') {
+            setIsMCSBDescending(!isMCSBDescending);
+            let sortedItems = items.sort((a, b) => {
+                const getNumericParts = (str) => str.match(/\d+/g).map(Number) || [0];
+                const [alphaA, numsA] = [a.mcsbID.match(/[A-Za-z]+/)[0], getNumericParts(a.mcsbID)];
+                const [alphaB, numsB] = [b.mcsbID.match(/[A-Za-z]+/)[0], getNumericParts(b.mcsbID)];
+
+                if (alphaA.localeCompare(alphaB) !== 0) {
+                    return alphaA.localeCompare(alphaB);
+                }
+                for (let i = 0; i < Math.max(numsA.length, numsB.length); i++) {
+                    const diff = numsA[i] - numsB[i];
+                    if (diff !== 0) {
+                        return diff;
+                    }
+                }
+            });
+            if (isMCSBDescending) {
+                sortedItems = sortedItems.reverse();
             }
-            setItems(reversedItems);
-            setGroupedItems(groupedArray);
+            setItems(sortedItems);
         }
     }
 
@@ -254,168 +221,33 @@ const INITIATIVES = (props) => {
         return controlIdWithoutParentheses.split('|')[0].trim();
     };
 
-    const groupAndSortNIST = (sortedItems, descending) => {
-        const groupedItems = sortedItems.reduce((groups, item) => {
-            const controlId = sanitizeControlID(item.control).trim();
-            if (!groups[controlId]) {
-                groups[controlId] = [];
-            }
-            groups[controlId].push(item);
-            return groups;
-        }, {});
-
-        const groupedArray = Object.keys(groupedItems).map((key) => ({
-            key,
-            name: key,
-            startIndex: sortedItems.indexOf(groupedItems[key][0]),
-            count: groupedItems[key].length,
-            isCollapsed: false,
-        }));
-
-        groupedArray.sort((a, b) => {
-            const [alphaA, numA] = [a.name.match(/[A-Za-z]+/)[0], parseInt(a.name.match(/\d+/)[0], 10)];
-            const [alphaB, numB] = [b.name.match(/[A-Za-z]+/)[0], parseInt(b.name.match(/\d+/)[0], 10)];
-
-            return alphaA !== alphaB ? alphaA.localeCompare(alphaB) : numA - numB;
-        });
-
-        if (descending) {
-            groupedArray.reverse();
-        }
-
-        return groupedArray;
-    };
-
-    const groupAndSortCIS = (sortedItems, descending) => {
-        const groupedItems = sortedItems.reduce((groups, item) => {
-            const controlId = sanitizeControlID(item.control).trim();
-            if (!groups[controlId]) {
-                groups[controlId] = [];
-            }
-            groups[controlId].push(item);
-            return groups;
-        }, {});
-
-        const groupedArray = Object.keys(groupedItems).map((key) => ({
-            key,
-            name: key,
-            startIndex: sortedItems.indexOf(groupedItems[key][0]),
-            count: groupedItems[key].length,
-            isCollapsed: false,
-        }));
-
-        groupedArray.sort((a, b) => {
-            const [alphaA, numA] = [a.name.match(/[A-Za-z]+/)[0], parseInt(a.name.match(/\d+/)[0], 10)];
-            const [alphaB, numB] = [b.name.match(/[A-Za-z]+/)[0], parseInt(b.name.match(/\d+/)[0], 10)];
-
-            return alphaA !== alphaB
-                ? alphaA.localeCompare(alphaB)
-                : (!descending ? numA - numB : numB - numA);
-
-        });
-        return groupedArray
-    }
-
-    const groupAndSortPCI = (sortedItems, descending) => {
-        const groupedItems = sortedItems.reduce((groups, item) => {
-            const controlIdArray = sanitizeControlID(item.control).split('.');
-            const controlId = controlIdArray.slice(0, 2).join('.');
-            let groupHeaderText
-            if (controlIdArray.length === 3) {
-                groupHeaderText = `${controlId}: ${controlIdArray.slice(2).join('. ').substring(3)}`;
-            } else {
-                groupHeaderText = `${controlId}: ${controlIdArray.slice(2).join('. ').substring(6)}`;
-            }
-
-            if (!groups[controlId]) {
-                groups[controlId] = {
-                    items: [],
-                    groupHeaderText,
-                };
-            }
-            groups[controlId].items.push(item);
-            return groups;
-        }, {});
-
-        const groupedArray = Object.keys(groupedItems).map((key) => ({
-            key,
-            name: groupedItems[key].groupHeaderText,
-            startIndex: sortedItems.indexOf(groupedItems[key].items[0]),
-            count: groupedItems[key].items.length,
-            isCollapsed: false,
-        }));
-
-        groupedArray.sort((a, b) => {
-            const controlIDA = sanitizeControlID(a.name).split('.').map(part => parseInt(part, 10));
-            const controlIDB = sanitizeControlID(b.name).split('.').map(part => parseInt(part, 10));
-
-            for (let i = 0; i < Math.min(controlIDA.length, controlIDB.length); i++) {
-                const numA = controlIDA[i];
-                const numB = controlIDB[i];
-
-                return (!descending ? 1 : -1) * (numA - numB);
-            }
-            return controlIDA.length - controlIDB.length;
-        });
-        return groupedArray;
-    }
-
-    const nistTableLoad = (flattenedData) => {
+    const initiativeTableLoad = (flattenedData) => {
         let sortedItems = flattenedData.sort((a, b) => {
-            const numA = parseInt(sanitizeControlID(a.control).match(/\d+/)[0], 10);
-            const numB = parseInt(sanitizeControlID(b.control).match(/\d+/)[0], 10);
-
-            if (numA < numB) {
-                return -1;
-            } else if (numA > numB) {
-                return 1;
-            } else {
-                return sanitizeControlID(a.control).localeCompare(sanitizeControlID(b.control));
+            const getNumericParts = (str) => str.match(/\d+/g).map(Number) || [0];
+            const [alphaA, numsA] = [a.mcsbID.match(/[A-Za-z]+/)[0], getNumericParts(a.mcsbID)];
+            const [alphaB, numsB] = [b.mcsbID.match(/[A-Za-z]+/)[0], getNumericParts(b.mcsbID)];
+    
+            if (alphaA.localeCompare(alphaB) !== 0) {
+                return alphaA.localeCompare(alphaB);
             }
-        });
-        setItems(sortedItems);
-        setGroupedItems(groupAndSortNIST(sortedItems, false));
-    }
-
-    const pciTableLoad = (flattenedData) => {
-        let sortedItems = flattenedData.sort((a, b) => {
-            const controlIDA = sanitizeControlID(a.control).split('.').map(part => parseInt(part, 10));
-            const controlIDB = sanitizeControlID(b.control).split('.').map(part => parseInt(part, 10));
-
-            for (let i = 0; i < Math.min(controlIDA.length, controlIDB.length); i++) {
-                const numA = controlIDA[i];
-                const numB = controlIDB[i];
-
-                if (numA < numB) {
-                    return -1;
-                } else if (numA > numB) {
-                    return 1;
+            for (let i = 0; i < Math.max(numsA.length, numsB.length); i++) {
+                const diff = numsA[i] - numsB[i];
+                if (diff !== 0) {
+                    return diff;
                 }
             }
-            return controlIDA.length - controlIDB.length;
         });
-        setItems(sortedItems);
-        setGroupedItems(groupAndSortPCI(sortedItems, false));
-    };
-
-    const cisTableLoad = (flattenedData) => {
-        let sortedItems = flattenedData.sort((a, b) => {
-            const partsA = sanitizeControlID(a.control).split('.').map(part => isNaN(part) ? part : parseInt(part, 10));
-            const partsB = sanitizeControlID(b.control).split('.').map(part => isNaN(part) ? part : parseInt(part, 10));
-
-            for (let i = 0; i < Math.max(partsA.length, partsB.length); i++) {
-                const partA = partsA[i] || 0;
-                const partB = partsB[i] || 0;
-
-                if (partA < partB) {
-                    return -1;
-                } else if (partA > partB) {
-                    return 1;
-                }
+        // Filter out duplicates
+        sortedItems = sortedItems.reduce((acc, current) => {
+            const x = acc.find(item => item.mcsbID === current.mcsbID);
+            if (!x) {
+                return acc.concat([current]);
+            } else {
+                return acc;
             }
-            return sanitizeControlID(a.control).localeCompare(sanitizeControlID(b.control));
-        });
-    }
+        }, []);
+        setItems(sortedItems);
+    }    
 
     useEffect(() => {
         const handleResize = () => {
@@ -432,13 +264,7 @@ const INITIATIVES = (props) => {
 
     useEffect(() => {
         const flattenedData = flattenData(props.data);
-        if (props.framework === "NIST_SP_800-53_R4") {
-            nistTableLoad(flattenedData)
-        } else if (props.framework === "CIS_Azure_Benchmark_v2.0.0") {
-            cisTableLoad(flattenedData)
-        } else {
-            pciTableLoad(flattenedData)
-        }
+        initiativeTableLoad(flattenedData)
     }, [props]);
 
     function flattenData(dataset) {
@@ -547,7 +373,6 @@ const INITIATIVES = (props) => {
 
                                     return defaultRender ? defaultRender(props) : <></>;
                                 }}
-                                groups={groupedItems}
                                 layoutMode={DetailsListLayoutMode.justified}
                                 styles={gridStyles}
                                 focusZoneProps={focusZoneProps}
