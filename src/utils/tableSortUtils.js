@@ -1,4 +1,4 @@
-import { sanitizeControlID, findLabelByValue } from './controlIdUtils';
+import { sanitizeControlID } from './controlIdUtils';
 
 export const sortRows = (items, framework) => {
     switch (framework) {
@@ -86,7 +86,7 @@ const sortPCI = (items, sanitizeControlID) => {
 
 const groupAndSortNIST = (sortedItems, descending) => {
     const groupedItems = sortedItems.reduce((groups, item) => {
-        const controlId = sanitizeControlID(item.control).split(/[(,:]/)[0].trim();
+        const controlId = sanitizeControlID(item.control).trim();
         if (!groups[controlId]) {
             groups[controlId] = [];
         }
@@ -96,7 +96,7 @@ const groupAndSortNIST = (sortedItems, descending) => {
 
     const groupedArray = Object.keys(groupedItems).map((key) => ({
         key,
-        name: key + ": " + findLabelByValue(key),
+        name: key,
         startIndex: sortedItems.indexOf(groupedItems[key][0]),
         count: groupedItems[key].length,
         isCollapsed: false,
