@@ -3,7 +3,6 @@ import { DropdownMenuItemType, Dropdown } from '@fluentui/react';
 import ACF from '../Tables/ACF.js';
 import MCSB from '../Tables/MCSB.js';
 import Policies from '../Tables/Policies.js';
-import Initiatives from '../Tables/Initiatives.js';
 import TableStates from '../Tables/TableStates.js';
 import FilterBadgesContainer from './FilterBadgesContainer.js';
 import ExportButton from '../ExportButton.js';

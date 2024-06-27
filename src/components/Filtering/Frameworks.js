@@ -103,6 +103,6 @@ const Frameworks = {
             return currentMap
         }
     }
-}
+};
 
 export default Frameworks

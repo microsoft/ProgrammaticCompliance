@@ -42,4 +42,4 @@ export const frameworkStrategyMapping = {
   'NIST_SP_800-53_R4': 'NISTSP80053R4',
   'PCI_DSS_v4.0': 'PCIDSSv4',
   'CIS_Azure_2.0.0': 'CISAzure2'
-}
+};

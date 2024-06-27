@@ -31,4 +31,4 @@ export const prefixExtractor = (control, framework) => {
     return control.split('.')[0];
     }
   }
-}
+};
