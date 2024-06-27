@@ -332,12 +332,12 @@ const POLICY = (props) => {
           horizontal
           verticalAlign="center"
           horizontalAlign="end">
-          <div style={{ marginRight: '30px' }}>  {/* Wrap the Initiatives in a div with margin */}
+          {/* <div style={{ marginRight: '30px' }}>
             <InitiativesPanel
               policyTable={<Initiatives data={props.data} framework={props.framework} controls={props.controls} mapState={props.framework === "NIST_SP_800-53_R4" ? props.nistMap : props.framework === "CIS_Azure_2.0.0" ? props.cisMap : props.framework === "PCI_DSS_v4.0" ? props.pciMap : null} />}
               controlIDs={props.controls}
             />
-          </div>
+          </div> */}
           <IconButton
             ariaLabel={isTableExpanded ? "Collapse table" : "Expand table"}
             title={isTableExpanded ? "Collapse Compliance Policies by Service table" : "Expand Compliance Policies by Service table"}
