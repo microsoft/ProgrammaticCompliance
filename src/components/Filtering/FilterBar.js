@@ -14,12 +14,13 @@ import { allACFs, filteredACFs } from '../../queries/ACF.Query.js';
 import { filteredMCSB } from '../../queries/MCSB.Query.js';
 import { styles, frameworkStyles, selectedFrameworkStyles, serviceStyles, selectedServiceStyles, controlStyles, selectedControlStyles } from '../../styles/DropdownStyles.js';
 import { appText } from '../../static/staticStrings.js';
+import Frameworks from './Frameworks.js';
+import { sanitizeControlID, numberSort, prefixExtractor } from '../../utils/filterUtils.js';
+
 import '../../styles/FilterBar.css';
 import '../../styles/index.css';
 
 import cisDOMAINS from '../../static/cisDomains.json';
-import Frameworks from './Frameworks.js';
-import { sanitizeControlID, numberSort, prefixExtractor } from '../../utils/filterUtils.js';
 
 const FilterBar = ({ azureToken }) => {
   const [error, setError] = useState(null);
@@ -213,7 +214,7 @@ const FilterBar = ({ azureToken }) => {
         })
         .catch(error => {
           console.error('API Error:', error);
-        });
+      });
     }
   }
 
@@ -263,14 +264,14 @@ const FilterBar = ({ azureToken }) => {
             });
           }
           currentControls.sort((a, b) => {
-              return numberSort(a.key, b.key);
+            return numberSort(a.key, b.key);
           });
         });
         setDefaultControls(currentControls);
       })
       .catch(error => {
         console.error('API Error in control IDs:', error);
-      });
+    });
   }
 
   /**
