@@ -13,16 +13,16 @@ export const sortRows = (items, framework) => {
     }
 }
 
-export const groupAndSortRows = (sortedItems, isControlDescending, framework) => {
+export const groupAndSortRows = (sortedItems, isDescending, framework) => {
     switch (framework) {
         case 'NIST_SP_800-53_R4':
-            return groupAndSortNIST(sortedItems, isControlDescending);
+            return groupAndSortNIST(sortedItems, isDescending);
         case 'CIS_Azure_2.0.0':
-            return groupAndSortCIS(sortedItems, isControlDescending, sanitizeControlID);
+            return groupAndSortCIS(sortedItems, isDescending, sanitizeControlID);
         case 'PCI_DSS_v4.0':
-            return groupAndSortPCI(sortedItems, isControlDescending, sanitizeControlID);
+            return groupAndSortPCI(sortedItems, isDescending, sanitizeControlID);
         default:
-            return sortedItems;
+            return groupAndSortMCSB(sortedItems, isDescending);
     }
 }
 
@@ -82,6 +82,37 @@ const sortPCI = (items, sanitizeControlID) => {
         return controlIDA.length - controlIDB.length;
     });
     return sortedItems;
+};
+
+const groupAndSortMCSB = (sortedItems, descending) => {
+    const groupedItems = sortedItems.reduce((groups, item) => {
+        const mcsbID = sanitizeControlID(item.mcsbID).trim();
+        if (!groups[mcsbID]) {
+            groups[mcsbID] = [];
+        }
+        groups[mcsbID].push(item);
+        return groups;
+    }, {});
+
+    const groupedArray = Object.keys(groupedItems).map((key) => ({
+        key,
+        name: key,
+        startIndex: sortedItems.indexOf(groupedItems[key][0]),
+        count: groupedItems[key].length,
+        isCollapsed: false,
+    }));
+
+    groupedArray.sort((a, b) => {
+        const [alphaA, numA] = [a.name.match(/[A-Za-z]+/)[0], parseInt(a.name.match(/\d+/)[0], 10)];
+        const [alphaB, numB] = [b.name.match(/[A-Za-z]+/)[0], parseInt(b.name.match(/\d+/)[0], 10)];
+
+        return alphaA !== alphaB ? alphaA.localeCompare(alphaB) : numA - numB;
+    });
+
+    if (descending) {
+        groupedArray.reverse();
+    }
+    return groupedArray;
 };
 
 const groupAndSortNIST = (sortedItems, descending) => {
