@@ -3,11 +3,12 @@ import { DropdownMenuItemType, Dropdown } from '@fluentui/react';
 import ACF from '../Tables/ACF.js';
 import MCSB from '../Tables/MCSB.js';
 import Policies from '../Tables/Policies.js';
+import Initiatives from '../Tables/Initiatives.js';
 import TableStates from '../Tables/TableStates.js';
 import FilterBadgesContainer from './FilterBadgesContainer.js';
 import ExportButton from '../ExportButton.js';
 import SearchableDropdown from './SearchableDropdown.js';
-import { frameworks, apiText } from '../../static/staticStrings.js';
+import { frameworks, apiText, frameworkStrategyMapping } from '../../static/staticStrings.js';
 import { cisDomains, allDomains, allServices, allControls } from '../../queries/Filters.Query.js';
 import { allACFs, filteredACFs } from '../../queries/ACF.Query.js';
 import { filteredMCSB } from '../../queries/MCSB.Query.js';
@@ -17,6 +18,8 @@ import '../../styles/FilterBar.css';
 import '../../styles/index.css';
 
 import cisDOMAINS from '../../static/cisDomains.json';
+import Frameworks from './Frameworks.js';
+import { sanitizeControlID, numberSort, prefixExtractor } from '../../utils/filterUtils.js';
 
 const FilterBar = ({ azureToken }) => {
   const [error, setError] = useState(null);
@@ -53,44 +56,6 @@ const FilterBar = ({ azureToken }) => {
 
   // UTILITY FUNCTIONS
   /**
-   * @param {string} controlId 
-   * @returns the controlID string without the control name (e.g. AC-2: Account Management -> AC-2)
-   */
-  const sanitizeControlID = (controlId) => {
-    const prefixMatch = controlId.match(/^[^:()]+/);
-    const prefix = prefixMatch ? prefixMatch[0].trim() : '';
-    return prefix;
-  };
-
-  /**
-   * @param {string} a 
-   * @param {string} b 
-   * @returns AC before AU, AU before SC
-   */
-  const customSort = (a, b) => {
-    const splitA = a.match(/([a-zA-Z]+)(-?\d*)/);
-    const splitB = b.match(/([a-zA-Z]+)(-?\d*)/);
-
-    if (splitA[1] < splitB[1]) return -1;
-    if (splitA[1] > splitB[1]) return 1;
-
-    const numA = parseInt(splitA[2]) || 0;
-    const numB = parseInt(splitB[2]) || 0;
-    return numB - numA;
-  };
-
-  /**
-   * @param {string} a 
-   * @param {string} b 
-   * @returns 1.2 before 2.1, 2.1 before 10.1
-   */
-  const numberSort = (a, b) => {
-    const numA = parseFloat(a) || 0;
-    const numB = parseFloat(b) || 0;
-    return numA - numB;
-  };
-
-  /**
    * @param {string} seekControl the control key to count the total for
    * @returns the total number of controls with the same prefix as seekControl
    */
@@ -124,20 +89,6 @@ const FilterBar = ({ azureToken }) => {
       };
     });
   };
-
-  /**
-   * @param {string} control to extract the prefix from
-   * @returns "AC", "AU" etc. if NIST, "1.1", "2.1" etc. if PCI or CIS
-   */
-  const prefixExtractor = (control) => {
-    if (control) {
-      if (selectedFramework === "NIST_SP_800-53_R4") {
-        return control.split('-')[0];
-      } else {
-        return control.split('.')[0];
-      }
-    }
-  }
 
   // Sanity checks if the mcsb data is malformed / fields cannot be found, if errors, displays user-friendly error message
   const checkMCSBDataValid = async () => {
@@ -234,9 +185,7 @@ const FilterBar = ({ azureToken }) => {
    * Populates the domain filter dropdown depending on what framework is selected
    */
   const populateDomains = (framework) => {
-    let controlID;
-    let key;
-    let text;
+    let uniqueDomains;
     if (selectedFramework === "CIS_Azure_2.0.0") { // @TODO Reconnect with below API call once CIS domain names are fixed
       // apiText.requestBody.query = cisDomains();
       let currentDomains = cisDOMAINS.map(domain => {
@@ -259,29 +208,7 @@ const FilterBar = ({ azureToken }) => {
           return response.json();
         })
         .then(result => {
-          const data = result.data;
-          const domainMap = {};
-          data.forEach(item => {
-            if (framework === "NIST_SP_800-53_R4") {
-              controlID = item.ControlID.split('_').pop().split('-')[0];
-              key = controlID;
-              text = `${controlID}: ${item.ControlDomain}`;
-            } else if (framework === "PCI_DSS_v4.0") {
-              controlID = item.ControlDomain.split(':')[0].split(' ')[1];
-              if (controlID.startsWith('0')) {
-                controlID = controlID.substring(1);
-              }
-              key = controlID;
-              text = `${controlID}: ${item.ControlDomain.split(':')[1]}`;
-            } else if (framework === "CIS_Azure_2.0.0") {
-              key = item.ControlDomain.split(' ')[0];
-              text = `${item.ControlDomain.split(' ')[0]}: ${item.ControlDomain.substring(item.ControlDomain.indexOf(" ") + 1)}`;
-            }
-            if (!domainMap[key]) {
-              domainMap[key] = text;
-            }
-          });
-          const uniqueDomains = Object.values(domainMap).map(text => ({ key: text.split(': ')[0], text }));
+          uniqueDomains = Frameworks[frameworkStrategyMapping[framework]].getUniqueDomains(result.data, framework) 
           setDefaultDomains(uniqueDomains);
         })
         .catch(error => {
@@ -316,55 +243,29 @@ const FilterBar = ({ azureToken }) => {
         const controlKeys = new Set();
         const controlPrefixes = new Set();
         data.forEach(item => {
-          if (framework === "NIST_SP_800-53_R4") {
-            controlID = item.properties.metadataId.replace(/\([^()]*\)/g, '');
-            controlID = controlID.trim().split(' ').pop();
-            const controlPrefix = prefixExtractor(controlID);
-            if (controlPrefix !== currentPrefix && !controlPrefixes.has(controlPrefix)) { // add unique domain headers
+          controlID = Frameworks[frameworkStrategyMapping[framework]].getControlIDForControls(item);
+          const controlPrefix = prefixExtractor(controlID, framework);
+          if (controlPrefix !== currentPrefix && !controlPrefixes.has(controlPrefix)) {
               controlPrefixes.add(controlPrefix)
               currentControls.push({
-                key: `${controlPrefix}`,
-                text: `${controlPrefix}`,
-                itemType: DropdownMenuItemType.Header,
-              });
-              currentPrefix = controlPrefix;
-            }
-            const sanitizedControlID = sanitizeControlID(controlID); // add control IDs with descriptions
-            if (!controlKeys.has(sanitizedControlID)) {
-              controlKeys.add(sanitizedControlID);
-              currentControls.push({
-                key: sanitizedControlID,
-                text: `${sanitizedControlID}: ${item.properties.title}`,
-              });
-            }
-            currentControls.sort((a, b) => { // sort controls and domain headers
-              return customSort(a.key, b.key);
+              key: `${controlPrefix}`,
+              text: `${controlPrefix}`,
+              itemType: DropdownMenuItemType.Header,
             });
-          } else {
-            controlID = item.properties.metadataId.split(' ').pop().trim();
-            const controlPrefix = prefixExtractor(controlID);
-            if (controlPrefix !== currentPrefix && !controlPrefixes.has(controlPrefix)) {
-              controlPrefixes.add(controlPrefix)
-              currentControls.push({
-                key: `${controlPrefix}`,
-                text: `${controlPrefix}`,
-                itemType: DropdownMenuItemType.Header,
-              });
-              currentPrefix = controlPrefix;
-            }
-            if (!controlKeys.has(controlID)) {
+            currentPrefix = controlPrefix;
+          }
+          const sanitizedControlID = Frameworks[frameworkStrategyMapping[framework]].sanitizeControlIDForControls(controlID);
+          if (!controlKeys.has(controlID)) {
               controlKeys.add(controlID);
               currentControls.push({
-                key: controlID,
-                text: `${controlID}: ${item.properties.title}`,
-              });
-            }
+              key: controlID,
+              text: `${sanitizedControlID}: ${item.properties.title}`,
+            });
           }
           currentControls.sort((a, b) => {
-            return numberSort(a.key, b.key);
+              return numberSort(a.key, b.key);
           });
         });
-
         setDefaultControls(currentControls);
       })
       .catch(error => {
@@ -378,7 +279,6 @@ const FilterBar = ({ azureToken }) => {
    * Used during onload to populate control ID values for all frameworks
    */
   const populateControlMaps = (framework) => {
-    let controlID;
     let currentMap = new Map();
     let retryCount = 0;
     apiText.requestBody.query = allControls(framework);
@@ -402,20 +302,7 @@ const FilterBar = ({ azureToken }) => {
         return response.json();
       })
       .then(result => {
-        const data = result.data;
-        data.forEach(item => {
-          if (framework === "NIST_SP_800-53_R4") {
-            if (!item.properties.metadataId.includes("(")) {
-              controlID = item.properties.metadataId.replace(/\([^()]*\)/g, '');
-              controlID = controlID.trim().split(' ').pop();
-              controlID = sanitizeControlID(controlID);
-              currentMap.set(controlID, item.properties.title)
-            }
-          } else {
-            controlID = item.properties.metadataId.split(' ').pop().trim();
-            currentMap.set(controlID, item.properties.title)
-          }
-        });
+        currentMap = Frameworks[frameworkStrategyMapping[framework]].getCurrentMap(result.data)
         if (framework === "NIST_SP_800-53_R4") {
           setNistMap(currentMap);
         } else if (framework === "CIS_Azure_2.0.0") {
@@ -462,12 +349,12 @@ const FilterBar = ({ azureToken }) => {
   // Controls the linked relationship between the control domain and control IDs filters
   useEffect(() => {
     if (controlFocus) {
-      let controlPrefix = prefixExtractor(controlFocus);
+      let controlPrefix = prefixExtractor(controlFocus, selectedFramework);
       let total = 0;
       for (let control of defaultControls) {
         const key = control.key
         if (key) {
-          if (prefixExtractor(control.key) === controlPrefix) {
+          if (prefixExtractor(control.key, selectedFramework) === controlPrefix) {
             total++;
           }
         }
@@ -626,14 +513,14 @@ const FilterBar = ({ azureToken }) => {
           defaultControls.forEach((control) => {
             const key = control.key;
             if (key) {
-              const domainKey = prefixExtractor(key);
+              const domainKey = prefixExtractor(key, selectedFramework);
               if (domainKey === item.key) {
                 newDomainSelectedControls.push(control);
               }
             }
           });
           newDomainSelectedControls.forEach((control) => {
-            let controlPrefix = prefixExtractor(control.key);
+            let controlPrefix = prefixExtractor(control.key, selectedFramework);
             updateControlCount(controlPrefix, false);
           });
           let ndscStrings = [];
@@ -654,14 +541,14 @@ const FilterBar = ({ azureToken }) => {
           defaultControls.forEach((control) => {
             const key = control.key;
             if (key) {
-              const domainKey = prefixExtractor(key);
+              const domainKey = prefixExtractor(key, selectedFramework);
               if (domainKey === item.key) {
                 newDomainSelectedControls.push(control);
               }
             }
           });
           newDomainSelectedControls.forEach((control) => {
-            let controlPrefix = prefixExtractor(control.key);
+            let controlPrefix = prefixExtractor(control.key, selectedFramework);
             updateControlCount(controlPrefix, true);
           });
           for (let control of newDomainSelectedControls.slice(1)) {
@@ -693,7 +580,7 @@ const FilterBar = ({ azureToken }) => {
           return prevSelectedControls.filter((key) => key !== sanitizedKey);
         }
       });
-      let controlPrefix = prefixExtractor(item.key);
+      let controlPrefix = prefixExtractor(item.key, selectedFramework);
       updateControlCount(controlPrefix, item.selected);
       setControlFocus(item.key);
     }
@@ -710,7 +597,7 @@ const FilterBar = ({ azureToken }) => {
       setSelectedControls((prevSelectedControls) => {
         return prevSelectedControls.filter((key) => key !== sanitizedKey);
       });
-      let controlPrefix = prefixExtractor(filterText)
+      let controlPrefix = prefixExtractor(filterText, selectedFramework)
       updateControlCount(controlPrefix, false);
       setControlFocus(filterText);
     }
