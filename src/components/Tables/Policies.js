@@ -240,8 +240,9 @@ const POLICY = (props) => {
       if (isMCSBDescending) {
         sortedItems = sortedItems.reverse();
       }
+      groupedArray = groupAndSortRows(sortedItems, isMCSBDescending, "MCSB_Table");
       setItems(sortedItems);
-      setGroupedItems([])
+      setGroupedItems(groupedArray);
     }
   }
 
