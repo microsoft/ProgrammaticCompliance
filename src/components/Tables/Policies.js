@@ -1,5 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { DetailsList, SelectionMode, DetailsListLayoutMode, Text, Icon, IconButton, Stack, initializeIcons, TooltipHost, Sticky, StickyPositionType, ConstrainMode, Link } from '@fluentui/react';
+import InitiativesPanel from '../InitiativesPanel.js';
+import Initiatives from '../Tables/Initiatives.js';
 
 import PoliciesModal from '../Modals/PoliciesModal.js';
 import TableStates from './TableStates.js';
@@ -33,6 +35,7 @@ const POLICY = (props) => {
   const [isControlDescending, setIsControlDescending] = useState(true);
   const [isMCSBDescending, setIsMCSBDescending] = useState(true);
   const [isSmallScreen, setIsSmallScreen] = useState(window.innerWidth <= 1300);
+  const [selectedValues, setSelectedValues] = useState([]);
 
   const columns = [
     {
@@ -240,8 +243,9 @@ const POLICY = (props) => {
       if (isMCSBDescending) {
         sortedItems = sortedItems.reverse();
       }
+      groupedArray = groupAndSortRows(sortedItems, isMCSBDescending, "MCSB_Table");
       setItems(sortedItems);
-      setGroupedItems([])
+      setGroupedItems(groupedArray);
     }
   }
 
@@ -324,15 +328,26 @@ const POLICY = (props) => {
         <h2 className="titleStyle">
           {tableText.policyTitle}
         </h2>
-        <IconButton
-          ariaLabel={isTableExpanded ? "Collapse table" : "Expand table"}
-          title={isTableExpanded ? "Collapse Compliance Policies by Service table" : "Expand Compliance Policies by Service table"}
-          iconProps={{ iconName: isTableExpanded ? 'ChevronUp' : 'ChevronDown' }}
-          onClick={() => setIsTableExpanded(!isTableExpanded)}
-          styles={{
-            icon: { color: '#0078D4', fontSize: 15, fontWeight: "bold" },
-          }}
-        />
+        <Stack
+          horizontal
+          verticalAlign="center"
+          horizontalAlign="end">
+          <div style={{ marginRight: '30px' }}>  {/* Wrap the Initiatives in a div with margin */}
+            <InitiativesPanel
+              policyTable={<Initiatives data={props.data} framework={props.framework} controls={props.controls} mapState={props.framework === "NIST_SP_800-53_R4" ? props.nistMap : props.framework === "CIS_Azure_2.0.0" ? props.cisMap : props.framework === "PCI_DSS_v4.0" ? props.pciMap : null} />}
+              controlIDs={props.controls}
+            />
+          </div>
+          <IconButton
+            ariaLabel={isTableExpanded ? "Collapse table" : "Expand table"}
+            title={isTableExpanded ? "Collapse Compliance Policies by Service table" : "Expand Compliance Policies by Service table"}
+            iconProps={{ iconName: isTableExpanded ? 'ChevronUp' : 'ChevronDown' }}
+            onClick={() => setIsTableExpanded(!isTableExpanded)}
+            styles={{
+              icon: { color: '#0078D4', fontSize: 15, fontWeight: "bold" },
+            }}
+          />
+        </Stack>
       </Stack>
       <Text variant="medium" className="subtitleStyle">
         {tableText.policyDescription}
