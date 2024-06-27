@@ -262,9 +262,7 @@ const FilterBar = ({ azureToken }) => {
               text: `${sanitizedControlID}: ${item.properties.title}`,
             });
           }
-          currentControls.sort((a, b) => {
-            return numberSort(a.key, b.key);
-          });
+          currentControls = Frameworks[frameworkStrategyMapping[framework]].sortControlIDs(currentControls);
         });
         setDefaultControls(currentControls);
       })
