@@ -11,12 +11,40 @@ export const sanitizeControlID = (controlId) => {
 /**
  * @param {string} a 
  * @param {string} b 
+ * @returns AC before AU, AU before SC
+ */
+export const customSort = (a, b) => {
+  const splitA = a.match(/([a-zA-Z]+)(-?\d*)/);
+  const splitB = b.match(/([a-zA-Z]+)(-?\d*)/);
+
+  if (splitA[1] < splitB[1]) return -1;
+  if (splitA[1] > splitB[1]) return 1;
+
+  const numA = parseInt(splitA[2]) || 0;
+  const numB = parseInt(splitB[2]) || 0;
+  return numB - numA;
+};
+
+/**
+ * @param {string} a 
+ * @param {string} b 
  * @returns 1.2 before 2.1, 2.1 before 10.1
  */
 export const numberSort = (a, b) => {
-  const numA = parseFloat(a) || 0;
-  const numB = parseFloat(b) || 0;
-  return numA - numB;
+  const splitA = a.split('.').map(Number);
+  const splitB = b.split('.').map(Number);
+
+  const maxLength = Math.max(splitA.length, splitB.length);
+
+  for (let i = 0; i < maxLength; i++) {
+    const numA = splitA[i] || 0;
+    const numB = splitB[i] || 0;
+
+    if (numA < numB) return -1;
+    if (numA > numB) return 1;
+  }
+
+  return 0;
 };
 
 /**

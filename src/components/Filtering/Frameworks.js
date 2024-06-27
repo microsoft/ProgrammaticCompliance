@@ -1,4 +1,4 @@
-import { sanitizeControlID } from "../../utils/filterUtils";
+import { customSort, numberSort, sanitizeControlID } from "../../utils/filterUtils";
 
 const Frameworks = {
     NISTSP80053R4: {
@@ -36,6 +36,11 @@ const Frameworks = {
                 }
             });
             return currentMap
+        },
+        sortControlIDs: (currentControls) => {
+            return currentControls.sort((a, b) => {
+                return customSort(a.key, b.key);
+            });
         }
     },
     CISAzure2: {
@@ -66,6 +71,11 @@ const Frameworks = {
                 currentMap.set(controlID, item.properties.title)
             });
             return currentMap
+        },
+        sortControlIDs: (currentControls) => {
+            return currentControls.sort((a, b) => {
+                return numberSort(a.key, b.key);
+            });
         }
     },
     PCIDSSv4: {
@@ -101,6 +111,11 @@ const Frameworks = {
                 currentMap.set(controlID, item.properties.title)
             });
             return currentMap
+        },
+        sortControlIDs: (currentControls) => {
+            return currentControls.sort((a, b) => {
+                return numberSort(a.key, b.key);
+            });
         }
     }
 };
