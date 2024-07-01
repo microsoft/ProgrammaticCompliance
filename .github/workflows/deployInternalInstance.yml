@@ -1,0 +1,61 @@
+name: Deploy to Azure
+
+on:
+  push:
+    branches:
+      - develop
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v2
+      with:
+        ref: feature/wangjulia/internalInstance
+
+    - name: Setup Node.js
+      uses: actions/setup-node@v2
+      with:
+        node-version: '18'
+
+    - name: Setup .env
+      run: |
+        echo REACT_APP_CLIENT_ID=${{ vars.REACT_APP_CLIENT_ID }} >> .env
+        echo REACT_APP_TENANT_ID=${{ vars.REACT_APP_TENANT_ID }} >> .env
+        echo REACT_WEBAPP_URL=${{ vars.REACT_WEBAPP_URL }} >> .env
+        
+    - name: Install dependencies
+      run: npm ci
+
+    - name: Build
+      run: npm run build
+
+    - name: Setup .env.dev in server directory
+      run: |
+        echo CLIENT_SECRET=${{ secrets.CLIENT_SECRET }} >> server/.env.dev
+        echo CLOUD_INSTANCE=${{ vars.CLOUD_INSTANCE }} >> server/.env.dev
+        echo TENANT_ID=${{ vars.TENANT_ID }} >> server/.env.dev
+        echo CLIENT_ID=${{ vars.CLIENT_ID }} >> server/.env.dev
+        echo REDIRECT_URI=${{ vars.REDIRECT_URI }} >> server/.env.dev
+        echo POST_LOGOUT_REDIRECT_URI=${{ vars.POST_LOGOUT_REDIRECT_URI }} >> server/.env.dev
+        echo GRAPH_API_ENDPOINT=${{ vars.GRAPH_API_ENDPOINT }} >> server/.env.dev
+        echo MANAGEMENT_API_ENDPOINT=${{ vars.MANAGEMENT_API_ENDPOINT }} >> server/.env.dev
+
+    - name: Change directory to server
+      run: cd server
+
+    - name: Remove existing deployment.zip from /server
+      run: rm deployment.zip
+
+    - name: Zip /server
+      run: Compress-Archive -Path * -DestinationPath deployment.zip 
+
+    - name: Azure Login
+      uses: Azure/login@v1
+      with:
+        creds: ${{ secrets.AZURE_CREDENTIALS }}
+
+    - name: Deploy to Azure
+      run: |
+        az webapp deployment source config-zip --resource-group Programmatic-Compliance-GH1-WA --name programmatic-compliance-gh1 --src deployment.zip
