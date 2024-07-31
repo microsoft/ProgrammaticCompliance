@@ -202,8 +202,13 @@ const ACF = (props) => {
       if (isACFDescending) {
         sortedItems = sortedItems.reverse();
       }
+      groupedArray = groupAndSortRows(
+        sortedItems,
+        isACFDescending,
+        "ACF_Table"
+      );
       setItems(sortedItems);
-      setGroupedItems([]);
+      setGroupedItems(groupedArray);
     }
   };
 
@@ -266,7 +271,6 @@ const ACF = (props) => {
   // ENTRY POINT
   useEffect(() => {
     const flattenedData = flattenData(props.data);
-    console.log("ACF data: ", flattenedData);
     initTableLoad(flattenedData);
   }, [props.data]);
 

@@ -404,7 +404,6 @@ const MCSB = (props) => {
   // ENTRY POINT
   useEffect(() => {
     let flattenedData = flattenData(props.data);
-    console.log("MCSB data: ", flattenedData);
     initTableLoad(flattenedData);
   }, [props]);
 

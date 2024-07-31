@@ -851,6 +851,7 @@ const FilterBar = ({ azureToken }) => {
                       ? socMap
                       : null
                   }
+                  framework={selectedFramework}
                 />
               </div>
             </div>
