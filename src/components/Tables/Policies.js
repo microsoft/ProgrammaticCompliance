@@ -1,19 +1,36 @@
-import React, { useState, useEffect } from 'react';
-import { DetailsList, SelectionMode, DetailsListLayoutMode, Text, Icon, IconButton, Stack, initializeIcons, TooltipHost, Sticky, StickyPositionType, ConstrainMode, Link } from '@fluentui/react';
+import React, { useState, useEffect } from "react";
+import {
+  DetailsList,
+  SelectionMode,
+  DetailsListLayoutMode,
+  Text,
+  Icon,
+  IconButton,
+  Stack,
+  initializeIcons,
+  TooltipHost,
+  Sticky,
+  StickyPositionType,
+  ConstrainMode,
+  Link,
+} from "@fluentui/react";
 
-import PoliciesModal from '../Modals/PoliciesModal.js';
-import TableStates from './TableStates.js';
+import PoliciesModal from "../Modals/PoliciesModal.js";
+import TableStates from "./TableStates.js";
 
-import '../../styles/Tables.css';
-import { gridStyles, focusZoneProps, classNames } from '../../styles/TablesStyles.js';
-import { tableText } from '../../static/staticStrings.js';
-import { sortRows, groupAndSortRows } from '../../utils/tableSortUtils.js';
-import { sanitizeControlID } from '../../utils/controlIdUtils.js';
+import "../../styles/Tables.css";
+import {
+  gridStyles,
+  focusZoneProps,
+  classNames,
+} from "../../styles/TablesStyles.js";
+import { tableText } from "../../static/staticStrings.js";
+import { sortRows, groupAndSortRows } from "../../utils/tableSortUtils.js";
+import { sanitizeControlID } from "../../utils/controlIdUtils.js";
 
 initializeIcons();
 
 const POLICY = (props) => {
-
   let controlIDSet = new Set(props.controls);
 
   const onItemInvoked = (item) => {
@@ -36,9 +53,9 @@ const POLICY = (props) => {
 
   const columns = [
     {
-      key: 'expand',
-      name: '',
-      fieldName: 'expand',
+      key: "expand",
+      name: "",
+      fieldName: "expand",
       minWidth: 12,
       maxWidth: 12,
       onRender: (item) => (
@@ -46,22 +63,35 @@ const POLICY = (props) => {
           <Icon
             aria-label="Expand fullscreen"
             iconName="ChromeFullScreen"
-            style={{ cursor: 'pointer', width: "20px", color: '#0078D4', fontSize: '14px' }}
+            style={{
+              cursor: "pointer",
+              width: "20px",
+              color: "#0078D4",
+              fontSize: "14px",
+            }}
             onClick={() => onItemInvoked(item)}
           />
         </div>
       ),
     },
     {
-      key: 'control',
-      name: <>Control ID
-        <TooltipHost
-          content="Identifier for specific control within the selected regulatory framework"
-          closeDelay={1000}>
-          <Icon styles={{ root: { verticalAlign: "bottom", marginLeft: "5px" } }} iconName="info" aria-label="Tooltip" />
-        </TooltipHost>
-      </>,
-      fieldName: 'control',
+      key: "control",
+      name: (
+        <>
+          Control ID
+          <TooltipHost
+            content="Identifier for specific control within the selected regulatory framework"
+            closeDelay={1000}
+          >
+            <Icon
+              styles={{ root: { verticalAlign: "bottom", marginLeft: "5px" } }}
+              iconName="info"
+              aria-label="Tooltip"
+            />
+          </TooltipHost>
+        </>
+      ),
+      fieldName: "control",
       minWidth: 105,
       maxWidth: 150,
       isResizable: true,
@@ -70,23 +100,36 @@ const POLICY = (props) => {
       isSortable: true,
     },
     {
-      key: 'mcsbID',
+      key: "mcsbID",
       name: (
-        <>Microsoft Cloud Security Benchmark ID
+        <>
+          Microsoft Cloud Security Benchmark ID
           <TooltipHost
             content={
               <>
                 Identifier for specific control within{" "}
-                <Link href={"https://learn.microsoft.com/security/benchmark/azure/overview"} target="_blank" rel="noopener noreferrer">Microsoft Cloud Security Benchmark</Link>
+                <Link
+                  href={
+                    "https://learn.microsoft.com/security/benchmark/azure/overview"
+                  }
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  Microsoft Cloud Security Benchmark
+                </Link>
               </>
             }
             closeDelay={1000}
           >
-            <Icon styles={{ root: { verticalAlign: "bottom", marginLeft: "5px" } }} iconName="info" aria-label="Tooltip" />
+            <Icon
+              styles={{ root: { verticalAlign: "bottom", marginLeft: "5px" } }}
+              iconName="info"
+              aria-label="Tooltip"
+            />
           </TooltipHost>
         </>
       ),
-      fieldName: 'mcsbID',
+      fieldName: "mcsbID",
       minWidth: 175,
       maxWidth: 175,
       isResizable: true,
@@ -95,81 +138,157 @@ const POLICY = (props) => {
       isSortable: true,
     },
     {
-      key: 'service',
-      name: <>Service
-        <TooltipHost
-          content=<Link href={'https://azure.microsoft.com/products/'} target="_blank" rel="noopener noreferrer">Microsoft Cloud product</Link>
-          closeDelay={1000}>
-          <Icon styles={{ root: { verticalAlign: "bottom", marginLeft: "5px" } }} iconName="info" aria-label="Tooltip" />
-        </TooltipHost>
-      </>,
-      fieldName: 'service',
+      key: "service",
+      name: (
+        <>
+          Service
+          <TooltipHost
+            content=<Link
+              href={"https://azure.microsoft.com/products/"}
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              Microsoft Cloud product
+            </Link>
+            closeDelay={1000}
+          >
+            <Icon
+              styles={{ root: { verticalAlign: "bottom", marginLeft: "5px" } }}
+              iconName="info"
+              aria-label="Tooltip"
+            />
+          </TooltipHost>
+        </>
+      ),
+      fieldName: "service",
       minWidth: 100,
       maxWidth: 120,
       isResizable: true,
     },
     {
-      key: 'policy',
-      name: <>Azure Policy Name
-        <TooltipHost
-          content={
-            <>
-              Title of the{" "}
-              <Link href={"https://learn.microsoft.com/azure/governance/policy/overview"} target="_blank" rel="noopener noreferrer"> Azure Policy</Link>
-              {" "}used to help measure compliance with a given regulatory framework
-            </>
-          }
-          closeDelay={1000}>
-          <Icon styles={{ root: { verticalAlign: "bottom", marginLeft: "5px" } }} iconName="info" aria-label="Tooltip" />
-        </TooltipHost>
-      </>,
-      fieldName: 'policy',
+      key: "policy",
+      name: (
+        <>
+          Azure Policy Name
+          <TooltipHost
+            content={
+              <>
+                Title of the{" "}
+                <Link
+                  href={
+                    "https://learn.microsoft.com/azure/governance/policy/overview"
+                  }
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                   Azure Policy
+                </Link>{" "}
+                used to help measure compliance with a given regulatory
+                framework
+              </>
+            }
+            closeDelay={1000}
+          >
+            <Icon
+              styles={{ root: { verticalAlign: "bottom", marginLeft: "5px" } }}
+              iconName="info"
+              aria-label="Tooltip"
+            />
+          </TooltipHost>
+        </>
+      ),
+      fieldName: "policy",
       minWidth: 200,
       maxWidth: 400,
       isResizable: true,
     },
     {
-      key: 'description',
-      name: <>Azure Policy Description
-        <TooltipHost
-          content={
-            <>
-              More details about the{" "}
-              <Link href={"https://learn.microsoft.com/azure/governance/policy/overview"} target="_blank" rel="noopener noreferrer"> Azure Policy</Link>
-              {" "}used to help measure compliance with a given regulatory framework
-            </>
-          }
-          closeDelay={1000}>
-          <Icon styles={{ root: { verticalAlign: "bottom", marginLeft: "5px" } }} iconName="info" aria-label="Tooltip" />
-        </TooltipHost>
-      </>,
-      fieldName: 'description',
+      key: "description",
+      name: (
+        <>
+          Azure Policy Description
+          <TooltipHost
+            content={
+              <>
+                More details about the{" "}
+                <Link
+                  href={
+                    "https://learn.microsoft.com/azure/governance/policy/overview"
+                  }
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                   Azure Policy
+                </Link>{" "}
+                used to help measure compliance with a given regulatory
+                framework
+              </>
+            }
+            closeDelay={1000}
+          >
+            <Icon
+              styles={{ root: { verticalAlign: "bottom", marginLeft: "5px" } }}
+              iconName="info"
+              aria-label="Tooltip"
+            />
+          </TooltipHost>
+        </>
+      ),
+      fieldName: "description",
       minWidth: 200,
       maxWidth: 800,
       isResizable: true,
     },
     {
-      key: 'policyID',
-      name: <>Reference
-        <TooltipHost
-          content={
-            <>
-              Link to more information about the{" "}
-              <Link href={"https://learn.microsoft.com/azure/governance/policy/overview"} target="_blank" rel="noopener noreferrer"> Azure Policy</Link>
-              {" "}used to help measure compliance with a given regulatory framework
-            </>
-          }
-          closeDelay={1000}>
-          <Icon styles={{ root: { verticalAlign: "bottom", marginLeft: "5px" } }} iconName="info" aria-label="Tooltip" />
-        </TooltipHost>
-      </>,
-      fieldName: 'policyID',
+      key: "policyID",
+      name: (
+        <>
+          Reference
+          <TooltipHost
+            content={
+              <>
+                Link to more information about the{" "}
+                <Link
+                  href={
+                    "https://learn.microsoft.com/azure/governance/policy/overview"
+                  }
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                   Azure Policy
+                </Link>{" "}
+                used to help measure compliance with a given regulatory
+                framework
+              </>
+            }
+            closeDelay={1000}
+          >
+            <Icon
+              styles={{ root: { verticalAlign: "bottom", marginLeft: "5px" } }}
+              iconName="info"
+              aria-label="Tooltip"
+            />
+          </TooltipHost>
+        </>
+      ),
+      fieldName: "policyID",
       minWidth: 90,
       maxWidth: 90,
       isResizable: true,
       onRender: (item) => (
-        <Link href={"https://ms.portal.azure.com/#view/Microsoft_Azure_Policy/PolicyDetailBlade/definitionId/%2Fproviders%2FMicrosoft.Authorization%2FpolicyDefinitions%2F" + item.policyID} target="_blank" rel="noopener noreferrer">
-          <Icon iconName="OpenInNewWindow" style={{ marginRight: '4px', fontSize: '14px' }} aria-label="Open in new tab" />
+        <Link
+          href={
+            "https://ms.portal.azure.com/#view/Microsoft_Azure_Policy/PolicyDetailBlade/definitionId/%2Fproviders%2FMicrosoft.Authorization%2FpolicyDefinitions%2F" +
+            item.policyID
+          }
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          <Icon
+            iconName="OpenInNewWindow"
+            style={{ marginRight: "4px", fontSize: "14px" }}
+            aria-label="Open in new tab"
+          />
           See Docs
         </Link>
       ),
@@ -186,17 +305,17 @@ const POLICY = (props) => {
           ...headerProps,
           styles: {
             root: {
-              height: '50px',
+              height: "50px",
               selectors: {
-                '.ms-DetailsHeader-cell': {
-                  whiteSpace: 'normal',
-                  textOverflow: 'clip',
-                  lineHeight: 'normal',
-                  height: '50px',
+                ".ms-DetailsHeader-cell": {
+                  whiteSpace: "normal",
+                  textOverflow: "clip",
+                  lineHeight: "normal",
+                  height: "50px",
                 },
-                '.ms-DetailsHeader-cellTitle': {
-                  height: '100%',
-                  alignItems: 'center',
+                ".ms-DetailsHeader-cellTitle": {
+                  height: "100%",
+                  alignItems: "center",
                 },
               },
             },
@@ -209,23 +328,33 @@ const POLICY = (props) => {
   const onColumnClick = (ev, column) => {
     let groupedArray;
     const sortableColumn = column;
-    if (sortableColumn.key === 'control') {
+    if (sortableColumn.key === "control") {
       setIsControlDescending(!isControlDescending);
       const reversedItems = items.reverse();
       let sortedItems = sortRows(items, props.framework);
       if (isControlDescending) {
         sortedItems = sortedItems.reverse();
       }
-      groupedArray = groupAndSortRows(sortedItems, isControlDescending, props.framework);
+      groupedArray = groupAndSortRows(
+        sortedItems,
+        isControlDescending,
+        props.framework
+      );
       setItems(reversedItems);
       setGroupedItems(groupedArray);
     }
-    if (sortableColumn.key === 'mcsbID') {
+    if (sortableColumn.key === "mcsbID") {
       setIsMCSBDescending(!isMCSBDescending);
       let sortedItems = items.sort((a, b) => {
         const getNumericParts = (str) => str.match(/\d+/g).map(Number) || [0];
-        const [alphaA, numsA] = [a.mcsbID.match(/[A-Za-z]+/)[0], getNumericParts(a.mcsbID)];
-        const [alphaB, numsB] = [b.mcsbID.match(/[A-Za-z]+/)[0], getNumericParts(b.mcsbID)];
+        const [alphaA, numsA] = [
+          a.mcsbID.match(/[A-Za-z]+/)[0],
+          getNumericParts(a.mcsbID),
+        ];
+        const [alphaB, numsB] = [
+          b.mcsbID.match(/[A-Za-z]+/)[0],
+          getNumericParts(b.mcsbID),
+        ];
 
         if (alphaA.localeCompare(alphaB) !== 0) {
           return alphaA.localeCompare(alphaB);
@@ -240,22 +369,26 @@ const POLICY = (props) => {
       if (isMCSBDescending) {
         sortedItems = sortedItems.reverse();
       }
-      groupedArray = groupAndSortRows(sortedItems, isMCSBDescending, "MCSB_Table");
+      groupedArray = groupAndSortRows(
+        sortedItems,
+        isMCSBDescending,
+        "MCSB_Table"
+      );
       setItems(sortedItems);
       setGroupedItems(groupedArray);
     }
-  }
+  };
 
   useEffect(() => {
     const handleResize = () => {
       setIsSmallScreen(window.innerWidth < 1300);
     };
 
-    window.addEventListener('resize', handleResize);
+    window.addEventListener("resize", handleResize);
 
     return () => {
-      <div className={isSmallScreen ? classNames.scrollable : ''}></div>
-      window.removeEventListener('resize', handleResize);
+      <div className={isSmallScreen ? classNames.scrollable : ""}></div>;
+      window.removeEventListener("resize", handleResize);
     };
   }, []);
 
@@ -267,30 +400,34 @@ const POLICY = (props) => {
 
   // ENTRY POINT
   useEffect(() => {
-    const flattenedData = flattenData(props.data);
+    let flattenedData = flattenData(props.data);
     initTableLoad(flattenedData);
   }, [props]);
 
   function flattenData(dataset) {
     const temp = [];
     dataset.forEach((row) => {
-      let rowControls = row.properties_metadata.mcsb.frameworkControls;
+      let rowControls = row.properties_metadata.frameworkControlsMappings;
       // if there are user-selected control IDs, then only show those controls
       // this filters out rows that do not have any user-selected IDs in their controls array
       if (controlIDSet && controlIDSet.size > 0) {
         rowControls.forEach((control) => {
-          if (controlIDSet.has(control.split('_').pop())) {
-            row.properties_metadata.mcsb.automatedPolicyAvailability.forEach((policy) => {
-              temp.push({
-                mcsbID: row.properties_metadata.mcsb.mcsbId,
-                control: `${control.split("_").pop()}: ${props.mapState.get(sanitizeControlID(control.split("_").pop()))}`,
-                service: row.properties_metadata.offeringName,
-                category: policy.policyCategory,
-                policy: policy.policyName,
-                description: policy.policyDescription,
-                policyID: policy.policyId,
-              });
-            });
+          if (controlIDSet.has(control.split("_").pop())) {
+            row.properties_metadata.automatedPolicyAvailability.forEach(
+              (policy) => {
+                temp.push({
+                  mcsbID: row.properties_metadata.mcsbId,
+                  control: `${control.split("_").pop()}: ${props.mapState.get(
+                    sanitizeControlID(control.split("_").pop())
+                  )}`,
+                  service: row.properties_metadata.offeringName,
+                  category: policy.policyCategory,
+                  policy: policy.policyName,
+                  description: policy.policyDescription,
+                  policyID: policy.policyId,
+                });
+              }
+            );
           }
         });
         // otherwise, since the user didn't limit any controls,
@@ -298,17 +435,21 @@ const POLICY = (props) => {
       } else {
         rowControls.forEach((control) => {
           if (control.includes(props.framework)) {
-            row.properties_metadata.mcsb.automatedPolicyAvailability.forEach((policy) => {
-              temp.push({
-                mcsbID: row.properties_metadata.mcsb.mcsbId,
-                control: `${control.split("_").pop()}: ${props.mapState.get(sanitizeControlID(control.split("_").pop()))}`,
-                service: row.properties_metadata.offeringName,
-                category: policy.policyCategory,
-                policy: policy.policyName,
-                description: policy.policyDescription,
-                policyID: policy.policyId,
-              });
-            })
+            row.properties_metadata.automatedPolicyAvailability.forEach(
+              (policy) => {
+                temp.push({
+                  mcsbID: row.properties_metadata.mcsbId,
+                  control: `${control.split("_").pop()}: ${props.mapState.get(
+                    sanitizeControlID(control.split("_").pop())
+                  )}`,
+                  service: row.properties_metadata.offeringName,
+                  category: policy.policyCategory,
+                  policy: policy.policyName,
+                  description: policy.policyDescription,
+                  policyID: policy.policyId,
+                });
+              }
+            );
           }
         });
       }
@@ -318,20 +459,21 @@ const POLICY = (props) => {
 
   return (
     <div className="cardStyle">
-      <Stack
-        horizontal
-        verticalAlign="center"
-        horizontalAlign="space-between">
-        <h2 className="titleStyle">
-          {tableText.policyTitle}
-        </h2>
+      <Stack horizontal verticalAlign="center" horizontalAlign="space-between">
+        <h2 className="titleStyle">{tableText.policyTitle}</h2>
         <IconButton
           ariaLabel={isTableExpanded ? "Collapse table" : "Expand table"}
-          title={isTableExpanded ? "Collapse Compliance Policies by Service table" : "Expand Compliance Policies by Service table"}
-          iconProps={{ iconName: isTableExpanded ? 'ChevronUp' : 'ChevronDown' }}
+          title={
+            isTableExpanded
+              ? "Collapse Compliance Policies by Service table"
+              : "Expand Compliance Policies by Service table"
+          }
+          iconProps={{
+            iconName: isTableExpanded ? "ChevronUp" : "ChevronDown",
+          }}
           onClick={() => setIsTableExpanded(!isTableExpanded)}
           styles={{
-            icon: { color: '#0078D4', fontSize: 15, fontWeight: "bold" },
+            icon: { color: "#0078D4", fontSize: 15, fontWeight: "bold" },
           }}
         />
       </Stack>
@@ -340,7 +482,7 @@ const POLICY = (props) => {
       </Text>
 
       {isTableExpanded ? (
-        <div className={isSmallScreen ? classNames.scrollable : ''}>
+        <div className={isSmallScreen ? classNames.scrollable : ""}>
           {items.length > 0 ? (
             groupedItems && groupedItems.length > 0 ? (
               <DetailsList
@@ -356,10 +498,11 @@ const POLICY = (props) => {
                   props.styles = {
                     cell: {
                       height: 65,
-                      whiteSpace: 'normal',
-                      lineHeight: '1.69',
-                      fontSize: '14.1px',
-                      fontFamily: 'SegoeUI-Regular-final, -apple-system, BlinkMacSystemFont, \'Segoe UI\', Roboto, Oxygen, Ubuntu, Cantarell, \'Fira Sans\', \'Droid Sans\', \'Helvetica Neue\', sans-serif',
+                      whiteSpace: "normal",
+                      lineHeight: "1.69",
+                      fontSize: "14.1px",
+                      fontFamily:
+                        "SegoeUI-Regular-final, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Fira Sans', 'Droid Sans', 'Helvetica Neue', sans-serif",
                     },
                     root: {
                       height: 70,
@@ -394,10 +537,11 @@ const POLICY = (props) => {
                   props.styles = {
                     cell: {
                       height: 65,
-                      whiteSpace: 'normal',
-                      lineHeight: '1.69',
-                      fontSize: '14.1px',
-                      fontFamily: 'SegoeUI-Regular-final, -apple-system, BlinkMacSystemFont, \'Segoe UI\', Roboto, Oxygen, Ubuntu, Cantarell, \'Fira Sans\', \'Droid Sans\', \'Helvetica Neue\', sans-serif',
+                      whiteSpace: "normal",
+                      lineHeight: "1.69",
+                      fontSize: "14.1px",
+                      fontFamily:
+                        "SegoeUI-Regular-final, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Fira Sans', 'Droid Sans', 'Helvetica Neue', sans-serif",
                     },
                     root: {
                       height: 70,
@@ -424,7 +568,12 @@ const POLICY = (props) => {
         </div>
       ) : null}
 
-      <PoliciesModal isLightDismiss isOpen={isModalOpen} onClose={closeModal} rowData={modalData} />
+      <PoliciesModal
+        isLightDismiss
+        isOpen={isModalOpen}
+        onClose={closeModal}
+        rowData={modalData}
+      />
     </div>
   );
 };
