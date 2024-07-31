@@ -1,0 +1,42 @@
+{
+  "properties": {
+    "displayName": "MCSB Baseline item DP-3 for Azure Kubernetes Service on Azure Stack HCI",
+    "policyType": "Custom",
+    "mode": "All",
+    "description": "Manual policy definition and additional metadata for MCSB service baseline control DP-3 for Azure Kubernetes Service on Azure Stack HCI",
+    "metadata": {
+      "version": "1.0.0",
+      "category": "Regulatory Compliance",
+      "additionalMetadataId": "/providers/Microsoft.PolicyInsights/policyMetadata/DP-3_Azure_Kubernetes_Service_on_Azure_Stack_HCI"
+    },
+    "version": "1.0.0",
+    "parameters": {
+      "effect": {
+        "type": "String",
+        "metadata": {
+          "displayName": "Effect",
+          "description": "Enable or disable the attestation of the policy"
+        },
+        "allowedValues": [
+          "Manual",
+          "Disabled"
+        ],
+        "defaultValue": "Manual"
+      }
+    },
+    "policyRule": {
+      "if": {
+        "field": "type",
+        "equals": "Microsoft.Resources/subscriptions"
+      },
+      "then": {
+        "effect": "[parameters('effect')]",
+        "details": {
+          "defaultState": "Unknown"
+        }
+      }
+    }
+  },
+  "id": "/providers/Microsoft.Authorization/policyDefinitions/25b3fcf3-30a6-4b5e-8b66-66b4486900d0",
+  "name": "25b3fcf3-30a6-4b5e-8b66-66b4486900d0"
+}

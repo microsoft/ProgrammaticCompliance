@@ -1,0 +1,42 @@
+{
+  "properties": {
+    "displayName": "MCSB Baseline item PA-8 for Azure Operator Service Manager",
+    "policyType": "Custom",
+    "mode": "All",
+    "description": "Manual policy definition and additional metadata for MCSB service baseline control PA-8 for Azure Operator Service Manager",
+    "metadata": {
+      "version": "1.0.0",
+      "category": "Regulatory Compliance",
+      "additionalMetadataId": "/providers/Microsoft.PolicyInsights/policyMetadata/PA-8_Azure_Operator_Service_Manager"
+    },
+    "version": "1.0.0",
+    "parameters": {
+      "effect": {
+        "type": "String",
+        "metadata": {
+          "displayName": "Effect",
+          "description": "Enable or disable the attestation of the policy"
+        },
+        "allowedValues": [
+          "Manual",
+          "Disabled"
+        ],
+        "defaultValue": "Manual"
+      }
+    },
+    "policyRule": {
+      "if": {
+        "field": "type",
+        "equals": "Microsoft.Resources/subscriptions"
+      },
+      "then": {
+        "effect": "[parameters('effect')]",
+        "details": {
+          "defaultState": "Unknown"
+        }
+      }
+    }
+  },
+  "id": "/providers/Microsoft.Authorization/policyDefinitions/d8fc458c-2276-4b2d-b933-23a92ef7935f",
+  "name": "d8fc458c-2276-4b2d-b933-23a92ef7935f"
+}

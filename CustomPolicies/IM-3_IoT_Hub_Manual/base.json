@@ -1,0 +1,42 @@
+{
+  "properties": {
+    "displayName": "MCSB Baseline item IM-3 for IoT Hub",
+    "policyType": "Custom",
+    "mode": "All",
+    "description": "Manual policy definition and additional metadata for MCSB service baseline control IM-3 for IoT Hub",
+    "metadata": {
+      "version": "1.0.0",
+      "category": "Regulatory Compliance",
+      "additionalMetadataId": "/providers/Microsoft.PolicyInsights/policyMetadata/IM-3_IoT_Hub"
+    },
+    "version": "1.0.0",
+    "parameters": {
+      "effect": {
+        "type": "String",
+        "metadata": {
+          "displayName": "Effect",
+          "description": "Enable or disable the attestation of the policy"
+        },
+        "allowedValues": [
+          "Manual",
+          "Disabled"
+        ],
+        "defaultValue": "Manual"
+      }
+    },
+    "policyRule": {
+      "if": {
+        "field": "type",
+        "equals": "Microsoft.Resources/subscriptions"
+      },
+      "then": {
+        "effect": "[parameters('effect')]",
+        "details": {
+          "defaultState": "Unknown"
+        }
+      }
+    }
+  },
+  "id": "/providers/Microsoft.Authorization/policyDefinitions/737dbb2e-6a6b-45e2-9a40-7a4241276985",
+  "name": "737dbb2e-6a6b-45e2-9a40-7a4241276985"
+}

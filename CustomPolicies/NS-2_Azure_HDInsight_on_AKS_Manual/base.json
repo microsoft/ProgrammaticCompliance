@@ -1,0 +1,42 @@
+{
+  "properties": {
+    "displayName": "MCSB Baseline item NS-2 for Azure HDInsight on AKS",
+    "policyType": "Custom",
+    "mode": "All",
+    "description": "Manual policy definition and additional metadata for MCSB service baseline control NS-2 for Azure HDInsight on AKS",
+    "metadata": {
+      "version": "1.0.0",
+      "category": "Regulatory Compliance",
+      "additionalMetadataId": "/providers/Microsoft.PolicyInsights/policyMetadata/NS-2_Azure_HDInsight_on_AKS"
+    },
+    "version": "1.0.0",
+    "parameters": {
+      "effect": {
+        "type": "String",
+        "metadata": {
+          "displayName": "Effect",
+          "description": "Enable or disable the attestation of the policy"
+        },
+        "allowedValues": [
+          "Manual",
+          "Disabled"
+        ],
+        "defaultValue": "Manual"
+      }
+    },
+    "policyRule": {
+      "if": {
+        "field": "type",
+        "equals": "Microsoft.Resources/subscriptions"
+      },
+      "then": {
+        "effect": "[parameters('effect')]",
+        "details": {
+          "defaultState": "Unknown"
+        }
+      }
+    }
+  },
+  "id": "/providers/Microsoft.Authorization/policyDefinitions/8b74c640-652b-47b4-bdfc-291ec70f10da",
+  "name": "8b74c640-652b-47b4-bdfc-291ec70f10da"
+}

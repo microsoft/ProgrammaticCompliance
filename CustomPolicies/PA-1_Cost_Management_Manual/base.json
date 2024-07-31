@@ -1,0 +1,42 @@
+{
+  "properties": {
+    "displayName": "MCSB Baseline item PA-1 for Cost Management",
+    "policyType": "Custom",
+    "mode": "All",
+    "description": "Manual policy definition and additional metadata for MCSB service baseline control PA-1 for Cost Management",
+    "metadata": {
+      "version": "1.0.0",
+      "category": "Regulatory Compliance",
+      "additionalMetadataId": "/providers/Microsoft.PolicyInsights/policyMetadata/PA-1_Cost_Management"
+    },
+    "version": "1.0.0",
+    "parameters": {
+      "effect": {
+        "type": "String",
+        "metadata": {
+          "displayName": "Effect",
+          "description": "Enable or disable the attestation of the policy"
+        },
+        "allowedValues": [
+          "Manual",
+          "Disabled"
+        ],
+        "defaultValue": "Manual"
+      }
+    },
+    "policyRule": {
+      "if": {
+        "field": "type",
+        "equals": "Microsoft.Resources/subscriptions"
+      },
+      "then": {
+        "effect": "[parameters('effect')]",
+        "details": {
+          "defaultState": "Unknown"
+        }
+      }
+    }
+  },
+  "id": "/providers/Microsoft.Authorization/policyDefinitions/8e8c3f8e-c82d-4db0-b09b-9234a96212cb",
+  "name": "8e8c3f8e-c82d-4db0-b09b-9234a96212cb"
+}
