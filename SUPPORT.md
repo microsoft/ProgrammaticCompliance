@@ -10,4 +10,4 @@ For help and questions about using this project, please contact ProgCompFeed@mic
 
 ## Microsoft Support Policy  
 
-Support for this Programmatic Compliance is limited to the resources listed above.
+Support for Programmatic Compliance is limited to the resources listed above.
