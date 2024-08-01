@@ -1,0 +1,67 @@
+trigger:
+- develop
+
+stages:
+- stage: Build
+  jobs:
+  - job: Build
+
+    pool:
+      vmImage: 'ubuntu-latest'
+
+    steps:
+    - task: UseNode@1
+      inputs:
+        version: '18.17.x'
+      displayName: 'Install Node.js'
+
+    - script: |
+        npm install
+      displayName: 'npm install'
+
+    - script: |
+        npm run build
+      displayName: 'npm build'
+    - task: Npm@1
+      inputs:
+        command: 'install'
+
+    - task: CopyFiles@2
+      inputs:
+        sourceFolder: '$(Build.SourcesDirectory)'
+        contents: |
+          src/*
+          public/*
+        targetFolder: '$(Build.ArtifactStagingDirectory)'
+      displayName: 'Copy project files'
+
+    - task: PublishPipelineArtifact@1
+      inputs:
+        artifactName: e2e-server
+        targetPath: '$(Build.ArtifactStagingDirectory)'
+        publishLocation: 'pipeline'
+      displayName: 'Publish npm artifact'
+    - task: ComponentGovernanceComponentDetection@0
+
+    - task: AzureKeyVault@2
+      inputs:
+        azureSubscription: "MCI-ProgrammaticCompliance-JOELOTOUDE" ## Update this value with your Azure subscription
+        keyVaultName: "pc-accessibility-alias" ## Update this value with the name of the key vault
+        secretsFilter: "serviceAccountName,serviceAccountPassword" ## Update this value with the labels for the key vault secrets, they will be come variables names that you will use in the next task
+        runAsPreJob: false ## Make the secrets available to the whole job
+
+    - task: accessibility-insights.prod.task.accessibility-insights@3
+      inputs:
+        # Replace the url value below with your canary/staging/pre-production URL:
+        url: 'https://programmatic-compliance-gh1.azurewebsites.net'
+        serviceAccountName: $(serviceAccountName) # Replace this value with the service account label name in `secretsFilter` in the previous step
+        serviceAccountPassword: $(serviceAccountPassword) # Replace this value with the service account password label name in `secretsFilter` in the previous step
+        authType: "AAD" # The authentication type, we only support Entra (AAD) at this time.
+
+    - task: PublishSecurityAnalysisLogs@3
+      inputs:
+        ArtifactName: 'CodeAnalysisLogs'
+        ArtifactType: 'Container'
+        PublishProcessedResults: true
+        AllTools: true
+        ToolLogsNotFoundAction: 'Standard'

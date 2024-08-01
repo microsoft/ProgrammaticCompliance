@@ -1,0 +1,35 @@
+{
+  "$schema": "https://schemastore.azurewebsites.net/schemas/json/sarif-2.1.0-rtm.5.json",
+  "version": "2.1.0",
+  "runs": [
+    {
+      "tool": {
+        "driver": {
+          "name": "credscan",
+          "fullName": "Credential Scanner",
+          "version": "2.3.12.23",
+          "properties": {
+            "RawName": "credscan"
+          }
+        }
+      },
+      "versionControlProvenance": [
+        {
+          "repositoryUri": "https://github.com/microsoft/ProgrammaticCompliance.git",
+          "revisionId": "9eafed95f05d8fed284cf16fba96a03532e6cd98",
+          "branch": "feature/wangjulia/UXsetup",
+          
+          "properties": {
+            "RepositoryRoot": "C:\\ProgrammaticCompliance"
+          }
+        }
+      ],
+      
+      "results": [],
+      "columnKind": "utf16CodeUnits",
+      "properties": {
+        "toolInfoId": "credscan>>0>>202402122252"
+      }
+    }
+  ]
+}

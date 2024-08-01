@@ -1,0 +1,13 @@
+{
+    "$schema": "https://json.schemastore.org/component-detection-manifest.json",
+    "version": 1,
+    "registrations": [
+        {
+            "component": {
+                "type": git,
+                "git": https://github.com/microsoft/ProgrammaticCompliance
+            },
+            "developmentDependency": false,
+        }
+    ]
+}
