@@ -18,6 +18,7 @@ const ExportButton = ({
   disabled,
   acfData,
   controlIDs,
+  framework,
 }) => {
   const [isPaneOpen, setIsPaneOpen] = useState(false);
 
@@ -32,19 +33,21 @@ const ExportButton = ({
   };
 
   const handleExportJSON = () => {
-    const jsonData = JSON.stringify(apiData, null, 2);
-    let blob = new Blob([jsonData], { type: "application/json" });
+    if (apiData) {
+      const jsonData = JSON.stringify(apiData, null, 2);
+      let blob = new Blob([jsonData], { type: "application/json" });
+      let url = URL.createObjectURL(blob);
+      let a = document.createElement("a");
+      a.href = url;
+      a.download = "exportedMCSB.json";
+      document.body.appendChild(a);
+      a.click();
+      URL.revokeObjectURL(url);
+    }
+    const jsonAcf = JSON.stringify(acfData, null, 2);
+    let blob = new Blob([jsonAcf], { type: "application/json" });
     let url = URL.createObjectURL(blob);
     let a = document.createElement("a");
-    a.href = url;
-    a.download = "exportedMCSB.json";
-    document.body.appendChild(a);
-    a.click();
-    URL.revokeObjectURL(url);
-    const jsonAcf = JSON.stringify(acfData, null, 2);
-    blob = new Blob([jsonAcf], { type: "application/json" });
-    url = URL.createObjectURL(blob);
-    a = document.createElement("a");
     a.href = url;
     a.download = "exportedACF.json";
     document.body.appendChild(a);
@@ -107,27 +110,44 @@ const ExportButton = ({
       "Microsoft Managed Actions - Description",
       "Microsoft Managed Actions - Details",
     ];
-    const csvRows = [ACFcolumns.join(",")];
+    let csvRows = [ACFcolumns.join(",")];
     for (const item of data) {
-      const controlID = item.ControlID.split("_").pop() || "";
-      const ACFID = sanitizeValue(item.AzureControlFrameworkID) || "";
-      const description =
-        sanitizeValue(item.MicrosoftManagedActionsDescription) || "";
-      const details = sanitizeValue(item.MicrosoftManagedActionsDetails) || "";
-      const values = [
-        sanitizeValue(
-          item.ControlID.lastIndexOf("_") !== -1
-            ? item.ControlID.slice(0, item.ControlID.lastIndexOf("_"))
-            : item.ControlID
-        ) || "",
-        ACFID,
-        controlID,
-        description,
-        details,
-      ];
-      csvRows.push(values.join(","));
+      let controlID;
+      for (const mapping of item.properties.metadata
+        .frameworkControlsMappings) {
+        if (controlIDs.length === 0) {
+          // there are not controls, export all with the framework
+          if (mapping.contains(framework)) {
+            controlID = mapping.split("_").pop();
+          }
+        } else {
+          // there are controls, just export the ones with the control ID included
+          if (controlIDs.includes(mapping.split("_").pop())) {
+            controlID = mapping.split("_").pop() || "";
+          }
+        }
+        const Standard = framework;
+        const ACFID = sanitizeValue(item.name) || "";
+        const description = sanitizeValue(item.properties.description) || "";
+        const details = sanitizeValue(item.properties.requirements) || "";
+        const values = [Standard, ACFID, controlID, description, details];
+        if (controlID) {
+          csvRows.push(values.join(","));
+        }
+      }
+      csvRows = getUniqueRows(csvRows);
     }
     return csvRows.join("\n");
+  };
+
+  const getUniqueRows = (rows) => {
+    const uniqueRows = [];
+    for (const row of rows) {
+      if (!uniqueRows.includes(row)) {
+        uniqueRows.push(row);
+      }
+    }
+    return uniqueRows;
   };
 
   const mcsbToCsvExporter = (data) => {
@@ -141,15 +161,15 @@ const ExportButton = ({
       "Configuration Guidance",
       "Reference",
     ];
-    const csvRows = [mcsbColumns.join(",")];
+    let csvRows = [mcsbColumns.join(",")];
     for (const item of data) {
       const metadata = item.properties_metadata;
-      metadata.mcsb.frameworkControls.forEach((control) => {
+      metadata.frameworkControlsMappings.forEach((control) => {
         if (controlIDs.length === 0) {
-          metadata.mcsb.features.forEach((feature) => {
+          metadata.features.forEach((feature) => {
             const sanitizedValues = [
               control.split("_").pop(),
-              metadata.mcsb.mcsbId,
+              metadata.mcsbId,
               metadata.offeringName,
               '"' + feature.featureName.replace(/"/g, '""') + '"',
               '"' + feature.featureSupport.replace(/"/g, '""') + '"',
@@ -161,10 +181,10 @@ const ExportButton = ({
           });
         } else {
           if (controlIDs.includes(control.split("_").pop())) {
-            metadata.mcsb.features.forEach((feature) => {
+            metadata.features.forEach((feature) => {
               const sanitizedValues = [
                 '"' + control.split("_").pop() + '"',
-                metadata.mcsb.mcsbId,
+                metadata.mcsbId,
                 metadata.offeringName,
                 '"' + feature.featureName.replace(/"/g, '""') + '"',
                 '"' + feature.featureSupport.replace(/"/g, '""') + '"',
@@ -178,6 +198,7 @@ const ExportButton = ({
         }
       });
     }
+    csvRows = getUniqueRows(csvRows);
 
     return csvRows.join("\n");
   };
@@ -189,40 +210,28 @@ const ExportButton = ({
       "Policy Name",
       "Policy Description",
     ];
-    const csvRows = [policyColumns.join(",")];
+    let csvRows = [policyColumns.join(",")];
     for (const item of data) {
       const metadata = item.properties_metadata;
-      metadata.mcsb.frameworkControls.forEach((control) => {
+      metadata.frameworkControlsMappings.forEach((control) => {
         if (controlIDs.length === 0) {
-          metadata.mcsb.automatedPolicyAvailability.forEach((policy) => {
+          metadata.automatedPolicyAvailability.forEach((policy) => {
             const sanitizedValues = [
               control.split("_").pop(),
               metadata.offeringName,
-              '"' +
-                policy.policyName.replace(/"/g, '""').replace(/\n/g, " ") +
-                '"',
-              '"' +
-                policy.policyDescription
-                  .replace(/"/g, '""')
-                  .replace(/\n/g, " ") +
-                '"',
+              '"' + policy.policyName + '"',
+              '"' + policy.policyDescription + '"',
             ];
             csvRows.push(sanitizedValues.join(","));
           });
         } else {
           if (controlIDs.includes(control.split("_").pop())) {
-            metadata.mcsb.automatedPolicyAvailability.forEach((policy) => {
+            metadata.automatedPolicyAvailability.forEach((policy) => {
               const sanitizedValues = [
                 control.split("_").pop(),
                 metadata.offeringName,
-                '"' +
-                  policy.policyName.replace(/"/g, '""').replace(/\n/g, " ") +
-                  '"',
-                '"' +
-                  policy.policyDescription
-                    .replace(/"/g, '""')
-                    .replace(/\n/g, " ") +
-                  '"',
+                '"' + policy.policyName + '"',
+                '"' + policy.policyDescription + '"',
               ];
               csvRows.push(sanitizedValues.join(","));
             });
@@ -230,6 +239,8 @@ const ExportButton = ({
         }
       });
     }
+    csvRows = getUniqueRows(csvRows);
+
     return csvRows.join("\n");
   };
 

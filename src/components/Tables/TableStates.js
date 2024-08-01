@@ -1,7 +1,7 @@
-import React, { useEffect, useState } from 'react';
-import { Icon, Text, Spinner, SpinnerSize, Link, Stack } from '@fluentui/react';
-import '../../styles/Tables.css';
-import { tableText } from '../../static/staticStrings.js';
+import React, { useEffect, useState } from "react";
+import { Icon, Text, Spinner, SpinnerSize, Link, Stack } from "@fluentui/react";
+import "../../styles/Tables.css";
+import { tableText } from "../../static/staticStrings.js";
 
 const TableStates = (props) => {
   const [title, setTitle] = useState("");
@@ -9,30 +9,27 @@ const TableStates = (props) => {
 
   useEffect(() => {
     if (props.type === "ACF" && props.variant !== "EmptyLoad") {
-      setTitle(tableText.acfTitle)
-      setSubtitle(tableText.acfDescription)
+      setTitle(tableText.acfTitle);
+      setSubtitle(tableText.acfDescription);
     }
     if (props.type === "MCSB" && props.variant !== "EmptyLoad") {
-      setTitle(tableText.mcsbTitle)
-      setSubtitle(tableText.mcsbDescription)
+      setTitle(tableText.mcsbTitle);
+      setSubtitle(tableText.mcsbDescription);
     }
     if (props.type === "Policy" && props.variant !== "EmptyLoad") {
-      setTitle(tableText.policyTitle)
-      setSubtitle(tableText.policyDescription)
+      setTitle(tableText.policyTitle);
+      setSubtitle(tableText.policyDescription);
     }
   }, [props]);
 
   const iconStyles = {
-    fontSize: '24px',
-    color: '#0078D4'
+    fontSize: "24px",
+    color: "#0078D4",
   };
 
   return (
     <div className="cardStyle">
-      <Stack
-        horizontal
-        verticalAlign="center"
-        horizontalAlign="space-between">
+      <Stack horizontal verticalAlign="center" horizontalAlign="space-between">
         <Stack horizontal verticalAlign="center">
           <div>
             <h2 variant="mediumPlus" className="titleStyle">
@@ -47,10 +44,15 @@ const TableStates = (props) => {
       <p></p>
 
       <div className="centerStyle">
-        {props.variant === 'Onload' && (
+        {props.variant === "Onload" && (
           <>
             <br></br>
-            <Icon iconName="Search" style={iconStyles} aria-label="Search"/> <br></br>
+            <Icon
+              iconName="Search"
+              style={iconStyles}
+              aria-label="Search"
+            />{" "}
+            <br></br>
             <Text variant="mediumPlus" className="messageTitle">
               {tableText.onloadTitle}
             </Text>
@@ -63,13 +65,20 @@ const TableStates = (props) => {
           </>
         )}
 
-        {props.variant === 'Empty' && (
+        {props.variant === "Empty" && (
           <>
             <br></br>
-            <Icon iconName="CodeEdit" style={iconStyles} aria-hidden="true"/>
-            <Text variant="medium" className="message"><br></br>
+            <Icon iconName="CodeEdit" style={iconStyles} aria-hidden="true" />
+            <Text variant="medium" className="message">
+              <br></br>
               {tableText.unsupportedDescription}
-              <Link href={"https://learn.microsoft.com/azure/compliance/"} target="_blank" rel="noopener noreferrer">here</Link>
+              <Link
+                href={"https://learn.microsoft.com/azure/compliance/"}
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                here
+              </Link>
               .
             </Text>
             <p></p>
@@ -77,7 +86,7 @@ const TableStates = (props) => {
           </>
         )}
 
-        {props.variant === 'Loading' && (
+        {props.variant === "Loading" && (
           <>
             <Spinner size={SpinnerSize.large} />
             <p></p>
@@ -88,11 +97,16 @@ const TableStates = (props) => {
             <p></p>
           </>
         )}
-        
-        {props.variant === 'NoService' && (
+
+        {props.variant === "NoService" && (
           <>
             <br></br>
-            <Icon iconName="Search" style={iconStyles} aria-label="Search"/> <br></br>
+            <Icon
+              iconName="Search"
+              style={iconStyles}
+              aria-label="Search"
+            />{" "}
+            <br></br>
             <Text variant="mediumPlus" className="messageTitle">
               {tableText.onloadTitle}
             </Text>
@@ -104,16 +118,29 @@ const TableStates = (props) => {
             <p></p>
           </>
         )}
-        
-        {props.variant === 'EmptyLoad' && (
+
+        {props.variant === "EmptyLoad" && (
           <>
-            <Icon iconName="CodeEdit" style={iconStyles} aria-hidden="true"/> <br></br>
+            <br></br>
+            <Icon
+              iconName="CodeEdit"
+              style={iconStyles}
+              aria-hidden="true"
+            />{" "}
+            <br></br>
             <Text variant="mediumPlus" className="messageTitle">
               {tableText.onloadTitle}
             </Text>
-            <Text variant="medium" className="message"><br></br>
+            <Text variant="medium" className="message">
+              <br></br>
               {tableText.unsupportedDescription}
-              <Link href={"https://learn.microsoft.com/azure/compliance/"} target="_blank" rel="noopener noreferrer">here</Link>
+              <Link
+                href={"https://learn.microsoft.com/azure/compliance/"}
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                here
+              </Link>
               .
             </Text>
             <p></p>

@@ -1,5 +1,5 @@
 export const appText = {
-  siteTitle: "Programmatic Compliance 🌼",
+  siteTitle: "Programmatic Compliance",
   siteDescription:
     "Microsoft and its customers follow a shared responsibility model regarding security and compliance of the Microsoft Cloud environment. This tool is designed to bring together helpful information about the technical capabilities available through the Microsoft Cloud to support customers’ compliance goals. This tool is provided for informational purposes only; as-is; without warranties of any kind, either express or implied; and is not intended to be a substitute for professional advice.",
   readMoreButton: "Read more",
@@ -8,7 +8,7 @@ export const appText = {
     "This tool helps illustrate how customers can leverage, enable, and configure various features and capabilities in support of achieving their regulatory requirements. It is the customer’s responsibility to determine whether these technical capabilities, if properly employed, meet their compliance needs.",
   disclaimer3:
     "MICROSOFT MAKES NO WARRANTY THAT THE DATA AND CONTENT PROVIDED AS PART OF THE PROGRAMMATIC COMPLIANCE TOOL IS ACCURATE, UP-TO-DATE, OR COMPLETE.",
-  healthy: "Programmatic Compliance site host is alive and well 🌼",
+  healthy: "Programmatic Compliance site host is alive and well",
   unhealthy:
     "🚨 Programmatic Compliance needs repair. Please try again later! 🚨",
 };

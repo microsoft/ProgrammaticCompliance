@@ -37,6 +37,8 @@ export const groupAndSortRows = (sortedItems, isDescending, framework) => {
       return groupAndSortISO(sortedItems, isDescending, sanitizeControlID);
     case "SOC 2 Type 2":
       return groupAndSortSOC(sortedItems, isDescending, sanitizeControlID);
+    case "ACF_Table":
+      return groupAndSortACF(sortedItems, isDescending);
     default:
       return groupAndSortMCSB(sortedItems, isDescending);
   }
@@ -155,11 +157,9 @@ const sortSOC = (items, sanitizeControlID) => {
     const splitA = parseControlID(a.control);
     const splitB = parseControlID(b.control);
 
-    // Compare alphabetical parts first
     if (splitA.alphaPart < splitB.alphaPart) return -1;
     if (splitA.alphaPart > splitB.alphaPart) return 1;
 
-    // Compare numerical parts
     for (
       let i = 0;
       i < Math.max(splitA.numericPart.length, splitB.numericPart.length);
@@ -174,6 +174,43 @@ const sortSOC = (items, sanitizeControlID) => {
     return 0;
   });
   return sortedItems;
+};
+
+const groupAndSortACF = (sortedItems, descending) => {
+  const groupedItems = sortedItems.reduce((groups, item) => {
+    const acfID = sanitizeControlID(item.acfID).trim();
+    if (!groups[acfID]) {
+      groups[acfID] = [];
+    }
+    groups[acfID].push(item);
+    return groups;
+  }, {});
+
+  const groupedArray = Object.keys(groupedItems).map((key) => ({
+    key,
+    name: key,
+    startIndex: sortedItems.indexOf(groupedItems[key][0]),
+    count: groupedItems[key].length,
+    isCollapsed: false,
+  }));
+
+  groupedArray.sort((a, b) => {
+    const [alphaA, numA] = [
+      a.name.match(/[A-Za-z]+/)[0],
+      parseInt(a.name.match(/\d+/)[0], 10),
+    ];
+    const [alphaB, numB] = [
+      b.name.match(/[A-Za-z]+/)[0],
+      parseInt(b.name.match(/\d+/)[0], 10),
+    ];
+
+    return alphaA !== alphaB ? alphaA.localeCompare(alphaB) : numA - numB;
+  });
+
+  if (descending) {
+    groupedArray.reverse();
+  }
+  return groupedArray;
 };
 
 const groupAndSortMCSB = (sortedItems, descending) => {
@@ -357,8 +394,6 @@ const groupAndSortPCI = (sortedItems, descending) => {
 const groupAndSortISO = (sortedItems, descending, sanitizeControlID) => {
   const groupedItems = sortedItems.reduce((groups, item) => {
     const controlId = sanitizeControlID(item.control).trim();
-    // const groupKey = controlId.replace(/[a-z]/g, "");
-
     if (!groups[controlId]) {
       groups[controlId] = [];
     }

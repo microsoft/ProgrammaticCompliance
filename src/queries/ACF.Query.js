@@ -14,13 +14,14 @@ export const filteredACFs = (framework, controls) => {
   let CONTROL_ID_CLAUSES = "";
   controls.forEach((control) => {
     CONTROL_ID_CLAUSES +=
-      `properties.metadata.frameworkControlsMappings contains '${framework}'` +
+      `properties.metadata.frameworkControlsMappings has '${framework}` +
       "_" +
       control +
       "'" +
-      " or ";
+      ' or name contains "ACF" and';
   });
-  CONTROL_ID_CLAUSES = CONTROL_ID_CLAUSES.slice(0, -4);
-  let baseQuery = `policyresources | where type contains 'microsoft.policyinsights/policymetadata' | where name contains "ACF" and ${CONTROL_ID_CLAUSES}'`;
+  CONTROL_ID_CLAUSES = CONTROL_ID_CLAUSES.slice(0, -28);
+  let baseQuery = `policyresources | where type contains 'microsoft.policyinsights/policymetadata' | where name contains "ACF" and ${CONTROL_ID_CLAUSES}`;
+  console.log(baseQuery);
   return baseQuery;
 };

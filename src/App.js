@@ -32,44 +32,8 @@ function MainApp() {
   const [isCalloutVisible, { toggle: toggleIsCalloutVisible }] =
     useBoolean(false);
 
-  const getUserToken = async () => {
-    try {
-      const response = await instance.acquireTokenSilent(
-        {
-          authority: msalConfig.auth.authority,
-          scopes: [tokenConfig.managementEndpoint],
-          account: accounts[0],
-        },
-        {
-          onTokenFailure: async (error) => {
-            if (error.errorMessage.includes("interaction_required")) {
-              try {
-                await instance.loginRedirect({
-                  authority: msalConfig.auth.authority,
-                  scopes: [tokenConfig.managementEndpoint],
-                });
-              } catch (loginError) {
-                console.error("Error during loginRedirect:", loginError);
-              }
-            } else {
-              console.error("Error fetching data:", error);
-            }
-          },
-        }
-      );
-      setUserToken(response.accessToken);
-    } catch (error) {
-      console.error("Error fetching data:", error);
-    }
-  };
-
-  /**
-   * UNCOMMENT BELOW TO PRINT AZ ACCESS TOKEN
-   */
-
-  // useEffect(() => {
-  //   console.log('AZURE TOKEN: ', azureToken);
-  // }, [azureToken])
+  const BASEPOINT = "https://programmatic-compliance-gh1.azurewebsites.net";
+  const [getToken, setToken] = React.useState("");
 
   useEffect(() => {
     fetchToken(); // backend app token route
@@ -190,9 +154,7 @@ function MainApp() {
               </Link>
             </p>
           </section>
-          {azureToken && (
-            <FilterBar azureToken={azureToken} aria-label="Main" />
-          )}
+          {getToken && <FilterBar azureToken={getToken} aria-label="Main" />}
           <br></br>
           <br></br>
           <Link
@@ -202,6 +164,8 @@ function MainApp() {
           >
             Microsoft Privacy Statement
           </Link>
+          <p></p>
+          <p></p>
         </div>
       </main>
 
