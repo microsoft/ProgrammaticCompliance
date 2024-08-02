@@ -113,11 +113,14 @@ const ExportButton = ({
     let csvRows = [ACFcolumns.join(",")];
     for (const item of data) {
       let controlID;
-      for (const mapping of item.properties.metadata
-        .frameworkControlsMappings) {
+      for (let mapping of item.properties.metadata.frameworkControlsMappings) {
         if (controlIDs.length === 0) {
           // there are not controls, export all with the framework
-          if (mapping.contains(framework)) {
+          if (framework == "NIST_SP_800-53_R4") {
+            framework = "NIST_SP_800-53_Rev4";
+          } else if (framework == "CIS_Azure_2.0.0")
+            framework = "CIS_Azure_Benchmark_v2.0";
+          if (mapping.includes(framework)) {
             controlID = mapping.split("_").pop();
           }
         } else {
