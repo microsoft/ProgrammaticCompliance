@@ -140,7 +140,7 @@ Congratulations! You have now successfully configured and deployed your Programm
 ## 2. OPTIONAL: Configure your tenant for custom policy definitions creation
 
 > [!NOTE]
-> The custom policies creation process is strictly for a non-production/testing environment (tenants or subscriptions) and destined for any user allowed in private preview. The policies have now been made available as built-in metadata, so this custom policy creation portion is no longer necessary. This portion of documentation is kept for reference purposes.
+> Optionally, one may use the custom manual policies for the purpose of manual attestation when automated policies are not available or partially address a control. The custom manual policies are not required by the UX or Azure Resource Graph API based retrieval of programmatic compliance information.
 
 ### A. Local machine configuration
 
