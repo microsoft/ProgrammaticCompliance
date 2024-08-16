@@ -155,7 +155,7 @@ const ExportButton = ({
 
   const mcsbToCsvExporter = (data) => {
     const mcsbColumns = [
-      "Control ID",
+      "Standard",
       "MCSB ID",
       "Service",
       "MCSB Feature",
@@ -171,7 +171,7 @@ const ExportButton = ({
         if (controlIDs.length === 0) {
           metadata.features.forEach((feature) => {
             const sanitizedValues = [
-              control.split("_").pop(),
+              framework,
               metadata.mcsbId,
               metadata.offeringName,
               '"' + feature.featureName.replace(/"/g, '""') + '"',
@@ -186,7 +186,7 @@ const ExportButton = ({
           if (controlIDs.includes(control.split("_").pop())) {
             metadata.features.forEach((feature) => {
               const sanitizedValues = [
-                '"' + control.split("_").pop() + '"',
+                framework,
                 metadata.mcsbId,
                 metadata.offeringName,
                 '"' + feature.featureName.replace(/"/g, '""') + '"',
