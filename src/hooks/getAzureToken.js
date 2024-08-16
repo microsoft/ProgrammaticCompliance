@@ -46,29 +46,47 @@ const getAzureToken = async ({ accounts, instance }) => {
 };
 
 const checkGroupMembership = async (accessToken) => {
+  const groupIds = [
+    "5efec934-a2db-4476-82b9-bc746c4c238c",
+    "e04f0648-620c-45cb-83c0-976e776661d1",
+    "383b265c-41cf-4d25-bf74-84c82c315a06",
+  ];
+
   try {
-    const groupId = "383b265c-41cf-4d25-bf74-84c82c315a06";
-    const response = await fetch(
-      `https://graph.microsoft.com/v1.0/me/memberOf?$filter=id eq \'${groupId}\'`,
-      {
-        headers: {
-          Authorization: `Bearer ${accessToken}`,
-        },
-      }
+    const promises = groupIds.map((groupId) =>
+      fetch(
+        `https://graph.microsoft.com/v1.0/me/memberOf?$filter=id eq '${groupId}'`,
+        {
+          headers: {
+            Authorization: `Bearer ${accessToken}`,
+          },
+        }
+      )
     );
-    if (!response.ok) {
-      throw new Error(`HTTP error! Status: ${response.status}`);
-    }
-    const data = await response.json();
 
-    if (data.error) {
-      window.location.href =
-        "https://programmatic-compliance-gh1.azurewebsites.net/unauthorized";
-      throw new Error(`memberOf returned error!`);
+    const responses = await Promise.all(promises);
+
+    for (const response of responses) {
+      if (!response.ok) {
+        throw new Error(`HTTP error! Status: ${response.status}`);
+      }
+
+      const data = await response.json();
+
+      if (data.error) {
+        window.location.href =
+          "https://programmatic-compliance-gh1.azurewebsites.net/unauthorized";
+        throw new Error(`memberOf returned error!`);
+      }
+
+      if (data.value && data.value.length > 0) {
+        console.log("Successfully authenticated to security group!");
+        return true;
+      }
     }
 
-    console.log("Successfully authenticated to security group!");
-    return data.value;
+    console.error("User is not a member of the required groups.");
+    return false;
   } catch (error) {
     window.location.href =
       "https://programmatic-compliance-gh1.azurewebsites.net/unauthorized";

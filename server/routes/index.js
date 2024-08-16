@@ -3,30 +3,32 @@
  * Licensed under the MIT License.
  */
 
-var express = require('express');
+var express = require("express");
 var router = express.Router();
-var isAuthenticated = require('../middleware.js')
+var isAuthenticated = require("../middleware.js");
 
-router.get('/health', (request, response, next) => {
-    response.send('<h2>Programmatic Compliance is alive and well.</h2>')
-  })
-  
-router.get('/unauthorized', (request, response, next) => {
-  response.send('<p>You are unauthorized to view these contents. Please reach out to craigmo@ to be added to the security group for this resource.</p>')
-})
+router.get("/health", (request, response, next) => {
+  response.send("<h2>Programmatic Compliance is alive and well.</h2>");
+});
 
-  // general catch all
-router.get('/*', function (req, res, next) {
-    // Check if user is authenticated
-    console.log("HIT")
-    if (!isAuthenticated(req)) {
-      // If not authenticated, redirect to /login
-      res.redirect('/auth/acquireToken');
-    } else {
-      // If authenticated, serve the index page
-      const path = path.join(__dirname, 'public', 'build', 'index.html');
-      res.sendFile(path);
-    }
-  });
+router.get("/unauthorized", (request, response, next) => {
+  response.send(
+    '<p>This content requires authorized access via CoreIdentity, and is only available to full-time employees. <a href="https://coreidentity.microsoft.com/manage/Entitlement/entitlement/programmatic-eo5j">Request access</a></p>'
+  );
+});
+
+// general catch all
+router.get("/*", function (req, res, next) {
+  // Check if user is authenticated
+  console.log("HIT");
+  if (!isAuthenticated(req)) {
+    // If not authenticated, redirect to /login
+    res.redirect("/auth/acquireToken");
+  } else {
+    // If authenticated, serve the index page
+    const path = path.join(__dirname, "public", "build", "index.html");
+    res.sendFile(path);
+  }
+});
 
 module.exports = router;
