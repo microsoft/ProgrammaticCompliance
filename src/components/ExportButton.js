@@ -156,6 +156,7 @@ const ExportButton = ({
   const mcsbToCsvExporter = (data) => {
     const mcsbColumns = [
       "Standard",
+      "Control ID",
       "MCSB ID",
       "Service",
       "MCSB Feature",
@@ -172,6 +173,7 @@ const ExportButton = ({
           metadata.features.forEach((feature) => {
             const sanitizedValues = [
               framework,
+              control.split("_").pop(),
               metadata.mcsbId,
               metadata.offeringName,
               '"' + feature.featureName.replace(/"/g, '""') + '"',
@@ -180,13 +182,16 @@ const ExportButton = ({
               '"' + feature.featureGuidance.replace(/"/g, '""') + '"',
               '"' + feature.featureReference.replace(/"/g, '""') + '"',
             ];
-            csvRows.push(sanitizedValues.join(","));
+            if (framework.includes(control.split("_")[0])) {
+              csvRows.push(sanitizedValues.join(","));
+            }
           });
         } else {
           if (controlIDs.includes(control.split("_").pop())) {
             metadata.features.forEach((feature) => {
               const sanitizedValues = [
                 framework,
+                '"' + control.split("_").pop() + '"',
                 metadata.mcsbId,
                 metadata.offeringName,
                 '"' + feature.featureName.replace(/"/g, '""') + '"',
@@ -195,7 +200,9 @@ const ExportButton = ({
                 '"' + feature.featureGuidance.replace(/"/g, '""') + '"',
                 '"' + feature.featureReference.replace(/"/g, '""') + '"',
               ];
-              csvRows.push(sanitizedValues.join(","));
+              if (framework.includes(control.split("_")[0])) {
+                csvRows.push(sanitizedValues.join(","));
+              }
             });
           }
         }
@@ -208,6 +215,7 @@ const ExportButton = ({
 
   const policyToCsvExporter = (data) => {
     const policyColumns = [
+      "Standard",
       "Control ID",
       "Service",
       "Policy Name",
@@ -220,23 +228,29 @@ const ExportButton = ({
         if (controlIDs.length === 0) {
           metadata.automatedPolicyAvailability.forEach((policy) => {
             const sanitizedValues = [
+              framework,
               control.split("_").pop(),
               metadata.offeringName,
               '"' + policy.policyName + '"',
               '"' + policy.policyDescription + '"',
             ];
-            csvRows.push(sanitizedValues.join(","));
+            if (framework.includes(control.split("_")[0])) {
+              csvRows.push(sanitizedValues.join(","));
+            }
           });
         } else {
           if (controlIDs.includes(control.split("_").pop())) {
             metadata.automatedPolicyAvailability.forEach((policy) => {
               const sanitizedValues = [
+                framework,
                 control.split("_").pop(),
                 metadata.offeringName,
                 '"' + policy.policyName + '"',
                 '"' + policy.policyDescription + '"',
               ];
-              csvRows.push(sanitizedValues.join(","));
+              if (framework.includes(control.split("_")[0])) {
+                csvRows.push(sanitizedValues.join(","));
+              }
             });
           }
         }
