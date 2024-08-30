@@ -1,10 +1,30 @@
 # Programmatic Compliance
 
+## What is the Programmatic Compliance tool? 
+
+Microsoft and its customers follow a shared responsibility model regarding security and compliance of the Microsoft Cloud environment. With the Programmatic Compliance tool, customers can evaluate the compliance of multiple services at the same time based on industry standards helping to improve time-to-value and accelerate innovation. 
+
+The Programmatic Compliance tool revolutionizes the compliance experience, delivering **unified**, **machine-readable**, and **retrievable** compliance data.  
+
+- **Unified**: A singular source for all compliance data. 
+- **Machine-Readable**: Seamlessly integrates with other systems via public API 
+- **Retrievable**: Unfettered access to the latest compliance information.
+
+### Use-cases and capabilities 
+
+The Programmatic Compliance tool, deployed as a webapp to your Azure Subscription, focuses on enabling three pivotal personas and their scenarios within the compliance lifecycle, while also providing a solution that includes lookup by standard and service, along with a pre-deployment scenario: 
+
+- A Compliance Officer needs to ensure Microsoft provides compliance capabilities for a given service, to meet the company’s industry/internal standards.  
+- The Service Owner needs to assess risk for the service and evaluate the controls and policies to approve/deny a service for deployment. 
+- The Cloud Architect needs to understand any actions they need to take to configure and maintain the compliance and security of each service within their solution.  
+
+In a few clicks, customers can easily find and export the relevant compliance information for reporting or deployment. 
+
 ## Licensing and Disclaimers.
 
 The Programmatic Compliance Preview (the "Preview") is licensed to you as part of your Azure subscription and subject to terms applicable to "Previews" as detailed in the Universal License Terms for Online Services section of the Microsoft Product Terms and the Microsoft Products and Services Data Protection Addendum ("DPA"). AS STATED IN THOSE TERMS, PREVIEWS ARE PROVIDED "AS-IS," "WITH ALL FAULTS," AND "AS AVAILABLE," AND ARE EXCLUDED FROM THE SERVICE LEVEL AGREEMENTS AND LIMITED WARRANTY. MICROSOFT MAKES NO WARRANTY THAT THE DATA AND CONTENT PROVIDED AS PART OF THE PREVIEW IS ACCURATE, UP-TO-DATE, OR COMPLETE. THE PREVIEW (1) IS NOT DESIGNED, INTENDED, OR MADE AVAILABLE AS LEGAL SERVICES, AND (2) IS NOT INTENDED TO SUBSTITUTE FOR PROFESSIONAL LEGAL COUNSEL OR JUDGMENT. THE DATA AND CONTENT PROVIDED THROUGH THE PREVIEW SHOULD NOT BE USED IN PLACE OF CONSULTING WITH A QUALIFIED PROFESSIONAL LEGAL PROFESSIONAL FOR YOUR SPECIFIC NEEDS. Previews may employ lesser or different privacy and security measures than those typically present in Azure Services. Unless otherwise noted, Customer should not use Previews to process Personal Data or other data that is subject to legal or regulatory compliance requirements. The following terms in the DPA do not apply to Previews: Processing of Personal Data; GDPR, Data Security, and HIPAA Business Associate. We may change or discontinue Previews at any time without notice. We also may choose not to release a Preview into General Availability.
 
-# 1. Create the Azure Web App that hosts the UX
+## 1. Create the Azure Web App that hosts the UX
 
 ### A. App registration and roles configurations
 
