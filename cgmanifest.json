@@ -4,10 +4,10 @@
     "registrations": [
         {
             "component": {
-                "type": git,
-                "git": https://github.com/microsoft/ProgrammaticCompliance
+                "type": "git",
+                "git": "https://github.com/microsoft/ProgrammaticCompliance",
             },
-            "developmentDependency": false,
+            "developmentDependency": false
         }
     ]
 }

@@ -1,36 +1,36 @@
-import React, { useState, useEffect } from "react";
 import {
+  ConstrainMode,
   DetailsList,
-  SelectionMode,
   DetailsListLayoutMode,
-  Text,
   Icon,
   IconButton,
-  Stack,
   initializeIcons,
-  TooltipHost,
+  Link,
+  SelectionMode,
+  Stack,
   Sticky,
   StickyPositionType,
-  ConstrainMode,
+  Text,
+  TooltipHost,
 } from "@fluentui/react";
-import { useId } from "@fluentui/react-hooks";
+import React, { useEffect, useState } from "react";
 
-import ACFModal from "../Modals/ACFModal.js";
-import TableStates from "./TableStates.js";
+import PoliciesModal from "../Modals/PoliciesModal.jsx";
+import TableStates from "./TableStates.jsx";
 
+import { tableText } from "../../static/staticStrings.js";
 import "../../styles/Tables.css";
 import {
-  gridStyles,
-  focusZoneProps,
   classNames,
+  focusZoneProps,
+  gridStyles,
 } from "../../styles/TablesStyles.js";
-import { tableText } from "../../static/staticStrings.js";
-import { sortRows, groupAndSortRows } from "../../utils/tableSortUtils.js";
 import { sanitizeControlID } from "../../utils/controlIdUtils.js";
+import { groupAndSortRows, sortRows } from "../../utils/tableSortUtils.js";
 
 initializeIcons();
 
-const ACF = (props) => {
+const POLICY = (props) => {
   let controlIDSet = new Set(props.controls);
 
   const onItemInvoked = (item) => {
@@ -48,7 +48,7 @@ const ACF = (props) => {
   const [modalData, setModalData] = useState({});
   const [isTableExpanded, setIsTableExpanded] = useState(true);
   const [isControlDescending, setIsControlDescending] = useState(true);
-  const [isACFDescending, setIsACFDescending] = useState(true);
+  const [isMCSBDescending, setIsMCSBDescending] = useState(true);
   const [isSmallScreen, setIsSmallScreen] = useState(window.innerWidth <= 1300);
 
   const columns = [
@@ -80,7 +80,6 @@ const ACF = (props) => {
         <>
           Control ID
           <TooltipHost
-            id={useId("tooltip")}
             content="Identifier for specific control within the selected regulatory framework"
             closeDelay={1000}
           >
@@ -94,20 +93,32 @@ const ACF = (props) => {
       ),
       fieldName: "control",
       minWidth: 105,
-      maxWidth: 105,
+      maxWidth: 150,
       isResizable: true,
       isSorted: true,
       isSortedDescending: isControlDescending,
       isSortable: true,
     },
     {
-      key: "acfID",
+      key: "mcsbID",
       name: (
         <>
-          Azure Control Framework ID
+          Microsoft Cloud Security Benchmark ID
           <TooltipHost
-            id={useId("tooltip")}
-            content="Identifier for specific control within Azure Control Framework"
+            content={
+              <>
+                Identifier for specific control within{" "}
+                <Link
+                  href={
+                    "https://learn.microsoft.com/security/benchmark/azure/overview"
+                  }
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  Microsoft Cloud Security Benchmark
+                </Link>
+              </>
+            }
             closeDelay={1000}
           >
             <Icon
@@ -118,22 +129,101 @@ const ACF = (props) => {
           </TooltipHost>
         </>
       ),
-      fieldName: "acfID",
-      minWidth: 125,
-      maxWidth: 125,
+      fieldName: "mcsbID",
+      minWidth: 175,
+      maxWidth: 175,
       isResizable: true,
       isSorted: true,
-      isSortedDescending: isACFDescending,
+      isSortedDescending: isMCSBDescending,
       isSortable: true,
+    },
+    {
+      key: "service",
+      name: (
+        <>
+          Service
+          <TooltipHost
+            content=<Link
+              href={"https://azure.microsoft.com/products/"}
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              Microsoft Cloud product
+            </Link>
+            closeDelay={1000}
+          >
+            <Icon
+              styles={{ root: { verticalAlign: "bottom", marginLeft: "5px" } }}
+              iconName="info"
+              aria-label="Tooltip"
+            />
+          </TooltipHost>
+        </>
+      ),
+      fieldName: "service",
+      minWidth: 100,
+      maxWidth: 120,
+      isResizable: true,
+    },
+    {
+      key: "policy",
+      name: (
+        <>
+          Azure Policy Name
+          <TooltipHost
+            content={
+              <>
+                Title of the{" "}
+                <Link
+                  href={
+                    "https://learn.microsoft.com/azure/governance/policy/overview"
+                  }
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                   Azure Policy
+                </Link>{" "}
+                used to help measure compliance with a given regulatory
+                framework
+              </>
+            }
+            closeDelay={1000}
+          >
+            <Icon
+              styles={{ root: { verticalAlign: "bottom", marginLeft: "5px" } }}
+              iconName="info"
+              aria-label="Tooltip"
+            />
+          </TooltipHost>
+        </>
+      ),
+      fieldName: "policy",
+      minWidth: 200,
+      maxWidth: 400,
+      isResizable: true,
     },
     {
       key: "description",
       name: (
         <>
-          Microsoft Managed Actions - Description
+          Azure Policy Description
           <TooltipHost
-            id={useId("tooltip")}
-            content="Summary of the actions Microsoft takes to help fulfill its compliance responsibilities when developing and operating the Microsoft Cloud"
+            content={
+              <>
+                More details about the{" "}
+                <Link
+                  href={
+                    "https://learn.microsoft.com/azure/governance/policy/overview"
+                  }
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                   Azure Policy
+                </Link>{" "}
+                used to help measure compliance with a given regulatory
+                framework
+              </>
+            }
             closeDelay={1000}
           >
             <Icon
@@ -146,17 +236,31 @@ const ACF = (props) => {
       ),
       fieldName: "description",
       minWidth: 200,
-      maxWidth: 600,
+      maxWidth: 800,
       isResizable: true,
     },
     {
-      key: "details",
+      key: "policyID",
       name: (
         <>
-          Microsoft Managed Actions - Details
+          Reference
           <TooltipHost
-            id={useId("tooltip")}
-            content="Additional details about the actions Microsoft takes to help fulfill its compliance responsibilities when developing and operating the Microsoft Cloud"
+            content={
+              <>
+                Link to more information about the{" "}
+                <Link
+                  href={
+                    "https://learn.microsoft.com/azure/governance/policy/overview"
+                  }
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                   Azure Policy
+                </Link>{" "}
+                used to help measure compliance with a given regulatory
+                framework
+              </>
+            }
             closeDelay={1000}
           >
             <Icon
@@ -167,50 +271,29 @@ const ACF = (props) => {
           </TooltipHost>
         </>
       ),
-      fieldName: "details",
-      minWidth: 200,
-      maxWidth: 600,
+      fieldName: "policyID",
+      minWidth: 90,
+      maxWidth: 90,
       isResizable: true,
+      onRender: (item) => (
+        <Link
+          href={
+            "https://ms.portal.azure.com/#view/Microsoft_Azure_Policy/PolicyDetailBlade/definitionId/%2Fproviders%2FMicrosoft.Authorization%2FpolicyDefinitions%2F" +
+            item.policyID
+          }
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          <Icon
+            iconName="OpenInNewWindow"
+            style={{ marginRight: "4px", fontSize: "14px" }}
+            aria-label="Open in new tab"
+          />
+          See Docs
+        </Link>
+      ),
     },
   ];
-
-  const onColumnClick = (ev, column) => {
-    let groupedArray;
-    const sortableColumn = column;
-    if (sortableColumn.key === "control") {
-      setIsControlDescending(!isControlDescending);
-      const reversedItems = items.reverse();
-      let sortedItems = sortRows(items, props.framework);
-      if (isControlDescending) {
-        sortedItems = sortedItems.reverse();
-      }
-      groupedArray = groupAndSortRows(
-        sortedItems,
-        isControlDescending,
-        props.framework
-      );
-      setItems(reversedItems);
-      setGroupedItems(groupedArray);
-    }
-    if (sortableColumn.key === "acfID") {
-      setIsACFDescending(!isACFDescending);
-      let sortedItems = items.sort((a, b) => {
-        const numA = parseInt(a.acfID.match(/\d+/g), 10);
-        const numB = parseInt(b.acfID.match(/\d+/g), 10);
-        return numA - numB;
-      });
-      if (isACFDescending) {
-        sortedItems = sortedItems.reverse();
-      }
-      groupedArray = groupAndSortRows(
-        sortedItems,
-        isACFDescending,
-        "ACF_Table"
-      );
-      setItems(sortedItems);
-      setGroupedItems(groupedArray);
-    }
-  };
 
   const onRenderDetailsHeader = (headerProps, defaultRender) => {
     if (!headerProps || !defaultRender) {
@@ -242,11 +325,58 @@ const ACF = (props) => {
     );
   };
 
-  const onRenderColumn = (item, index, column) => {
-    const value =
-      item && column && column.fieldName ? item[column.fieldName] || "" : "";
+  const onColumnClick = (ev, column) => {
+    let groupedArray;
+    const sortableColumn = column;
+    if (sortableColumn.key === "control") {
+      setIsControlDescending(!isControlDescending);
+      const reversedItems = items.reverse();
+      let sortedItems = sortRows(items, props.framework);
+      if (isControlDescending) {
+        sortedItems = sortedItems.reverse();
+      }
+      groupedArray = groupAndSortRows(
+        sortedItems,
+        isControlDescending,
+        props.framework
+      );
+      setItems(reversedItems);
+      setGroupedItems(groupedArray);
+    }
+    if (sortableColumn.key === "mcsbID") {
+      setIsMCSBDescending(!isMCSBDescending);
+      let sortedItems = items.sort((a, b) => {
+        const getNumericParts = (str) => str.match(/\d+/g).map(Number) || [0];
+        const [alphaA, numsA] = [
+          a.mcsbID.match(/[A-Za-z]+/)[0],
+          getNumericParts(a.mcsbID),
+        ];
+        const [alphaB, numsB] = [
+          b.mcsbID.match(/[A-Za-z]+/)[0],
+          getNumericParts(b.mcsbID),
+        ];
 
-    return <div data-is-focusable={true}>{value}</div>;
+        if (alphaA.localeCompare(alphaB) !== 0) {
+          return alphaA.localeCompare(alphaB);
+        }
+        for (let i = 0; i < Math.max(numsA.length, numsB.length); i++) {
+          const diff = numsA[i] - numsB[i];
+          if (diff !== 0) {
+            return diff;
+          }
+        }
+      });
+      if (isMCSBDescending) {
+        sortedItems = sortedItems.reverse();
+      }
+      groupedArray = groupAndSortRows(
+        sortedItems,
+        isMCSBDescending,
+        "MCSB_Table"
+      );
+      setItems(sortedItems);
+      setGroupedItems(groupedArray);
+    }
   };
 
   useEffect(() => {
@@ -270,51 +400,56 @@ const ACF = (props) => {
 
   // ENTRY POINT
   useEffect(() => {
-    const flattenedData = flattenData(props.data);
+    let flattenedData = flattenData(props.data);
     initTableLoad(flattenedData);
-  }, [props.data]);
+  }, [props]);
 
   function flattenData(dataset) {
     const temp = [];
     dataset.forEach((row) => {
-      let rowControls = row.properties.metadata.frameworkControlsMappings;
-
+      let rowControls = row.properties_metadata.frameworkControlsMappings;
       // if there are user-selected control IDs, then only show those controls
       // this filters out rows that do not have any user-selected IDs in their controls array
       if (controlIDSet && controlIDSet.size > 0) {
         rowControls.forEach((control) => {
-          const controlID = control.split("_").pop();
-          const mappedControl = props.mapState.get(
-            sanitizeControlID(controlID)
-          );
-
-          if (controlIDSet.has(controlID) && mappedControl !== undefined) {
-            temp.push({
-              control: `${controlID}: ${mappedControl}`,
-              acfID: row.name,
-              description: row.properties.description,
-              details: row.properties.requirements,
-            });
+          if (controlIDSet.has(control.split("_").pop())) {
+            row.properties_metadata.automatedPolicyAvailability.forEach(
+              (policy) => {
+                temp.push({
+                  mcsbID: row.properties_metadata.mcsbId,
+                  control: `${control.split("_").pop()}: ${props.mapState.get(
+                    sanitizeControlID(control.split("_").pop())
+                  )}`,
+                  service: row.properties_metadata.offeringName,
+                  category: policy.policyCategory,
+                  policy: policy.policyName,
+                  description: policy.policyDescription,
+                  policyID: policy.policyId,
+                });
+              }
+            );
           }
         });
-      } else {
         // otherwise, since the user didn't limit any controls,
         // find all of the rows that have our chosen framework instead and show them all
+      } else {
         rowControls.forEach((control) => {
           if (control.includes(props.framework)) {
-            const controlID = control.split("_").pop();
-            const mappedControl = props.mapState.get(
-              sanitizeControlID(controlID)
+            row.properties_metadata.automatedPolicyAvailability.forEach(
+              (policy) => {
+                temp.push({
+                  mcsbID: row.properties_metadata.mcsbId,
+                  control: `${control.split("_").pop()}: ${props.mapState.get(
+                    sanitizeControlID(control.split("_").pop())
+                  )}`,
+                  service: row.properties_metadata.offeringName,
+                  category: policy.policyCategory,
+                  policy: policy.policyName,
+                  description: policy.policyDescription,
+                  policyID: policy.policyId,
+                });
+              }
             );
-
-            if (mappedControl !== undefined) {
-              temp.push({
-                control: `${controlID}: ${mappedControl}`,
-                acfID: row.name,
-                description: row.properties.description,
-                details: row.properties.requirements,
-              });
-            }
           }
         });
       }
@@ -323,15 +458,15 @@ const ACF = (props) => {
   }
 
   return (
-    <div className={"cardStyle"}>
+    <div className="cardStyle">
       <Stack horizontal verticalAlign="center" horizontalAlign="space-between">
-        <h2 className="titleStyle">{tableText.acfTitle}</h2>
+        <h2 className="titleStyle">{tableText.policyTitle}</h2>
         <IconButton
           ariaLabel={isTableExpanded ? "Collapse table" : "Expand table"}
           title={
             isTableExpanded
-              ? "Collapse Microsoft Cloud Compliance Foundation table"
-              : "Expand Microsoft Cloud Compliance Foundation table"
+              ? "Collapse Compliance Policies by Service table"
+              : "Expand Compliance Policies by Service table"
           }
           iconProps={{
             iconName: isTableExpanded ? "ChevronUp" : "ChevronDown",
@@ -343,7 +478,7 @@ const ACF = (props) => {
         />
       </Stack>
       <Text variant="medium" className="subtitleStyle">
-        {tableText.acfDescription}
+        {tableText.policyDescription}
       </Text>
 
       {isTableExpanded ? (
@@ -356,7 +491,6 @@ const ACF = (props) => {
                 onColumnHeaderClick={onColumnClick}
                 selectionMode={SelectionMode.none}
                 onItemInvoked={onItemInvoked}
-                onRenderItemColumn={onRenderColumn}
                 onRenderDetailsHeader={onRenderDetailsHeader}
                 onRenderRow={(props, defaultRender) => {
                   if (!props) return null;
@@ -381,9 +515,6 @@ const ACF = (props) => {
                   return defaultRender ? defaultRender(props) : <></>;
                 }}
                 groups={groupedItems}
-                groupProps={{
-                  showEmptyGroups: true,
-                }}
                 layoutMode={DetailsListLayoutMode.justified}
                 styles={gridStyles}
                 focusZoneProps={focusZoneProps}
@@ -399,7 +530,6 @@ const ACF = (props) => {
                 onColumnHeaderClick={onColumnClick}
                 selectionMode={SelectionMode.none}
                 onItemInvoked={onItemInvoked}
-                onRenderItemColumn={onRenderColumn}
                 onRenderDetailsHeader={onRenderDetailsHeader}
                 onRenderRow={(props, defaultRender) => {
                   if (!props) return null;
@@ -433,12 +563,12 @@ const ACF = (props) => {
               />
             )
           ) : (
-            <TableStates type="ACF" variant="EmptyLoad" />
+            <TableStates type="Policy" variant="EmptyLoad" />
           )}
         </div>
       ) : null}
 
-      <ACFModal
+      <PoliciesModal
         isLightDismiss
         isOpen={isModalOpen}
         onClose={closeModal}
@@ -448,4 +578,4 @@ const ACF = (props) => {
   );
 };
 
-export default ACF;
+export default POLICY;

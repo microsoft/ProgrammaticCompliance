@@ -1,41 +1,39 @@
+import { Dropdown, DropdownMenuItemType } from "@fluentui/react";
 import React, { useEffect, useState } from "react";
-import { DropdownMenuItemType, Dropdown } from "@fluentui/react";
-import ACF from "../Tables/ACF.js";
-import MCSB from "../Tables/MCSB.js";
-import Policies from "../Tables/Policies.js";
-import TableStates from "../Tables/TableStates.js";
-import FilterBadgesContainer from "./FilterBadgesContainer.js";
-import ExportButton from "../ExportButton.js";
-import SearchableDropdown from "./SearchableDropdown.js";
+import { allACFs, filteredACFs } from "../../queries/ACF.Query.js";
 import {
-  frameworks,
+  allControls,
+  allDomains,
+  allServices
+} from "../../queries/Filters.Query.js";
+import { filteredMCSB } from "../../queries/MCSB.Query.jsx";
+import {
   apiText,
+  appText,
+  frameworks,
   frameworkStrategyMapping,
 } from "../../static/staticStrings.js";
 import {
-  cisDomains,
-  allDomains,
-  allServices,
-  allControls,
-} from "../../queries/Filters.Query.js";
-import { allACFs, filteredACFs } from "../../queries/ACF.Query.js";
-import { filteredMCSB, aksTestMCSB } from "../../queries/MCSB.Query.js";
-import {
-  styles,
-  frameworkStyles,
-  selectedFrameworkStyles,
-  serviceStyles,
-  selectedServiceStyles,
   controlStyles,
+  frameworkStyles,
   selectedControlStyles,
+  selectedFrameworkStyles,
+  selectedServiceStyles,
+  serviceStyles,
+  styles,
 } from "../../styles/DropdownStyles.js";
-import { appText } from "../../static/staticStrings.js";
-import Frameworks from "./Frameworks.js";
 import {
-  sanitizeControlID,
-  numberSort,
   prefixExtractor,
+  sanitizeControlID
 } from "../../utils/filterUtils.js";
+import ExportButton from "../ExportButton.jsx";
+import ACF from "../Tables/ACF.jsx";
+import MCSB from "../Tables/MCSB.jsx";
+import Policies from "../Tables/Policies.jsx";
+import TableStates from "../Tables/TableStates.jsx";
+import FilterBadgesContainer from "./FilterBadgesContainer.jsx";
+import Frameworks from "./Frameworks.jsx";
+import SearchableDropdown from "./SearchableDropdown.jsx";
 
 import "../../styles/FilterBar.css";
 import "../../styles/index.css";

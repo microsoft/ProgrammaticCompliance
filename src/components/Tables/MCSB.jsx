@@ -1,32 +1,32 @@
-import React, { useState, useEffect } from "react";
 import {
+  ConstrainMode,
   DetailsList,
-  SelectionMode,
   DetailsListLayoutMode,
-  Text,
   Icon,
   IconButton,
-  Stack,
   initializeIcons,
-  TooltipHost,
+  Link,
+  SelectionMode,
+  Stack,
   Sticky,
   StickyPositionType,
-  ConstrainMode,
-  Link,
+  Text,
+  TooltipHost,
 } from "@fluentui/react";
+import React, { useEffect, useState } from "react";
 
-import MCSBModal from "../Modals/MCSBModal.js";
-import TableStates from "./TableStates.js";
+import MCSBModal from "../Modals/MCSBModal.jsx";
+import TableStates from "./TableStates.jsx";
 
+import { tableText } from "../../static/staticStrings.js";
 import "../../styles/Tables.css";
 import {
-  gridStyles,
-  focusZoneProps,
   classNames,
+  focusZoneProps,
+  gridStyles,
 } from "../../styles/TablesStyles.js";
-import { tableText } from "../../static/staticStrings.js";
-import { sortRows, groupAndSortRows } from "../../utils/tableSortUtils.js";
 import { sanitizeControlID } from "../../utils/controlIdUtils.js";
+import { groupAndSortRows, sortRows } from "../../utils/tableSortUtils.js";
 
 initializeIcons();
 

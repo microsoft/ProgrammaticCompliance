@@ -409,3 +409,4 @@ FodyWeavers.xsd
 build/
 node_modules/
 package-lock.json
+dist/

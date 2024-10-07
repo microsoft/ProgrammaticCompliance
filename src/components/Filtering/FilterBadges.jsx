@@ -1,5 +1,5 @@
 import React from 'react';
-import SelectedFilterLabel from './SelectedFilterLabel.js';
+import SelectedFilterLabel from './SelectedFilterLabel.jsx';
 
 const FilterBadges = ({ filterItems, filterType, onRemoveFilter }) => {
   if (filterItems.length === 0) {
