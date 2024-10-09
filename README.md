@@ -37,7 +37,7 @@ The Programmatic Compliance Preview (the "Preview") is licensed to you as part o
 - Under _Redirect URI_, select _Single-Page application(SPA)_ and input _https://webapp.azurewebsites.net_ as a value. Note that the Redirect URI is the URL assigned to the webapp that will be deployed in the subsequent steps. We can come back and update this URI after the webapp is created.
   - Remember to check the boxes for _Access token_ and _ID tokens_
 - Click _Register_
-  ![alt text](image-3.png)
+  ![alt text](docs/Images/image-3.png)
 - After the app registration succeeds, navigate to _Your_New_Registration > Manage > API Permissions_ and select _Add a permission_. We will be adding the following **delegated** permissions:
   - _Azure Service Management_ with _user_impersonation_ permissions.
   - _Microsoft Graph_ with the _User.Read_ permissions.
@@ -225,7 +225,7 @@ You can configure a service principal and give it enough privileges to create th
   > [!IMPORTANT]
   > You can create a custom role that only has permissions to read the policy definitions and policy metadata resources. Assign that custom role to users so that they do not have access to all of the other resources under the root management group.
 - Create the management groups in which the custom policies will be created (about 9 management groups are needed to host the custom policy definitions)
-  ![alt text](image-1.png)
+  ![alt text](docs/Images/image-1.png)
 
 - Create the custom policy definitions resources
 
