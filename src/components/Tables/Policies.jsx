@@ -13,7 +13,7 @@ import {
   Text,
   TooltipHost,
 } from "@fluentui/react";
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 
 import PoliciesModal from "../Modals/PoliciesModal.jsx";
 import TableStates from "./TableStates.jsx";
@@ -31,7 +31,7 @@ import { groupAndSortRows, sortRows } from "../../utils/tableSortUtils.js";
 initializeIcons();
 
 const POLICY = (props) => {
-  let controlIDSet = new Set(props.controls);
+  const controlIDSet = new Set(props.controls);
 
   const onItemInvoked = (item) => {
     setModalData(item);
@@ -218,7 +218,7 @@ const POLICY = (props) => {
                   target="_blank"
                   rel="noopener noreferrer"
                 >
-                   Azure Policy
+                   Azure Policy
                 </Link>{" "}
                 used to help measure compliance with a given regulatory
                 framework
@@ -393,21 +393,21 @@ const POLICY = (props) => {
   }, []);
 
   const initTableLoad = (flattenedData) => {
-    let sortedItems = sortRows(flattenedData, props.framework);
+    const sortedItems = sortRows(flattenedData, props.framework);
     setItems(sortedItems);
     setGroupedItems(groupAndSortRows(sortedItems, false, props.framework));
   };
 
   // ENTRY POINT
   useEffect(() => {
-    let flattenedData = flattenData(props.data);
+    const flattenedData = flattenData(props.data);
     initTableLoad(flattenedData);
   }, [props]);
 
   function flattenData(dataset) {
     const temp = [];
     dataset.forEach((row) => {
-      let rowControls = row.properties_metadata.frameworkControlsMappings;
+      const rowControls = row.properties_metadata.frameworkControlsMappings;
       // if there are user-selected control IDs, then only show those controls
       // this filters out rows that do not have any user-selected IDs in their controls array
       if (controlIDSet && controlIDSet.size > 0) {

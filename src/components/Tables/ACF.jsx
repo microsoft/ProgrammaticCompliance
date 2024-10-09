@@ -13,7 +13,7 @@ import {
   TooltipHost,
 } from "@fluentui/react";
 import { useId } from "@fluentui/react-hooks";
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 
 import ACFModal from "../Modals/ACFModal.jsx";
 import TableStates from "./TableStates.jsx";
@@ -31,7 +31,7 @@ import { groupAndSortRows, sortRows } from "../../utils/tableSortUtils.js";
 initializeIcons();
 
 const ACF = (props) => {
-  let controlIDSet = new Set(props.controls);
+  const controlIDSet = new Set(props.controls);
 
   const onItemInvoked = (item) => {
     setModalData(item);
@@ -263,7 +263,7 @@ const ACF = (props) => {
   }, []);
 
   const initTableLoad = (flattenedData) => {
-    let sortedItems = sortRows(flattenedData, props.framework);
+    const sortedItems = sortRows(flattenedData, props.framework);
     setItems(sortedItems);
     setGroupedItems(groupAndSortRows(sortedItems, false, props.framework));
   };
@@ -277,7 +277,7 @@ const ACF = (props) => {
   function flattenData(dataset) {
     const temp = [];
     dataset.forEach((row) => {
-      let rowControls = row.properties.metadata.frameworkControlsMappings;
+      const rowControls = row.properties.metadata.frameworkControlsMappings;
 
       // if there are user-selected control IDs, then only show those controls
       // this filters out rows that do not have any user-selected IDs in their controls array
