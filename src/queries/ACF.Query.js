@@ -4,24 +4,24 @@
 // };
 
 export const allACFs = (framework) => {
-  let query = `policyresources | where type contains 'microsoft.policyinsights/policymetadata' | where name contains "ACF" and properties.metadata.frameworkControlsMappings contains '${framework}'`;
+  const query = `policyresources | where type contains 'microsoft.policyinsights/policymetadata' | where name contains "ACF" and properties.metadata.frameworkControlsMappings contains '${framework}'`;
   return query;
 };
 
 // this query accounts for user-selected control IDs
 export const filteredACFs = (framework, controls) => {
-  let whereClause = `ControlIDs == '${framework}`;
-  let CONTROL_ID_CLAUSES = "";
+  // todo: const whereClause = `ControlIDs == '${framework}`;
+  let CONTROL_ID_CLAUSES = '';
   controls.forEach((control) => {
     CONTROL_ID_CLAUSES +=
       `properties.metadata.frameworkControlsMappings has '${framework}` +
-      "_" +
+      '_' +
       control +
       "'" +
       ' or name contains "ACF" and';
   });
   CONTROL_ID_CLAUSES = CONTROL_ID_CLAUSES.slice(0, -28);
-  let baseQuery = `policyresources | where type contains 'microsoft.policyinsights/policymetadata' | where name contains "ACF" and ${CONTROL_ID_CLAUSES}`;
+  const baseQuery = `policyresources | where type contains 'microsoft.policyinsights/policymetadata' | where name contains "ACF" and ${CONTROL_ID_CLAUSES}`;
   console.log(baseQuery);
   return baseQuery;
 };

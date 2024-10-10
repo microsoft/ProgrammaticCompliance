@@ -1,7 +1,7 @@
 import {
   customSort,
-  numberSort,
   isoSort,
+  numberSort,
   sanitizeControlID,
 } from "../../utils/filterUtils";
 
@@ -26,7 +26,7 @@ const Frameworks = {
       }));
     },
     getControlIDForControls: (item) => {
-      let controlID = item.properties.metadataId.replace(/\([^()]*\)/g, "");
+      const controlID = item.properties.metadataId.replace(/\([^()]*\)/g, "");
       return controlID.trim().split(" ").pop();
     },
     sanitizeControlIDForControls: (controlID) => {
@@ -34,7 +34,7 @@ const Frameworks = {
     },
     getCurrentMap: (data) => {
       let controlID;
-      let currentMap = new Map();
+      const currentMap = new Map();
       data.forEach((item) => {
         if (!item.properties.metadataId.includes("(")) {
           controlID = item.properties.metadataId.replace(/\([^()]*\)/g, "");
@@ -80,7 +80,7 @@ const Frameworks = {
     },
     getCurrentMap: (data) => {
       let controlID;
-      let currentMap = new Map();
+      const currentMap = new Map();
       data.forEach((item) => {
         controlID = item.properties.metadataId.split(" ").pop().trim();
         currentMap.set(controlID, item.properties.title);
@@ -123,7 +123,7 @@ const Frameworks = {
     },
     getCurrentMap: (data) => {
       let controlID;
-      let currentMap = new Map();
+      const currentMap = new Map();
       data.forEach((item) => {
         controlID = item.properties.metadataId.split(" ").pop().trim();
         currentMap.set(controlID, item.properties.title);
@@ -170,7 +170,7 @@ const Frameworks = {
     },
     getCurrentMap: (data) => {
       let controlID;
-      let currentMap = new Map();
+      const currentMap = new Map();
       data.forEach((item) => {
         controlID = item.properties.metadataId.split(" ").pop().trim();
         currentMap.set(controlID, item.properties.title);
@@ -212,7 +212,7 @@ const Frameworks = {
     },
     getCurrentMap: (data) => {
       let controlID;
-      let currentMap = new Map();
+      const currentMap = new Map();
 
       data.forEach((item) => {
         controlID = item.properties.metadataId.split(" ").pop().trim();
