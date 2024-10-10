@@ -1,12 +1,11 @@
-import React, { useEffect, useState } from "react";
 import {
-  DefaultButton,
-  PrimaryButton,
-  TextField,
   Checkbox,
+  DefaultButton,
   Panel,
   PanelType,
+  TextField
 } from "@fluentui/react";
+import React, { useState } from "react";
 
 const addIcon = { iconName: "Add" };
 const downloadIcon = { iconName: "Download" };
@@ -35,9 +34,9 @@ const ExportButton = ({
   const handleExportJSON = () => {
     if (apiData) {
       const jsonData = JSON.stringify(apiData, null, 2);
-      let blob = new Blob([jsonData], { type: "application/json" });
-      let url = URL.createObjectURL(blob);
-      let a = document.createElement("a");
+      const blob = new Blob([jsonData], { type: "application/json" });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement("a");
       a.href = url;
       a.download = "exportedMCSB.json";
       document.body.appendChild(a);
@@ -45,9 +44,9 @@ const ExportButton = ({
       URL.revokeObjectURL(url);
     }
     const jsonAcf = JSON.stringify(acfData, null, 2);
-    let blob = new Blob([jsonAcf], { type: "application/json" });
-    let url = URL.createObjectURL(blob);
-    let a = document.createElement("a");
+    const blob = new Blob([jsonAcf], { type: "application/json" });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement("a");
     a.href = url;
     a.download = "exportedACF.json";
     document.body.appendChild(a);
@@ -113,7 +112,7 @@ const ExportButton = ({
     let csvRows = [ACFcolumns.join(",")];
     for (const item of data) {
       let controlID;
-      for (let mapping of item.properties.metadata.frameworkControlsMappings) {
+      for (const mapping of item.properties.metadata.frameworkControlsMappings) {
         if (controlIDs.length === 0) {
           // there are not controls, export all with the framework
           if (framework == "NIST_SP_800-53_R4") {

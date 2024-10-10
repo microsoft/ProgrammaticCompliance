@@ -408,3 +408,4 @@ FodyWeavers.xsd
 *.zip
 build/
 node_modules/
+dist/
