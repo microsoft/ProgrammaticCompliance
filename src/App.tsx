@@ -1,5 +1,3 @@
-// @ts-nocheck
-
 import { InteractionStatus } from '@azure/msal-browser';
 import { useIsAuthenticated, useMsal } from "@azure/msal-react";
 import { Callout, DefaultButton, DirectionalHint, FocusZone, FocusZoneTabbableElements, FontWeights, Link, mergeStyleSets, Stack, Text } from '@fluentui/react';
@@ -21,7 +19,7 @@ function MainApp() {
   const [isCalloutVisible, { toggle: toggleIsCalloutVisible }] = useBoolean(false);
   const isAuthenticated = useIsAuthenticated();
   const { inProgress, instance, accounts } = useMsal();
-  const [userToken, setUserToken] = useState("");
+  const [setUserToken] = useState("");
   const { azureToken } = useAuthorizeUser({ isAuthenticated, inProgress, accounts, instance });
 
   const getUserToken = async () => {

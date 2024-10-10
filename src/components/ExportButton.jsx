@@ -11,6 +11,7 @@ const addIcon = { iconName: "Add" };
 const downloadIcon = { iconName: "Download" };
 
 const ExportButton = ({
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   services,
   policyTable,
   apiData,
@@ -260,6 +261,7 @@ const ExportButton = ({
     return csvRows.join("\n");
   };
 
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const handleExportInitiative = () => {
     setIsPaneOpen(true);
   };

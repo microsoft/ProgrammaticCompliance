@@ -1,14 +1,10 @@
-import * as React from "react";
 import {
-    SearchBox,
-    Stack,
-    Text,
     Icon,
-    Persona,
-    PersonaPresence,
-    PersonaSize
+    Stack,
+    Text
 } from "@fluentui/react";
 
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 const examplePersona = {
     imageInitials: "MS",
     text: "Microsoft Test",

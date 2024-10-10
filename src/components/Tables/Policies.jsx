@@ -181,7 +181,7 @@ const POLICY = (props) => {
                   target="_blank"
                   rel="noopener noreferrer"
                 >
-                   Azure Policy
+                   Azure Policy
                 </Link>{" "}
                 used to help measure compliance with a given regulatory
                 framework
@@ -255,7 +255,7 @@ const POLICY = (props) => {
                   target="_blank"
                   rel="noopener noreferrer"
                 >
-                   Azure Policy
+                  Azure Policy
                 </Link>{" "}
                 used to help measure compliance with a given regulatory
                 framework

@@ -1,3 +1,4 @@
+/* eslint-disable no-prototype-builtins */
 import { Dropdown, DropdownMenuItemType } from "@fluentui/react";
 import { useEffect, useState } from "react";
 import { allACFs, filteredACFs } from "../../queries/ACF.Query.js";
@@ -113,6 +114,7 @@ const FilterBar = ({ azureToken }) => {
   };
 
   // Sanity checks if the mcsb data is malformed / fields cannot be found, if errors, displays user-friendly error message
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const checkMCSBDataValid = async () => {
     apiText.requestBody.query = filteredMCSB(
       "NIST_SP_800-53_R4",
@@ -157,6 +159,7 @@ const FilterBar = ({ azureToken }) => {
   };
 
   // Sanity checks if the acf data is malformed / fields cannot be found, if errors, displays user-friendly error message
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const checkACFDataValid = async () => {
     apiText.requestBody.query = filteredACFs("NIST_SP_800-53_R4", ["AC-2"]);
     await fetch(apiText.mainEndpoint, {
@@ -174,7 +177,7 @@ const FilterBar = ({ azureToken }) => {
         return response.json();
       })
       .then((response) => {
-        let json = response.data[0];
+        const json = response.data[0];
         if (
           !json.hasOwnProperty("AzureControlFrameworkID") ||
           !json.hasOwnProperty("ControlDomain") ||
@@ -787,6 +790,7 @@ const FilterBar = ({ azureToken }) => {
                       ? selectedServiceStyles
                       : serviceStyles
                   }
+                  // eslint-disable-next-line @typescript-eslint/no-unused-vars
                   onRenderTitle={(options) => {
                     const title = `Control Domains: (${selectedDomains.length})`;
                     return (
@@ -809,6 +813,7 @@ const FilterBar = ({ azureToken }) => {
                   disabled={
                     !selectedFramework.length > 0 || defaultControls.size === 0
                   }
+                  // eslint-disable-next-line @typescript-eslint/no-unused-vars
                   onRenderTitle={(options) => {
                     const title = `Control IDs: (${selectedControls.length})`;
                     return (
