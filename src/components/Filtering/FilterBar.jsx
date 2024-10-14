@@ -1,7 +1,7 @@
 /* eslint-disable no-prototype-builtins */
 import { Dropdown, DropdownMenuItemType } from "@fluentui/react";
 import { useEffect, useState } from "react";
-import { allACFs, filteredACFs } from "../../queries/ACF.Query.js";
+import { allACFs, filteredACFs } from "../../queries/ACF.Query.ts";
 import {
   allControls,
   allDomains,
