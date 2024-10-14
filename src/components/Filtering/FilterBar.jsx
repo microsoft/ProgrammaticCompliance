@@ -6,7 +6,7 @@ import {
   allControls,
   allDomains,
   allServices
-} from "../../queries/Filters.Query.js";
+} from "../../queries/Filters.Query.ts";
 import { filteredMCSB } from "../../queries/MCSB.Query.jsx";
 import {
   apiText,
