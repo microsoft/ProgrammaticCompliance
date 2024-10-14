@@ -7,7 +7,7 @@ import {
   allDomains,
   allServices
 } from "../../queries/Filters.Query.ts";
-import { filteredMCSB } from "../../queries/MCSB.Query.jsx";
+import { filteredMCSB } from "../../queries/MCSB.Query.ts";
 import {
   apiText,
   appText,
