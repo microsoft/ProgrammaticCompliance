@@ -35,9 +35,10 @@ Before starting, ensure you have the following installed:
 
 #### 1. Build the Programmatic Compliance Application
 
-After making any changes or configuring the React app, build it for production:
+First of all you will need to build the Programmatic Compliance Application for production:
 
 ```bash
+npm install
 npm run build
 ```
 
