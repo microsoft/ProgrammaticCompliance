@@ -34,12 +34,13 @@ az login
 Then, deploy the website using the `swa deploy` command:
 
 ```bash
-swa deploy ./dist --app-name <appName> --resource-group <resource-group-name>
+swa deploy ./dist --app-name <appName> --resource-group <resource-group-name> --env production
 ```
 
 Explanation:
 - `<appName>` is the name of your Azure Static Web App.
 - `<resource-group-name>` is the Azure resource group where the app will be created.
+- `--env production` ensures the app is available on the the Static Web App's production hostname. 
 
 ### 4. Access Your Deployed App
 
