@@ -7,5 +7,15 @@ export default defineConfig({
     globals: true,
     environment: 'jsdom',
     setupFiles: './vitest.setup.ts',
+    coverage: {
+      exclude: [
+        'eslint.config.js',
+        'vite.config.ts',
+        'vitest.config.ts',
+        'src/vite-env.d.ts',
+        'src/styles/**',
+        'dist/**',
+      ],
+    },
   },
 });
