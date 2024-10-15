@@ -20,149 +20,191 @@ The Programmatic Compliance tool, deployed as a webapp to your Azure Subscriptio
 
 In a few clicks, customers can easily find and export the relevant compliance information for reporting or deployment. 
 
-## Licensing and Disclaimers.
+## Installation
 
-The Programmatic Compliance Preview (the "Preview") is licensed to you as part of your Azure subscription and subject to terms applicable to "Previews" as detailed in the Universal License Terms for Online Services section of the Microsoft Product Terms and the Microsoft Products and Services Data Protection Addendum ("DPA"). AS STATED IN THOSE TERMS, PREVIEWS ARE PROVIDED "AS-IS," "WITH ALL FAULTS," AND "AS AVAILABLE," AND ARE EXCLUDED FROM THE SERVICE LEVEL AGREEMENTS AND LIMITED WARRANTY. MICROSOFT MAKES NO WARRANTY THAT THE DATA AND CONTENT PROVIDED AS PART OF THE PREVIEW IS ACCURATE, UP-TO-DATE, OR COMPLETE. THE PREVIEW (1) IS NOT DESIGNED, INTENDED, OR MADE AVAILABLE AS LEGAL SERVICES, AND (2) IS NOT INTENDED TO SUBSTITUTE FOR PROFESSIONAL LEGAL COUNSEL OR JUDGMENT. THE DATA AND CONTENT PROVIDED THROUGH THE PREVIEW SHOULD NOT BE USED IN PLACE OF CONSULTING WITH A QUALIFIED PROFESSIONAL LEGAL PROFESSIONAL FOR YOUR SPECIFIC NEEDS. Previews may employ lesser or different privacy and security measures than those typically present in Azure Services. Unless otherwise noted, Customer should not use Previews to process Personal Data or other data that is subject to legal or regulatory compliance requirements. The following terms in the DPA do not apply to Previews: Processing of Personal Data; GDPR, Data Security, and HIPAA Business Associate. We may change or discontinue Previews at any time without notice. We also may choose not to release a Preview into General Availability.
+### Option 1: Deploy to Storage Account Static Website 
 
-## 1. Create the Azure Web App that hosts the UX
+Below is the process of deploying the Programmatic Compliance website to an Azure Storage Account Static Website. 
 
-### A. App registration and roles configurations
+#### Prerequisites
 
-> [!NOTE]
-> If you have been using the UI throughout the private preview stage as well, please just run `git pull` and `git install` on your instance to receive updates on ingesting built-in metadata rather than custom policies. Then, skip straight to step D below to redeploy the changes to the web app.
+Before starting, ensure you have the following installed:
 
-- Navigate to the [Azure Portal](_portal.azure.com_) and search _App registrations_ in the search bar, then select it
-- Within the _App registrations_ page, select _New registration_
-- Give a name to the app, e.g. _ProgrammaticCompliance_
-- Under _Redirect URI_, select _Single-Page application(SPA)_ and input _https://webapp.azurewebsites.net_ as a value. Note that the Redirect URI is the URL assigned to the webapp that will be deployed in the subsequent steps. We can come back and update this URI after the webapp is created.
-  - Remember to check the boxes for _Access token_ and _ID tokens_
-- Click _Register_
-  ![alt text](docs/Images/image-3.png)
-- After the app registration succeeds, navigate to _Your_New_Registration > Manage > API Permissions_ and select _Add a permission_. We will be adding the following **delegated** permissions:
-  - _Azure Service Management_ with _user_impersonation_ permissions.
-  - _Microsoft Graph_ with the _User.Read_ permissions.
-- Return to the _API Permissions_ view and click on _Grant admin consent for Microsoft_ to permeate changes.
-- In case there are other users who need access to the app, first add them to your [tenant](https://learn.microsoft.com/en-us/azure/role-based-access-control/role-assignments-external-users) as guests
+- [Node.js](https://nodejs.org/en/) (v14 or higher)
+- [Azure CLI](https://docs.microsoft.com/en-us/cli/azure/install-azure-cli)
 
-### B. Azure Webapp deployment
+#### Steps
 
-> [!NOTE]
-> Terraform is the infrastructure script deployment tool we used to set up the UX. You could also use the portal to create the webapp and deploy the UX code.
+##### 1. Build the Programmatic Compliance Application
 
-- Install the latest version of [terraform](https://developer.hashicorp.com/terraform/install) locally
-- Install the latest version of [Az CLI](https://learn.microsoft.com/en-us/cli/azure/install-azure-cli-windows?tabs=azure-cli) locally
-- Navigate to the terraform scripts root folder in your terminal of choice:
+First of all you will need to build the Programmatic Compliance Application for production:
 
-```
-Set-Location -Path .\pipeline\terraform
-```
-
-- Create a storage account that hosts the terraform state file through the portal
-- Create a container in the storage account created above that hosts the terraform state file
-- Create a `.tfvars` file to set up the terraform variables. Make sure the resource group that hosts the UX webapp is different from the resource group of the storage account created in the next step. Below is an example of the contents of a `.tfvars` file:
-
-```
-resource_group_name = "ProgrammaticComplianceRG"
-location            = "eastus"
-azure_app_name      = "ProgrammaticCompliance
-```
-
-- Login to your tenant and ensure that you are using the target subscription of your choice:
-
-```
-az login
-az account set -s <subscription id>
-az account show
-```
-
-- Initialize the terraform backend:
-
-```
-terraform init -backend-config="resource_group_name=${BACKEND_STORAGE_ACCOUNT_RG}" -backend-config="storage_account_name=${BACKEND_STORAGE_ACCOUNT_NAME}" -backend-config="container_name=${BACKEND_STORAGE_CONTAINER_NAME}"
-```
-
-`BACKEND_STORAGE_ACCOUNT_RG` is the resource group of the storage account that hosts the terraform state file  
-`BACKEND_STORAGE_ACCOUNT_NAME` is the storage account that hosts the terraform state file  
-`BACKEND_STORAGE_CONTAINER_NAME` is the container of the storage account that hosts the terraform state file
-
-- Create the terraform plan:
-
-```
-terraform plan -out plan.tfplan
-```
-
-> [!NOTE]
-> It's good practice to save the terraform plan file so that when you run the terraform apply command, terraform doesn't try to regenerate another plan.
-
-- Create the infrastructure:
-
-```
-terraform apply plan.tfplan
-```
-
-> [!IMPORTANT]
-> Please update the _Redirect URI_ in the _App registration and roles configurations_ step with the actual URL assigned to the webapp once it is created.
-
-### C. Installations prior to webapp deployment
-
-The following steps should be done in your terminal, from the directory into which you cloned the Git repository.
-
-- Download and install [Node.js](https://nodejs.org/), which includes npm, for your operating system. Use the LTS to avoid any fresh issues with the current version
-- To verify that Node.js and npm are installed correctly, open a terminal and run the following commands to check their versions:
-
-```
-node -v
-npm -v
-```
-
-> [!NOTE]
-> This UX was built using Node.js v18.17.1 and npm v9.8.1.
-
-- Create a `.env` file with the following contents
-
-```
-REACT_APP_CLIENT_ID=<your value goes here>
-REACT_APP_TENANT_ID=<your value goes here>
-REACT_WEBAPP_URL=<your value goes here>
-```
-
-The above values are the id of the tenant which hosts the webapp and the app registration and the id of the app registration configured in the _App registration and roles configurations_ step.
-
-> [!NOTE]
-> The name of the above file is indeed `.env` - This is the name convention for a React environment variables file.
-
-- After verifying the previous step, use npm to install project dependencies and wait until completion:
-
-```
+```bash
 npm install
-```
-
-> [!NOTE]
-> Ignore generated warnings. Following the suggested commands may change the versions of various dependencies and break their relationship.
-
-### D. Deploy the UX code to the webapp created
-
-- Build and create a zip file that contains the source code at the root of the project:
-
-```
 npm run build
-Compress-Archive -Path * -DestinationPath deployment.zip
 ```
 
-- Deploy the zip file to the webapp:
+This will generate the production build in the `dist` folder.
 
+##### 2. Create an Azure Storage Account
+
+Now, create a storage account in Azure where the static website will be hosted. Run the following commands in the Azure CLI:
+
+```bash
+# Log in to Azure
+az login
+
+# Create a resource group (optional)
+az group create --name <resource-group-name> --location <location>
+
+# Create a storage account
+az storage account create \
+  --name <storageAccountName> \
+  --resource-group <resource-group-name> \
+  --location <location> \
+  --sku Standard_LRS \
+  --kind StorageV2 \
+  --allow-blob-public-access false \
+  --allow-shared-key-access false
 ```
-az webapp deployment source config-zip --resource-group <WEBAPP_RESOURCE_GROUP> --name <WEBAPP_NAME> --src deployment.zip
+
+- Replace `<resource-group-name>`, `<storageAccountName>`, and `<location>` with appropriate values.
+- The storage account kind should be `StorageV2` to support static website hosting.
+- Ensure you have minimum `Contributor` permissions on the resource group you are deploying to.
+
+##### 3. Enable Static Website Hosting
+
+After creating the storage account, enable static website hosting using the following command:
+
+```bash
+az storage blob service-properties update \
+  --account-name <storageAccountName> \
+  --static-website \
+  --index-document index.html \
+  --404-document 404.html
 ```
 
-Congratulations! You have now successfully configured and deployed your Programmatic Compliance website. Let the testing begin!
+- Replace `<storageAccountName>` with the name of your storage account.
+- Ensure that the `index.html` and `404.html` files are included in the build output of your React project.
 
-## 2. OPTIONAL: Configure your tenant for custom policy definitions creation
+##### 4. Upload the website Build to Azure
+
+Once static website hosting is enabled, upload your website's build to the storage account. The built files (from the `dist` folder) need to be uploaded as blobs. You can upload them using the Azure CLI:
+
+```bash
+az storage blob upload-batch \
+  --account-name <storageAccountName> \
+  --source ./dist \
+  --destination '$web'
+```
+
+- Replace `dist` with your build folder if necessary (for `create-react-app`, use `build`).
+- `$web` is a special container for hosting static website content.
+
+##### 5. Access the Deployed Website
+
+After successfully uploading your files, you can get the URL for your static website:
+
+```bash
+az storage account show \
+  --name <storageAccountName> \
+  --query "primaryEndpoints.web" \
+  --output tsv
+```
+
+This command will return the URL where your website is hosted. Open the URL in a browser to verify that your website is working as expected.
+
+#### Next steps
+
+Congratulations! You have successfully deployed the Programmatic Compliance website to an Azure Storage account with static website hosting! You can now manage your website through Azure and update it by uploading new build files as necessary.
+
+If you want to add a custom domain and SSL to your website, you can refer to [Azure's custom domain documentation](https://docs.microsoft.com/en-us/azure/storage/blobs/storage-blob-static-website-custom-domain) for further steps.
+
+### Option 2: Deploy to Azure Static Web App
+
+Follow these steps to deploy your React website to an Azure Static Web App using the `swa` CLI tool.
+
+#### Prerequisites
+
+Before starting, ensure you have the following installed:
+
+- [Node.js](https://nodejs.org/en/) (v14 or higher)
+- [Azure CLI](https://docs.microsoft.com/en-us/cli/azure/install-azure-cli)
+
+#### Steps
+
+##### 1. Install the Azure Static Web Apps CLI
+
+First, install the Static Web Apps CLI globally:
+
+```bash
+npm install -g @azure/static-web-apps-cli
+```
+
+This tool will help you simulate, develop, and deploy static websites to Azure Static Web Apps.
+
+##### 2. Build the Programmatic Compliance Application
+
+Build the Programmatic Compliance Application using the commands below:
+
+```bash
+npm install
+npm run build
+```
+
+This will generate the production build in a `dist` folder.
+
+##### 3. Deploy Using Azure SWA CLI
+
+To deploy your React app to Azure Static Web Apps, use the `swa` CLI. Make sure you’re logged in to Azure first:
+
+```bash
+az login
+```
+
+Then, deploy the website using the `swa deploy` command:
+
+```bash
+swa deploy ./dist --app-name <appName> --resource-group <resource-group-name> --env production
+```
+
+Explanation:
+- `<appName>` is the name of your Azure Static Web App.
+- `<resource-group-name>` is the Azure resource group where the app will be created.
+- `--env production` ensures the app is available on the the Static Web App's production hostname. 
+
+##### 4. Access Your Deployed App
+
+Once the deployment is complete, the CLI will return a URL where your static website is hosted. You can access your website at this URL.
+
+If you need to find the URL later, you can retrieve it by running the following command:
+
+```bash
+az staticwebapp show --name <appName> --resource-group <resource-group-name> --query "defaultHostname"
+```
+
+This command will return the URL for your deployed app.
+
+##### 5. Simulate Local Deployment (Optional)
+
+The SWA CLI also allows you to simulate the app locally to test before deploying. You can run:
+
+```bash
+swa start ./dist
+```
+
+This will serve your site locally at `http://localhost:4280`, so you can view it in a browser before deploying to Azure.
+
+##### (Optional) 6. Continuous Deployment (CI/CD) Setup
+
+If you want to automate future deployments via GitHub or other CI/CD pipelines, Azure Static Web Apps supports [continuous deployment workflows](https://docs.microsoft.com/en-us/azure/static-web-apps/build-configuration). You can easily set this up by integrating GitHub Actions or other CI tools for automated builds and deployments.
+
+## OPTIONAL: Configure your tenant for custom policy definitions creation
 
 > [!NOTE]
 > Optionally, one may use the custom manual policies for the purpose of manual attestation when automated policies are not available or partially address a control. The custom manual policies are not required by the UX or Azure Resource Graph API based retrieval of programmatic compliance information.
 
-### A. Local machine configuration
+#### 1. Local machine configuration
 
 - Download the latest version of [PowerShell](https://learn.microsoft.com/en-us/powershell/scripting/install/installing-powershell-on-windows?view=powershell-7.4)
 
@@ -199,7 +241,7 @@ Set-Location -Path .\CustomPolicies\PowerShell
 .\EnvConfig.ps1
 ```
 
-### B. Log into the Azure tenant where custom policies will be installed
+#### 2. Log into the Azure tenant where custom policies will be installed
 
 You can configure a service principal and give it enough privileges to create the custom policies.
 
@@ -215,7 +257,7 @@ You can configure a service principal and give it enough privileges to create th
 .\Login.ps1 -TenantId <Tenant ID>
 ```
 
-### C. Create the custom policies
+#### 3. Create the custom policies
 
 > [!NOTE]
 > A management group can only hold up to 500 policy definitions. With this in mind, since there are over 4000 policy definitions to create, this process will create ~9 management groups that will together host all of the policy definitions. Once the policy definitions become built-in, this step will no longer be needed.
@@ -270,3 +312,18 @@ You can configure a service principal and give it enough privileges to create th
   ```
   .\PoliciesCleanUp.ps1 -TenantId XXXX -ApplicationId AAAA -ManagementGroupIds TestGroup1,TestGroup2,TestGroup3,TestGroup4,TestGroup5,TestGroup6,TestGroup7,TestGroup8,TestGroup9
   ```
+
+## Licensing and Disclaimers.
+
+The Programmatic Compliance Preview (the "Preview") is licensed to you as part of your Azure subscription and subject to terms applicable to "Previews" as detailed in the Universal License Terms for Online Services section of the Microsoft Product Terms and the Microsoft Products and Services Data Protection Addendum ("DPA"). AS STATED IN THOSE TERMS, PREVIEWS ARE PROVIDED "AS-IS," "WITH ALL FAULTS," AND "AS AVAILABLE," AND ARE EXCLUDED FROM THE SERVICE LEVEL AGREEMENTS AND LIMITED WARRANTY. MICROSOFT MAKES NO WARRANTY THAT THE DATA AND CONTENT PROVIDED AS PART OF THE PREVIEW IS ACCURATE, UP-TO-DATE, OR COMPLETE. THE PREVIEW (1) IS NOT DESIGNED, INTENDED, OR MADE AVAILABLE AS LEGAL SERVICES, AND (2) IS NOT INTENDED TO SUBSTITUTE FOR PROFESSIONAL LEGAL COUNSEL OR JUDGMENT. THE DATA AND CONTENT PROVIDED THROUGH THE PREVIEW SHOULD NOT BE USED IN PLACE OF CONSULTING WITH A QUALIFIED PROFESSIONAL LEGAL PROFESSIONAL FOR YOUR SPECIFIC NEEDS. Previews may employ lesser or different privacy and security measures than those typically present in Azure Services. Unless otherwise noted, Customer should not use Previews to process Personal Data or other data that is subject to legal or regulatory compliance requirements. The following terms in the DPA do not apply to Previews: Processing of Personal Data; GDPR, Data Security, and HIPAA Business Associate. We may change or discontinue Previews at any time without notice. We also may choose not to release a Preview into General Availability.
+
+## Contributing
+For details on contributing to this repository, see the contributing guide.
+
+This project welcomes contributions and suggestions. Most contributions require you to agree to a Contributor License Agreement (CLA) declaring that you have the right to, and actually do, grant us the rights to use your contribution. For details, visit https://cla.microsoft.com.
+
+When you submit a pull request, a CLA-bot will automatically determine whether you need to provide a CLA and decorate the PR appropriately (e.g., label, comment). Simply follow the instructions provided by the bot. You will only need to do this once across all repositories using our CLA.
+
+This project has adopted the Microsoft Open Source Code of Conduct. For more information see the Code of Conduct FAQ or contact opencode@microsoft.com with any additional questions or comments.
+
+
