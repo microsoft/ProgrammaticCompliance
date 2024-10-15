@@ -1,37 +1,37 @@
-import React, { useState, useEffect } from "react";
 import {
+  ConstrainMode,
   DetailsList,
-  SelectionMode,
   DetailsListLayoutMode,
-  Text,
   Icon,
   IconButton,
-  Stack,
   initializeIcons,
-  TooltipHost,
+  Link,
+  SelectionMode,
+  Stack,
   Sticky,
   StickyPositionType,
-  ConstrainMode,
-  Link,
+  Text,
+  TooltipHost,
 } from "@fluentui/react";
+import { useEffect, useState } from "react";
 
-import MCSBModal from "../Modals/MCSBModal.js";
-import TableStates from "./TableStates.js";
+import MCSBModal from "../Modals/MCSBModal.jsx";
+import TableStates from "./TableStates.jsx";
 
+import { tableText } from "../../static/staticStrings.js";
 import "../../styles/Tables.css";
 import {
-  gridStyles,
-  focusZoneProps,
   classNames,
+  focusZoneProps,
+  gridStyles,
 } from "../../styles/TablesStyles.js";
-import { tableText } from "../../static/staticStrings.js";
-import { sortRows, groupAndSortRows } from "../../utils/tableSortUtils.js";
 import { sanitizeControlID } from "../../utils/controlIdUtils.js";
+import { groupAndSortRows, sortRows } from "../../utils/tableSortUtils.js";
 
 initializeIcons();
 
 const MCSB = (props) => {
-  let controlIDSet = new Set(props.controls);
+  const controlIDSet = new Set(props.controls);
 
   const onItemInvoked = (item) => {
     setModalData(item);
@@ -396,21 +396,21 @@ const MCSB = (props) => {
   }, []);
 
   const initTableLoad = (flattenedData) => {
-    let sortedItems = sortRows(flattenedData, props.framework);
+    const sortedItems = sortRows(flattenedData, props.framework);
     setItems(sortedItems);
     setGroupedItems(groupAndSortRows(sortedItems, false, props.framework));
   };
 
   // ENTRY POINT
   useEffect(() => {
-    let flattenedData = flattenData(props.data);
+    const flattenedData = flattenData(props.data);
     initTableLoad(flattenedData);
   }, [props]);
 
   function flattenData(dataset) {
     const temp = [];
     dataset.forEach((row) => {
-      let rowControls = row.properties_metadata.frameworkControlsMappings;
+      const rowControls = row.properties_metadata.frameworkControlsMappings;
       // if there are user-selected control IDs, then only show those controls
       // this filters out rows that do not have any user-selected IDs in their controls array
       if (controlIDSet && controlIDSet.size > 0) {

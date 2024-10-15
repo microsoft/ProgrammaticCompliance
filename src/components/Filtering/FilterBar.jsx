@@ -1,41 +1,39 @@
-import React, { useEffect, useState } from "react";
-import { DropdownMenuItemType, Dropdown } from "@fluentui/react";
-import ACF from "../Tables/ACF.js";
-import MCSB from "../Tables/MCSB.js";
-import Policies from "../Tables/Policies.js";
-import TableStates from "../Tables/TableStates.js";
-import FilterBadgesContainer from "./FilterBadgesContainer.js";
-import ExportButton from "../ExportButton.js";
-import SearchableDropdown from "./SearchableDropdown.js";
+import { Dropdown, DropdownMenuItemType } from "@fluentui/react";
+import { useEffect, useState } from "react";
+import { allACFs, filteredACFs } from "../../queries/ACF.Query.js";
 import {
-  frameworks,
+  allControls,
+  allDomains,
+  allServices
+} from "../../queries/Filters.Query.js";
+import { filteredMCSB } from "../../queries/MCSB.Query.jsx";
+import {
   apiText,
+  appText,
+  frameworks,
   frameworkStrategyMapping,
 } from "../../static/staticStrings.js";
 import {
-  cisDomains,
-  allDomains,
-  allServices,
-  allControls,
-} from "../../queries/Filters.Query.js";
-import { allACFs, filteredACFs } from "../../queries/ACF.Query.js";
-import { filteredMCSB, aksTestMCSB } from "../../queries/MCSB.Query.js";
-import {
-  styles,
-  frameworkStyles,
-  selectedFrameworkStyles,
-  serviceStyles,
-  selectedServiceStyles,
   controlStyles,
+  frameworkStyles,
   selectedControlStyles,
+  selectedFrameworkStyles,
+  selectedServiceStyles,
+  serviceStyles,
+  styles,
 } from "../../styles/DropdownStyles.js";
-import { appText } from "../../static/staticStrings.js";
-import Frameworks from "./Frameworks.js";
 import {
-  sanitizeControlID,
-  numberSort,
   prefixExtractor,
+  sanitizeControlID
 } from "../../utils/filterUtils.js";
+import ExportButton from "../ExportButton.jsx";
+import ACF from "../Tables/ACF.jsx";
+import MCSB from "../Tables/MCSB.jsx";
+import Policies from "../Tables/Policies.jsx";
+import TableStates from "../Tables/TableStates.jsx";
+import FilterBadgesContainer from "./FilterBadgesContainer.jsx";
+import Frameworks from "./Frameworks.jsx";
+import SearchableDropdown from "./SearchableDropdown.jsx";
 
 import "../../styles/FilterBar.css";
 import "../../styles/index.css";
@@ -71,7 +69,7 @@ const FilterBar = ({ azureToken }) => {
   const [socMap, setSocMap] = useState(new Map());
 
   // API SETUP
-  let TOKEN = `Bearer ${azureToken}`;
+  const TOKEN = `Bearer ${azureToken}`;
   const myHeaders = new Headers();
   myHeaders.append("Authorization", TOKEN);
   myHeaders.append("Accept", "*/*");
@@ -84,7 +82,7 @@ const FilterBar = ({ azureToken }) => {
    */
   const countMaxTotal = (seekControl) => {
     let total = 0;
-    for (let control of defaultControls) {
+    for (const control of defaultControls) {
       const key = control.key;
       if (key) {
         if (prefixExtractor(key, selectedFramework) === seekControl) {
@@ -101,7 +99,7 @@ const FilterBar = ({ azureToken }) => {
    */
   const updateControlCount = (key, increment = true) => {
     setControlCount((prevDictionary) => {
-      let total = countMaxTotal(key);
+      const total = countMaxTotal(key);
       const currentValue = prevDictionary[key];
       const change = increment ? 1 : -1;
       const proposedCount =
@@ -140,7 +138,7 @@ const FilterBar = ({ azureToken }) => {
         ) {
           setError("Data is malformed. Please check upstream data.");
         }
-        let json = response.data[0].properties_metadata.mcsb;
+        const json = response.data[0].properties_metadata.mcsb;
         if (
           !json.hasOwnProperty("mcsbId") ||
           !json.hasOwnProperty("features") ||
@@ -236,7 +234,7 @@ const FilterBar = ({ azureToken }) => {
     if (selectedFramework === "CIS_Azure_2.0.0") {
       // @TODO Reconnect with below API call once CIS domain names are fixed
       // apiText.requestBody.query = cisDomains();
-      let currentDomains = cisDOMAINS.map((domain) => {
+      const currentDomains = cisDOMAINS.map((domain) => {
         return { key: domain.value, text: domain.label };
       });
       setDefaultDomains(currentDomains);
@@ -441,9 +439,9 @@ const FilterBar = ({ azureToken }) => {
   // Controls the linked relationship between the control domain and control IDs filters
   useEffect(() => {
     if (controlFocus) {
-      let controlPrefix = prefixExtractor(controlFocus, selectedFramework);
+      const controlPrefix = prefixExtractor(controlFocus, selectedFramework);
       let total = 0;
-      for (let control of defaultControls) {
+      for (const control of defaultControls) {
         const key = control.key;
         if (key) {
           if (
@@ -457,8 +455,8 @@ const FilterBar = ({ azureToken }) => {
       if (count === total) {
         // all controls selected, select domain
         setSelectedDomains((prevDomains) => {
-          let resultSelectedDomains = [...prevDomains];
-          let newSelectedDomain = [];
+          const resultSelectedDomains = [...prevDomains];
+          const newSelectedDomain = [];
           defaultDomains.forEach((domain) => {
             const key = domain.key;
             if (key) {
@@ -467,7 +465,7 @@ const FilterBar = ({ azureToken }) => {
               }
             }
           });
-          for (let domain of newSelectedDomain) {
+          for (const domain of newSelectedDomain) {
             if (!resultSelectedDomains.includes(domain)) {
               resultSelectedDomains.push(domain.key);
             }
@@ -478,7 +476,7 @@ const FilterBar = ({ azureToken }) => {
         // some or all controls deselected, deselect domain
         setSelectedDomains((prevDomains) => {
           let resultSelectedDomains = [...prevDomains];
-          let newSelectedDomain = [];
+          const newSelectedDomain = [];
           defaultDomains.forEach((domain) => {
             const key = domain.key;
             if (key) {
@@ -619,7 +617,7 @@ const FilterBar = ({ azureToken }) => {
         // deselect all controls
         setSelectedControls((prevControls) => {
           let resultSelectedControls = [...prevControls];
-          let newDomainSelectedControls = [];
+          const newDomainSelectedControls = [];
           defaultControls.forEach((control) => {
             const key = control.key;
             if (key) {
@@ -630,11 +628,11 @@ const FilterBar = ({ azureToken }) => {
             }
           });
           newDomainSelectedControls.forEach((control) => {
-            let controlPrefix = prefixExtractor(control.key, selectedFramework);
+            const controlPrefix = prefixExtractor(control.key, selectedFramework);
             updateControlCount(controlPrefix, false);
           });
-          let ndscStrings = [];
-          for (let val of newDomainSelectedControls) {
+          const ndscStrings = [];
+          for (const val of newDomainSelectedControls) {
             ndscStrings.push(val.key);
           }
           resultSelectedControls = resultSelectedControls.filter(
@@ -648,7 +646,7 @@ const FilterBar = ({ azureToken }) => {
         const uniqueKeysSet = new Set();
         setSelectedControls((prevControls) => {
           let resultSelectedControls = [...prevControls];
-          let newDomainSelectedControls = [];
+          const newDomainSelectedControls = [];
           defaultControls.forEach((control) => {
             const key = control.key;
             if (key) {
@@ -659,10 +657,10 @@ const FilterBar = ({ azureToken }) => {
             }
           });
           newDomainSelectedControls.forEach((control) => {
-            let controlPrefix = prefixExtractor(control.key, selectedFramework);
+            const controlPrefix = prefixExtractor(control.key, selectedFramework);
             updateControlCount(controlPrefix, true);
           });
-          for (let control of newDomainSelectedControls.slice(1)) {
+          for (const control of newDomainSelectedControls.slice(1)) {
             if (!resultSelectedControls.includes(control)) {
               resultSelectedControls.push(control.key);
             }
@@ -691,7 +689,7 @@ const FilterBar = ({ azureToken }) => {
           return prevSelectedControls.filter((key) => key !== sanitizedKey);
         }
       });
-      let controlPrefix = prefixExtractor(item.key, selectedFramework);
+      const controlPrefix = prefixExtractor(item.key, selectedFramework);
       updateControlCount(controlPrefix, item.selected);
       setControlFocus(item.key);
     }
@@ -708,7 +706,7 @@ const FilterBar = ({ azureToken }) => {
       setSelectedControls((prevSelectedControls) => {
         return prevSelectedControls.filter((key) => key !== sanitizedKey);
       });
-      let controlPrefix = prefixExtractor(filterText, selectedFramework);
+      const controlPrefix = prefixExtractor(filterText, selectedFramework);
       updateControlCount(controlPrefix, false);
       setControlFocus(filterText);
     }

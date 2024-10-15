@@ -1,38 +1,37 @@
-import React, { useState, useEffect, useRef } from "react";
 import {
+  ConstrainMode,
   DetailsList,
-  SelectionMode,
-  Selection,
   DetailsListLayoutMode,
-  Text,
   Icon,
   IconButton,
-  Stack,
   initializeIcons,
-  TooltipHost,
+  Link,
+  Selection,
+  SelectionMode,
+  Stack,
   Sticky,
   StickyPositionType,
-  ConstrainMode,
-  Link,
+  Text,
+  TooltipHost,
 } from "@fluentui/react";
+import { useEffect, useRef, useState } from "react";
 
 import PoliciesModal from "../Modals/PoliciesModal.js";
 import TableStates from "./TableStates.js";
 
 import "../../styles/Tables.css";
 import {
-  gridStyles,
-  focusZoneProps,
   classNames,
+  focusZoneProps,
+  gridStyles,
 } from "../../styles/TablesStyles.js";
-import { tableText } from "../../static/staticStrings.js";
 
 initializeIcons();
 
 // NOTE: This is a WIP intended for a mockup of export to intiative.  It is not active in Github Release 2 and is not actively maintained past that release.
 
 const INITIATIVES = (props) => {
-  let controlIDSet = new Set(props.controls);
+  const controlIDSet = new Set(props.controls);
 
   const onItemInvoked = (item) => {
     setModalData(item);
@@ -181,7 +180,7 @@ const INITIATIVES = (props) => {
                   target="_blank"
                   rel="noopener noreferrer"
                 >
-                   Azure Policy
+                   Azure Policy
                 </Link>{" "}
                 used to help measure compliance with a given regulatory
                 framework
@@ -363,7 +362,7 @@ const INITIATIVES = (props) => {
   function flattenData(dataset) {
     const temp = [];
     dataset.forEach((row) => {
-      let rowControls = row.properties_metadata.mcsb.frameworkControls;
+      const rowControls = row.properties_metadata.mcsb.frameworkControls;
       // if there are user-selected control IDs, then only show those controls
       // this filters out rows that do not have any user-selected IDs in their controls array
       if (controlIDSet && controlIDSet.size > 0) {
