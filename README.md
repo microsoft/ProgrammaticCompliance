@@ -195,7 +195,7 @@ swa start ./dist
 
 This will serve your site locally at `http://localhost:4280`, so you can view it in a browser before deploying to Azure.
 
-##### (Optional) 6. Continuous Deployment (CI/CD) Setup
+#### Next steps
 
 If you want to automate future deployments via GitHub or other CI/CD pipelines, Azure Static Web Apps supports [continuous deployment workflows](https://docs.microsoft.com/en-us/azure/static-web-apps/build-configuration). You can easily set this up by integrating GitHub Actions or other CI tools for automated builds and deployments.
 
