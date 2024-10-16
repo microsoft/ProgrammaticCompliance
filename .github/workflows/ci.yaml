@@ -11,7 +11,7 @@ on:
   workflow_dispatch:
 
 concurrency:
-  group: "${{ github.workflow }}-${{ github.ref }}"
+  group: "${{ github.workflow }}-${{ github.ref }}",
   cancel-in-progress: true
 
 jobs:
@@ -33,6 +33,19 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: ${{ matrix.node-version }}
+
+      - name: Cache node modules
+        uses: actions/cache@v3
+        with:
+          path: node_modules
+          key: node-modules-${{ runner.os }}-${{ matrix.node-version }}-${{ hashFiles('package-lock.json') }}
+          restore-keys: |
+            node-modules-${{ runner.os }}-${{ matrix.node-version }}-
+
+      - name: Remove existing node_modules and package-lock.json (if any)
+        run: |
+          rm -rf node_modules
+          rm -f package-lock.json
 
       - name: Setup JS SDK
         run: npm ci
