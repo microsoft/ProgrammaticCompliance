@@ -33,6 +33,14 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: ${{ matrix.node-version }}
+      
+      - name: install rollup (Linux)
+        if: runner.os == 'Linux'
+        run: npm i @rollup/rollup-linux-x64-gnu
+
+      - name: install rollup (MacOS)
+        if: runner.os == 'macOS'
+        run: npm i @rollup/rollup-darwin-arm64
 
       - name: Setup JS SDK
         run: npm ci
