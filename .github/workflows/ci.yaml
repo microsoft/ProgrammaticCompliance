@@ -34,6 +34,9 @@ jobs:
         with:
           node-version: ${{ matrix.node-version }}
 
+      - name: Delete package-lock.json
+        run: rm package-lock.json
+
       - name: Setup JS SDK
         run: npm ci
 
