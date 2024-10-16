@@ -34,6 +34,7 @@ jobs:
         with:
           node-version: ${{ matrix.node-version }}
       
+      # The below is a workaround due to a known issue with npm: https://github.com/npm/cli/issues/4828 
       - name: install rollup (Linux)
         if: runner.os == 'Linux'
         run: npm i @rollup/rollup-linux-x64-gnu
