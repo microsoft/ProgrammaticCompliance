@@ -35,7 +35,7 @@ jobs:
           node-version: ${{ matrix.node-version }}
 
       - name: Setup JS SDK
-        run: npm ci
+        run: npm i
 
       - name: Build JS SDK
         run: npm run build
