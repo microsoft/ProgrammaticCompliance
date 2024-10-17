@@ -1,4 +1,4 @@
-import { InteractionStatus } from '@azure/msal-browser';
+import { AuthenticationResult, InteractionRequiredAuthError, InteractionStatus } from '@azure/msal-browser';
 import { useIsAuthenticated, useMsal } from "@azure/msal-react";
 import { Callout, DefaultButton, DirectionalHint, FocusZone, FocusZoneTabbableElements, FontWeights, Link, mergeStyleSets, Stack, Text } from '@fluentui/react';
 import { useBoolean } from '@fluentui/react-hooks';
@@ -19,34 +19,30 @@ function MainApp() {
   const [isCalloutVisible, { toggle: toggleIsCalloutVisible }] = useBoolean(false);
   const isAuthenticated = useIsAuthenticated();
   const { inProgress, instance, accounts } = useMsal();
-  const [setUserToken] = useState("");
+  const [, setUserToken] = useState("");
   const { azureToken } = useAuthorizeUser({ isAuthenticated, inProgress, accounts, instance });
 
   const getUserToken = async () => {
     try {
-      const response = await instance.acquireTokenSilent({
+      const response: AuthenticationResult = await instance.acquireTokenSilent({
         authority: msalConfig.auth.authority,
         scopes: [tokenConfig.managementEndpoint],
         account: accounts[0],
-      }, {
-        onTokenFailure: async (error) => {
-          if (error.errorMessage.includes("interaction_required")) {
-            try {
-              await instance.loginRedirect({
-                authority: msalConfig.auth.authority,
-                scopes: [tokenConfig.managementEndpoint],
-              });
-            } catch (loginError) {
-              console.error("Error during loginRedirect:", loginError);
-            }
-          } else {
-            console.error("Error fetching data:", error);
-          }
-        },
       });
       setUserToken(response.accessToken);
-    } catch (error) {
-      console.error("Error fetching data:", error);
+    } catch (error: unknown) {
+      if (error instanceof InteractionRequiredAuthError) {
+        try {
+          await instance.loginRedirect({
+            authority: msalConfig.auth.authority,
+            scopes: [tokenConfig.managementEndpoint],
+          });
+        } catch (loginError) {
+          console.error("Error during loginRedirect:", loginError);
+        }
+      } else {
+        console.error("Error fetching data:", error);
+      }
     }
   };
 
@@ -72,15 +68,15 @@ function MainApp() {
   /**
    * The site will automatically refresh to keep data fresh after 15 minutes of inactivity
    */
-  const idleTimeoutRef = useRef(null);
+  const idleTimeoutRef = useRef<number | null>(null);
 
   const resetIdleTimeout = () => {
     if (idleTimeoutRef.current) {
       clearTimeout(idleTimeoutRef.current);
     }
-    idleTimeoutRef.current = setTimeout(() => {
+    idleTimeoutRef.current = window.setTimeout(() => {
       window.location.reload();
-    }, 900000);
+    }, 900000) as unknown as number;
   };
 
   useEffect(() => {
@@ -100,7 +96,9 @@ function MainApp() {
       for (const event of events) {
         document.removeEventListener(event, handleUserActivity);
       }
-      clearTimeout(idleTimeoutRef.current);
+      if (idleTimeoutRef.current !== null) {
+        clearTimeout(idleTimeoutRef.current);
+      }
     };
   }, []);
 
