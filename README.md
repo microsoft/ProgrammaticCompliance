@@ -1,5 +1,7 @@
 # Programmatic Compliance
 
+[![Build](https://github.com/microsoft/ProgrammaticCompliance/actions/workflows/ci.yaml/badge.svg?branch=main)](https://github.com/microsoft/ProgrammaticCompliance/actions/workflows/ci.yaml)
+
 ## What is the Programmatic Compliance tool? 
 
 Microsoft and its customers follow a shared responsibility model regarding security and compliance of the Microsoft Cloud environment. With the Programmatic Compliance tool, customers can evaluate the compliance of multiple services at the same time based on industry standards helping to improve time-to-value and accelerate innovation. 
