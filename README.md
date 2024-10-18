@@ -1,6 +1,6 @@
 # Programmatic Compliance
 
-[![Build](https://github.com/microsoft/ProgrammaticCompliance/actions/workflows/ci.yml/badge.svg?branch=main)](https://github.com/Azure/cloud-sdk/actions/workflows/ci.yml)
+[![Build](https://github.com/microsoft/ProgrammaticCompliance/actions/workflows/ci.yml/badge.svg?branch=main)](https://github.com/microsoft/ProgrammaticCompliance/actions/workflows/ci.yml)
 
 ## What is the Programmatic Compliance tool? 
 
