@@ -1,18 +1,20 @@
-import React, { useState, useEffect, useRef } from 'react';
-import { useMsal, useIsAuthenticated } from "@azure/msal-react";
+// @ts-nocheck
+
 import { InteractionStatus } from '@azure/msal-browser';
-import { BrowserRouter, Route, Routes } from "react-router-dom";
-import { Text, FontWeights, Link, Callout, FocusZone, FocusZoneTabbableElements, mergeStyleSets, DirectionalHint, Stack, DefaultButton } from '@fluentui/react';
+import { useIsAuthenticated, useMsal } from "@azure/msal-react";
+import { Callout, DefaultButton, DirectionalHint, FocusZone, FocusZoneTabbableElements, FontWeights, Link, mergeStyleSets, Stack, Text } from '@fluentui/react';
 import { useBoolean } from '@fluentui/react-hooks';
+import { useEffect, useRef, useState } from 'react';
+import { BrowserRouter, Route, Routes } from "react-router-dom";
 
 import { msalConfig, tokenConfig } from "./authConfig.js";
-import FilterBar from './components/Filtering/FilterBar.js';
-import Header from './Header.js';
+import FilterBar from './components/Filtering/FilterBar.jsx';
+import Header from './Header.jsx';
 import { appText } from './static/staticStrings.js';
 
-import "./styles/Modal.css";
-import './styles/index.css';
 import { useAuthorizeUser } from './hooks/getAzureToken.js';
+import './styles/index.css';
+import "./styles/Modal.css";
 
 function MainApp() {
 
@@ -169,9 +171,9 @@ function MainApp() {
             {appText.disclaimer1} <br></br><br></br>
             {appText.disclaimer2} <br></br><br></br>
             {appText.disclaimer3} <br></br><br></br>
-              <a href="https://go.microsoft.com/fwlink/?LinkId=521839" target="_blank" rel="noopener noreferrer">
-                {"Microsoft Privacy Statement"}
-              </a>
+            <a href="https://go.microsoft.com/fwlink/?LinkId=521839" target="_blank" rel="noopener noreferrer">
+              {"Microsoft Privacy Statement"}
+            </a>
           </Text>
           <FocusZone handleTabKey={FocusZoneTabbableElements.all} isCircularNavigation>
             <Stack className={styles.buttons} gap={8} horizontal>

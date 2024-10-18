@@ -1,0 +1,53 @@
+name: CI - Programmatic Compliance
+
+on:
+  pull_request:
+    branches:
+      - main
+      - dev
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+
+concurrency:
+  group: "${{ github.workflow }}-${{ github.ref }}"
+  cancel-in-progress: true
+
+jobs:
+  build-and-test:
+    name: Build and Test
+
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [macos-latest, ubuntu-latest, windows-latest]
+        node-version: [20]
+
+    runs-on: ${{ matrix.os }}
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Use Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ matrix.node-version }}
+      
+      # The below is a workaround due to a known issue with npm: https://github.com/npm/cli/issues/4828 
+      - name: install rollup (Linux)
+        if: runner.os == 'Linux'
+        run: npm i @rollup/rollup-linux-x64-gnu
+
+      - name: install rollup (MacOS)
+        if: runner.os == 'macOS'
+        run: npm i @rollup/rollup-darwin-arm64
+
+      - name: Setup
+        run: npm ci
+
+      - name: Build
+        run: npm run build
+
+      # - name: Test
+      #   run: npm test
