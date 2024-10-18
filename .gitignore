@@ -410,3 +410,7 @@ build/
 node_modules/
 dist/
 coverage/
+
+*storybook.log
+stories/
+.storybook/
