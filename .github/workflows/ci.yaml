@@ -43,12 +43,11 @@ jobs:
         if: runner.os == 'macOS'
         run: npm i @rollup/rollup-darwin-arm64
 
-      - name: Setup JS SDK
+      - name: Setup
         run: npm ci
 
-      - name: Build JS SDK
+      - name: Build
         run: npm run build
 
       # - name: Test
-      #   working-directory: ./packages/js-sdk
       #   run: npm test
