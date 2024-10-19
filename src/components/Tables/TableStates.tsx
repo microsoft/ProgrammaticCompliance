@@ -1,26 +1,31 @@
-import React, { useEffect, useState } from "react";
-import { Icon, Text, Spinner, SpinnerSize, Link, Stack } from "@fluentui/react";
-import "../../styles/Tables.css";
+import { Icon, Link, Spinner, SpinnerSize, Stack, Text } from "@fluentui/react";
+import { FC, useEffect, useState } from "react";
 import { tableText } from "../../static/staticStrings.js";
+import "../../styles/Tables.css";
 
-const TableStates = (props) => {
+export interface TableStatesProps {
+  type: 'ACF' | 'MCSB' | 'Policy';
+  variant: 'Onload' | 'Empty' | 'Loading' | 'NoService' | 'EmptyLoad';
+}
+
+const TableStates: FC<TableStatesProps> = ({ type, variant }) => {
   const [title, setTitle] = useState("");
   const [subtitle, setSubtitle] = useState("");
 
   useEffect(() => {
-    if (props.type === "ACF" && props.variant !== "EmptyLoad") {
+    if (type === "ACF" && variant !== "EmptyLoad") {
       setTitle(tableText.acfTitle);
       setSubtitle(tableText.acfDescription);
     }
-    if (props.type === "MCSB" && props.variant !== "EmptyLoad") {
+    if (type === "MCSB" && variant !== "EmptyLoad") {
       setTitle(tableText.mcsbTitle);
       setSubtitle(tableText.mcsbDescription);
     }
-    if (props.type === "Policy" && props.variant !== "EmptyLoad") {
+    if (type === "Policy" && variant !== "EmptyLoad") {
       setTitle(tableText.policyTitle);
       setSubtitle(tableText.policyDescription);
     }
-  }, [props]);
+  }, [type, variant]);
 
   const iconStyles = {
     fontSize: "24px",
@@ -32,7 +37,7 @@ const TableStates = (props) => {
       <Stack horizontal verticalAlign="center" horizontalAlign="space-between">
         <Stack horizontal verticalAlign="center">
           <div>
-            <h2 variant="mediumPlus" className="titleStyle">
+            <h2 className="titleStyle">
               {title}
             </h2>
             <Text variant="medium" className="subtitleStyle">
@@ -44,7 +49,7 @@ const TableStates = (props) => {
       <p></p>
 
       <div className="centerStyle">
-        {props.variant === "Onload" && (
+        {variant === "Onload" && (
           <>
             <br></br>
             <Icon
@@ -65,7 +70,7 @@ const TableStates = (props) => {
           </>
         )}
 
-        {props.variant === "Empty" && (
+        {variant === "Empty" && (
           <>
             <br></br>
             <Icon iconName="CodeEdit" style={iconStyles} aria-hidden="true" />
@@ -86,7 +91,7 @@ const TableStates = (props) => {
           </>
         )}
 
-        {props.variant === "Loading" && (
+        {variant === "Loading" && (
           <>
             <Spinner size={SpinnerSize.large} />
             <p></p>
@@ -98,7 +103,7 @@ const TableStates = (props) => {
           </>
         )}
 
-        {props.variant === "NoService" && (
+        {variant === "NoService" && (
           <>
             <br></br>
             <Icon
@@ -119,7 +124,7 @@ const TableStates = (props) => {
           </>
         )}
 
-        {props.variant === "EmptyLoad" && (
+        {variant === "EmptyLoad" && (
           <>
             <br></br>
             <Icon

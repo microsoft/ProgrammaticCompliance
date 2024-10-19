@@ -31,7 +31,7 @@ import ExportButton from "../ExportButton.jsx";
 import ACF from "../Tables/ACF.jsx";
 import MCSB from "../Tables/MCSB.jsx";
 import Policies from "../Tables/Policies.jsx";
-import TableStates from "../Tables/TableStates.jsx";
+import TableStates from "../Tables/TableStates.tsx";
 import FilterBadgesContainer from "./FilterBadgesContainer.jsx";
 import Frameworks from "./Frameworks.jsx";
 import SearchableDropdown from "./SearchableDropdown.jsx";

@@ -16,7 +16,7 @@ import { useId } from "@fluentui/react-hooks";
 import { useEffect, useState } from "react";
 
 import ACFModal from "../Modals/ACFModal.jsx";
-import TableStates from "./TableStates.jsx";
+import TableStates from "./TableStates.tsx";
 
 import { tableText } from "../../static/staticStrings.js";
 import "../../styles/Tables.css";

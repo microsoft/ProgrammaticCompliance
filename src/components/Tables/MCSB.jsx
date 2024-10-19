@@ -16,7 +16,7 @@ import {
 import { useEffect, useState } from "react";
 
 import MCSBModal from "../Modals/MCSBModal.jsx";
-import TableStates from "./TableStates.jsx";
+import TableStates from "./TableStates.tsx";
 
 import { tableText } from "../../static/staticStrings.js";
 import "../../styles/Tables.css";
