@@ -34,7 +34,7 @@ import Policies from "../Tables/Policies.jsx";
 import TableStates from "../Tables/TableStates.tsx";
 import FilterBadgesContainer from "./FilterBadgesContainer.jsx";
 import Frameworks from "./Frameworks.jsx";
-import SearchableDropdown from "./SearchableDropdown.jsx";
+import SearchableDropdown from "./SearchableDropdown.tsx";
 
 import "../../styles/FilterBar.css";
 import "../../styles/index.css";
