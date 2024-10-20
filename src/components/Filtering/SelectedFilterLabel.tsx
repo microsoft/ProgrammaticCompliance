@@ -1,8 +1,13 @@
-import React from 'react';
 import { FontIcon, mergeStyleSets } from '@fluentui/react';
+import { FC } from 'react';
 
-const SelectedFilterLabel = (props) => {
-  const { text, filterType, onRemoveFilter } = props;
+interface SelectedFilterLabelProps {
+  text: string;
+  filterType: string;
+  onRemoveFilter: (text: string, filterType: string) => void;
+}
+
+const SelectedFilterLabel: FC<SelectedFilterLabelProps> = ({ text, filterType, onRemoveFilter }) => {
 
   const removeFilter = () => {
     onRemoveFilter(text, filterType);
@@ -39,7 +44,7 @@ const SelectedFilterLabel = (props) => {
     <div className={styles.labelContainer}>
       <span className={styles.spanStyle}>{text}</span>
       <span className={styles.spanStyle}>
-        <FontIcon style={iconClass} iconName="Cancel" onClick={removeFilter} aria-label="Cancel"/>
+        <FontIcon style={iconClass} iconName="Cancel" onClick={removeFilter} aria-label="Cancel" />
       </span>
     </div>
   );
