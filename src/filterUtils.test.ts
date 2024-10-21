@@ -43,17 +43,17 @@ describe('filterUtils', () => {
 
   describe('isoSort', () => {
     it('should sort based on alphabetical parts first', () => {
-      const a = 'B.1';
-      const b = 'A.2';
-      expect(isoSort(a, b)).toBe(1);
-      expect(isoSort(b, a)).toBe(-1);
+      const a = 'A.2';
+      const b = 'B.1';
+      expect(isoSort(a, b)).toBe(-1);
+      expect(isoSort(b, a)).toBe(1);
     });
 
     it('should sort based on numerical parts when alphabetical parts are equal', () => {
-      const a = 'A.2';
-      const b = 'A.1';
-      expect(isoSort(a, b)).toBe(1);
-      expect(isoSort(b, a)).toBe(-1);
+      const a = 'A.1';
+      const b = 'A.2';
+      expect(isoSort(a, b)).toBe(-1);
+      expect(isoSort(b, a)).toBe(1);
     });
 
     it('should handle multiple numerical parts', () => {
@@ -92,15 +92,15 @@ describe('filterUtils', () => {
 
   describe('customSort', () => {
     it('should sort based on alphabetical parts first', () => {
-      const a = 'AC1';
-      const b = 'AU1';
+      const a = 'AB1';
+      const b = 'AC1';
       expect(customSort(a, b)).toBe(-1);
       expect(customSort(b, a)).toBe(1);
     });
 
     it('should sort numerical parts in descending order when alphabetical parts are equal', () => {
-      const a = 'AU2';
-      const b = 'AU1';
+      const a = 'AB2';
+      const b = 'AB1';
       expect(customSort(a, b)).toBe(-1);
       expect(customSort(b, a)).toBe(1);
     });
@@ -112,10 +112,10 @@ describe('filterUtils', () => {
     });
 
     it('should treat missing numerical parts as 0', () => {
-      const a = 'SC';
-      const b = 'SC1';
-      expect(customSort(a, b)).toBe(1);
-      expect(customSort(b, a)).toBe(-1);
+      const a = 'SC1';
+      const b = 'SC';
+      expect(customSort(a, b)).toBe(-1);
+      expect(customSort(b, a)).toBe(1);
     });
   });
 
