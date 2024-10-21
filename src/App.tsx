@@ -9,6 +9,7 @@ import { msalConfig, tokenConfig } from "./authConfig.js";
 import FilterBar from './components/Filtering/FilterBar.jsx';
 import Header from './Header.jsx';
 import { appText } from './static/staticStrings.js';
+import { reloadPage } from './utils/reloadPage';
 
 import { useAuthorizeUser } from './hooks/getAzureToken.js';
 import './styles/index.css';
@@ -75,7 +76,7 @@ function MainApp() {
       clearTimeout(idleTimeoutRef.current);
     }
     idleTimeoutRef.current = window.setTimeout(() => {
-      window.location.reload();
+      reloadPage();
     }, 900000) as unknown as number;
   };
 
