@@ -16,7 +16,7 @@ import {
 import { useEffect, useState } from "react";
 
 import PoliciesModal from "../Modals/PoliciesModal.jsx";
-import TableStates from "./TableStates.jsx";
+import TableStates from "./TableStates.tsx";
 
 import { tableText } from "../../static/staticStrings.js";
 import "../../styles/Tables.css";
@@ -25,7 +25,7 @@ import {
   focusZoneProps,
   gridStyles,
 } from "../../styles/TablesStyles.js";
-import { sanitizeControlID } from "../../utils/controlIdUtils.js";
+import { sanitizeControlID } from "../../utils/controlIdUtils.ts";
 import { groupAndSortRows, sortRows } from "../../utils/tableSortUtils.js";
 
 initializeIcons();
@@ -181,7 +181,7 @@ const POLICY = (props) => {
                   target="_blank"
                   rel="noopener noreferrer"
                 >
-                   Azure Policy
+                   Azure Policy
                 </Link>{" "}
                 used to help measure compliance with a given regulatory
                 framework
@@ -255,7 +255,7 @@ const POLICY = (props) => {
                   target="_blank"
                   rel="noopener noreferrer"
                 >
-                   Azure Policy
+                  Azure Policy
                 </Link>{" "}
                 used to help measure compliance with a given regulatory
                 framework

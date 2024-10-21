@@ -1,6 +1,6 @@
-import React, { useState, useEffect, useLayoutEffect } from 'react';
-import FilterBadges from './FilterBadges';
 import { ActionButton } from '@fluentui/react';
+import { useLayoutEffect, useState } from 'react';
+import FilterBadges from './FilterBadges';
 
 const CustomSeparator = () => (
   <span style={{ fontSize: '18px', paddingLeft: '10px', paddingTop: '4px', color: '#9C9C9C' }}>|</span>

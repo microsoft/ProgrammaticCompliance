@@ -1,23 +1,36 @@
-import * as React from "react";
 import {
-    SearchBox,
-    Stack,
-    Text,
     Icon,
-    Persona,
-    PersonaPresence,
-    PersonaSize
+    IIconProps,
+    IStackStyles,
+    ITextStyles,
+    Stack,
+    Text
 } from "@fluentui/react";
 
-const examplePersona = {
-    imageInitials: "MS",
-    text: "Microsoft Test",
-    secondaryText: "Software Engineer",
-    tertiaryText: "pcompvteam@microsoft.com",
-    optionalText: "Available anytime",
+const iconProps: IIconProps = { iconName: 'Waffle' };
+
+const stackStyles: IStackStyles = {
+    root: {
+        backgroundColor: "#0078D4",
+        height: "49px",
+        maxHeight: "49px",
+    },
 };
 
-const iconProps = { iconName: 'Waffle' };
+const iconStyles: IIconProps['styles'] = {
+    root: {
+        color: "#0078D4",
+        fontSize: 25,
+        width: 50,
+        height: 50,
+    }
+};
+
+const textStyles: ITextStyles = {
+    root: {
+        color: "white",
+    },
+};
 
 const Header = () => {
     return (
@@ -27,36 +40,20 @@ const Header = () => {
             grow={1}
             verticalAlign="center"
             horizontalAlign="space-between"
-            styles={{
-                root: {
-                    backgroundColor: "#0078D4",
-                    height: "49px",
-                    maxHeight: "49px",
-                },
-            }}
+            styles={stackStyles}
             aria-label="Banner"
         >
             <Stack.Item grow={3}>
                 <Stack horizontal wrap={false} verticalAlign="center">
                     <Icon
-                        iconProps={iconProps}
+                        {...iconProps}
                         ariaLabel="Menu"
-                        styles={{
-                            icon: { color: '#0078D4', fontSize: 25 },
-                            root: {
-                                width: 50,
-                                height: 50,
-                            }
-                        }}
+                        styles={iconStyles}
                     />
                     <Text
                         key="productName"
                         variant={"large"}
-                        styles={{
-                            root: {
-                                color: "white",
-                            },
-                        }}
+                        styles={textStyles}
                         nowrap
                         block
                     >

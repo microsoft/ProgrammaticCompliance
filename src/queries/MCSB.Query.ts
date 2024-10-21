@@ -1,4 +1,4 @@
-export const filteredMCSB = (framework, services, controls) => {
+export const filteredMCSB = (framework: string, services: string[], controls: string[]): string => {
   const servicesClause = "properties.metadata.offeringName == ";
   const controlIDsClause = `properties.metadata.frameworkControlsMappings has '${framework}`;
   let PAIRED_CLAUSES = "";
