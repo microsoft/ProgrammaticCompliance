@@ -46,11 +46,14 @@ jobs:
       - name: Setup
         run: npm ci
 
-      - name: Code Quality Check
-        run: npm run lint
-
       - name: Build
         run: npm run build
 
+      - name: Code Quality Check
+        run: npm run lint
+
       - name: Test
         run: npm run test
+      
+      - name: Code Coverage
+        run: npm run coverage
