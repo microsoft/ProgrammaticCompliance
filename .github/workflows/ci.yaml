@@ -49,5 +49,11 @@ jobs:
       - name: Build
         run: npm run build
 
-      # - name: Test
-      #   run: npm test
+      - name: Code Quality Check
+        run: npm run lint
+
+      - name: Test
+        run: npm run test
+      
+      - name: Code Coverage
+        run: npm run coverage
