@@ -43,11 +43,14 @@ jobs:
         if: runner.os == 'macOS'
         run: npm i @rollup/rollup-darwin-arm64
 
+      - name: Code Quality Check
+        run: npm run lint
+        
       - name: Setup
         run: npm ci
 
       - name: Build
         run: npm run build
 
-      # - name: Test
-      #   run: npm test
+      - name: Test
+        run: npm run test
