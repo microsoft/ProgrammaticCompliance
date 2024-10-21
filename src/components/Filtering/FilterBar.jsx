@@ -32,7 +32,7 @@ import ACF from "../Tables/ACF.jsx";
 import MCSB from "../Tables/MCSB.jsx";
 import Policies from "../Tables/Policies.jsx";
 import TableStates from "../Tables/TableStates.tsx";
-import FilterBadgesContainer from "./FilterBadgesContainer.jsx";
+import FilterBadgesContainer from "./FilterBadgesContainer.tsx";
 import Frameworks from "./Frameworks.jsx";
 import SearchableDropdown from "./SearchableDropdown.tsx";
 
