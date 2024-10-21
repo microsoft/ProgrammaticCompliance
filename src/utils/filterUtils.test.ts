@@ -5,7 +5,7 @@ import {
   customSort,
   numberSort,
   prefixExtractor,
-} from './utils/filterUtils';
+} from './filterUtils';
 
 describe('filterUtils', () => {
   
