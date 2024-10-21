@@ -1,20 +1,20 @@
-import { sanitizeControlID } from "./controlIdUtils";
+import { sanitizeControlID } from './controlIdUtils';
 
 export const sortRows = (items, framework) => {
   switch (framework) {
-    case "NIST_SP_800-53_Rev4":
+    case 'NIST_SP_800-53_Rev4':
       return sortNIST(items);
-    case "NIST_SP_800-53_R4":
+    case 'NIST_SP_800-53_R4':
       return sortNIST(items);
-    case "CIS_Azure_Benchmark_v2.0":
+    case 'CIS_Azure_Benchmark_v2.0':
       return sortCIS(items, sanitizeControlID);
-    case "CIS_Azure_2.0.0":
+    case 'CIS_Azure_2.0.0':
       return sortCIS(items, sanitizeControlID);
-    case "PCI_DSS_v4.0":
+    case 'PCI_DSS_v4.0':
       return sortPCI(items, sanitizeControlID);
-    case "ISO 27001:2013":
+    case 'ISO 27001:2013':
       return sortISO(items, sanitizeControlID);
-    case "SOC 2 Type 2":
+    case 'SOC 2 Type 2':
       return sortSOC(items, sanitizeControlID);
     default:
       return items;
@@ -23,21 +23,21 @@ export const sortRows = (items, framework) => {
 
 export const groupAndSortRows = (sortedItems, isDescending, framework) => {
   switch (framework) {
-    case "NIST_SP_800-53_Rev4":
+    case 'NIST_SP_800-53_Rev4':
       return groupAndSortNIST(sortedItems, isDescending);
-    case "NIST_SP_800-53_R4":
+    case 'NIST_SP_800-53_R4':
       return groupAndSortNIST(sortedItems, isDescending);
-    case "CIS_Azure_Benchmark_v2.0":
+    case 'CIS_Azure_Benchmark_v2.0':
       return groupAndSortCIS(sortedItems, isDescending, sanitizeControlID);
-    case "CIS_Azure_2.0.0":
+    case 'CIS_Azure_2.0.0':
       return groupAndSortCIS(sortedItems, isDescending, sanitizeControlID);
-    case "PCI_DSS_v4.0":
+    case 'PCI_DSS_v4.0':
       return groupAndSortPCI(sortedItems, isDescending, sanitizeControlID);
-    case "ISO 27001:2013":
+    case 'ISO 27001:2013':
       return groupAndSortISO(sortedItems, isDescending, sanitizeControlID);
-    case "SOC 2 Type 2":
+    case 'SOC 2 Type 2':
       return groupAndSortSOC(sortedItems, isDescending, sanitizeControlID);
-    case "ACF_Table":
+    case 'ACF_Table':
       return groupAndSortACF(sortedItems, isDescending);
     default:
       return groupAndSortMCSB(sortedItems, isDescending);
@@ -45,7 +45,7 @@ export const groupAndSortRows = (sortedItems, isDescending, framework) => {
 };
 
 const sortNIST = (items) => {
-  let sortedItems = items.sort((a, b) => {
+  const sortedItems = items.sort((a, b) => {
     const getNumericParts = (str) => str.match(/\d+/g).map(Number) || [0];
 
     const [alphaA, numsA] = [
@@ -69,12 +69,12 @@ const sortNIST = (items) => {
 };
 
 const sortCIS = (items, sanitizeControlID) => {
-  let sortedItems = items.sort((a, b) => {
+  const sortedItems = items.sort((a, b) => {
     const partsA = sanitizeControlID(a.control)
-      .split(".")
+      .split('.')
       .map((part) => (isNaN(part) ? part : parseInt(part, 10)));
     const partsB = sanitizeControlID(b.control)
-      .split(".")
+      .split('.')
       .map((part) => (isNaN(part) ? part : parseInt(part, 10)));
 
     for (let i = 0; i < Math.max(partsA.length, partsB.length); i++) {
@@ -95,12 +95,12 @@ const sortCIS = (items, sanitizeControlID) => {
 };
 
 const sortPCI = (items, sanitizeControlID) => {
-  let sortedItems = items.sort((a, b) => {
+  const sortedItems = items.sort((a, b) => {
     const controlIDA = sanitizeControlID(a.control)
-      .split(".")
+      .split('.')
       .map((part) => parseInt(part, 10));
     const controlIDB = sanitizeControlID(b.control)
-      .split(".")
+      .split('.')
       .map((part) => parseInt(part, 10));
 
     for (let i = 0; i < Math.min(controlIDA.length, controlIDB.length); i++) {
@@ -130,7 +130,7 @@ const sortISO = (items, descending = false) => {
 
     for (let i = 0; i < Math.max(partsA.length, partsB.length); i++) {
       if (partsA[i] !== partsB[i]) {
-        if (typeof partsA[i] === "string" && typeof partsB[i] === "string") {
+        if (typeof partsA[i] === 'string' && typeof partsB[i] === 'string') {
           const diff = partsA[i].localeCompare(partsB[i]);
           if (diff !== 0) return descending ? diff : -diff;
         } else {
@@ -146,10 +146,10 @@ const sortISO = (items, descending = false) => {
 };
 
 const sortSOC = (items, sanitizeControlID) => {
-  let sortedItems = items.sort((a, b) => {
+  const sortedItems = items.sort((a, b) => {
     const parseControlID = (control) => {
-      const sanitizedControl = sanitizeControlID(control).split(":")[0];
-      const [alphaPart, ...numericParts] = sanitizedControl.split(".");
+      const sanitizedControl = sanitizeControlID(control).split(':')[0];
+      const [alphaPart, ...numericParts] = sanitizedControl.split('.');
       const numericPart = numericParts.map((num) => parseInt(num, 10));
       return { alphaPart, numericPart };
     };
@@ -317,11 +317,11 @@ const groupAndSortCIS = (sortedItems, descending) => {
     };
 
     const [alphaA, numsA] = [
-      a.name.match(/[A-Za-z]+/)?.[0] || "",
+      a.name.match(/[A-Za-z]+/)?.[0] || '',
       getNumericParts(a.name),
     ];
     const [alphaB, numsB] = [
-      b.name.match(/[A-Za-z]+/)?.[0] || "",
+      b.name.match(/[A-Za-z]+/)?.[0] || '',
       getNumericParts(b.name),
     ];
 
@@ -339,18 +339,18 @@ const groupAndSortCIS = (sortedItems, descending) => {
 
 const groupAndSortPCI = (sortedItems, descending) => {
   const groupedItems = sortedItems.reduce((groups, item) => {
-    const controlIdArray = sanitizeControlID(item.control).split(".");
-    const controlId = controlIdArray.slice(0, 2).join(".");
+    const controlIdArray = sanitizeControlID(item.control).split('.');
+    const controlId = controlIdArray.slice(0, 2).join('.');
     let groupHeaderText;
     if (controlIdArray.length === 3) {
       groupHeaderText = `${controlId}: ${controlIdArray
         .slice(2)
-        .join(". ")
+        .join('. ')
         .substring(3)}`;
     } else {
       groupHeaderText = `${controlId}: ${controlIdArray
         .slice(2)
-        .join(". ")
+        .join('. ')
         .substring(6)}`;
     }
 
@@ -374,10 +374,10 @@ const groupAndSortPCI = (sortedItems, descending) => {
 
   groupedArray.sort((a, b) => {
     const controlIDA = sanitizeControlID(a.name)
-      .split(".")
+      .split('.')
       .map((part) => parseInt(part, 10));
     const controlIDB = sanitizeControlID(b.name)
-      .split(".")
+      .split('.')
       .map((part) => parseInt(part, 10));
 
     for (let i = 0; i < Math.min(controlIDA.length, controlIDB.length); i++) {
