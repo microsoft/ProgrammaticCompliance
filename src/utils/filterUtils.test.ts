@@ -207,6 +207,13 @@ describe('filterUtils', () => {
       const framework = 'CIS';
       expect(prefixExtractor(control, framework)).toBe('A');
     });
+
+    it('should extract prefix ISO 27001:2013 frameworks', () => {
+      const control = 'A.1.2.3: Some Control';
+      const framework = 'ISO 27001:2013';
+      const expected = 'A.1';
+      expect(prefixExtractor(control, framework)).toBe(expected);
+    });
   });
 
 });
