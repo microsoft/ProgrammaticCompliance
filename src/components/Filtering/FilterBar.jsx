@@ -22,7 +22,7 @@ import {
   selectedServiceStyles,
   serviceStyles,
   styles,
-} from "../../styles/DropdownStyles.js";
+} from "../../styles/DropdownStyles.ts";
 import {
   prefixExtractor,
   sanitizeControlID
