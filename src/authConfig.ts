@@ -3,19 +3,18 @@
  * Licensed under the MIT License.
  */
 
-import { LogLevel } from '@azure/msal-browser';
+import { Configuration, LogLevel } from '@azure/msal-browser';
 
 /**
  * Configuration object to be passed to MSAL instance on creation.
  * For a full list of MSAL.js configuration parameters, visit:
  * https://github.com/AzureAD/microsoft-authentication-library-for-js/blob/dev/lib/msal-browser/docs/configuration.md
  */
-export const msalConfig = {
+export const msalConfig: Configuration = {
   auth: {
     clientId: import.meta.env.VITE_APP_CLIENT_ID,
-    authority: `https://login.microsoftonline.com/${
-      import.meta.env.VITE_APP_TENANT_ID
-    }`,
+    authority: `https://login.microsoftonline.com/${import.meta.env.VITE_APP_TENANT_ID
+      }`,
     redirectUri: import.meta.env.VITE_WEBAPP_URL,
   },
   cache: {
@@ -41,6 +40,8 @@ export const msalConfig = {
           case LogLevel.Warning:
             console.warn(message);
             return;
+          default:
+            console.log(message);
         }
       },
     },
@@ -51,6 +52,10 @@ export const msalConfig = {
  * Add here the scopes to request when obtaining an access token for MS Graph API. For more information, see:
  * https://github.com/AzureAD/microsoft-authentication-library-for-js/blob/dev/lib/msal-browser/docs/resources-and-scopes.md
  */
-export const tokenConfig = {
+interface ITokenConfig {
+  managementEndpoint: string;
+}
+
+export const tokenConfig: ITokenConfig = {
   managementEndpoint: 'https://management.azure.com/.default',
 };

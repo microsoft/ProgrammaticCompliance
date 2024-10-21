@@ -1,6 +1,21 @@
-import { mergeStyleSets } from '@fluentui/react';
+import { IProcessedStyleSet, mergeStyleSets } from '@fluentui/react';
+import { CSSProperties } from 'react';
 
-export const frameworkStyles = {
+interface FrameworkStyles {
+  dropdownItemHeader: CSSProperties;
+  root: CSSProperties;
+  callout: CSSProperties;
+  dropdownItem: CSSProperties;
+  dropdownItemSelected: CSSProperties;
+  dropdownOptionText?: CSSProperties;
+  dropdownItems: {
+    selectors: {
+      [key: string]: CSSProperties,
+    },
+  };
+}
+
+export const frameworkStyles: FrameworkStyles = {
   dropdownItemHeader: {
     paddingBottom: '5px',
   },
@@ -9,7 +24,7 @@ export const frameworkStyles = {
   },
   callout: {
     minWidth: 200,
-    maxwidth: 200,
+    maxWidth: 200,
   },
   dropdownItem: {
     height: 'auto',
@@ -24,22 +39,22 @@ export const frameworkStyles = {
   },
   dropdownItems: {
     selectors: {
-      "@media(min-width: 640px)": {
-        maxHeight: 450
-      }
-    }
-  }
+      '@media(min-width: 640px)': {
+        maxHeight: 450,
+      },
+    },
+  },
 };
 
-export const selectedFrameworkStyles = {
+export const selectedFrameworkStyles: FrameworkStyles & { title: CSSProperties } = {
   ...frameworkStyles,
   title: {
     borderBottomColor: '#0F6CBD',
     borderBottomWidth: '2px',
-  }
+  },
 };
 
-export const serviceStyles = {
+export const serviceStyles: FrameworkStyles = {
   dropdownItemHeader: {
     paddingBottom: '5px',
   },
@@ -48,7 +63,7 @@ export const serviceStyles = {
   },
   callout: {
     minWidth: 220,
-    maxwidth: 220,
+    maxWidth: 220,
   },
   dropdownItem: {
     height: 'auto',
@@ -58,22 +73,22 @@ export const serviceStyles = {
   },
   dropdownItems: {
     selectors: {
-      "@media(min-width: 640px)": {
-        maxHeight: 450
-      }
-    }
-  }
+      '@media(min-width: 640px)': {
+        maxHeight: 450,
+      },
+    },
+  },
 };
 
-export const selectedServiceStyles = {
+export const selectedServiceStyles: FrameworkStyles & { title: CSSProperties } = {
   ...serviceStyles,
   title: {
     borderBottomColor: '#0F6CBD',
     borderBottomWidth: '2px',
-  }
+  },
 };
 
-export const controlStyles = {
+export const controlStyles: FrameworkStyles = {
   dropdownItemHeader: {
     paddingBottom: '5px',
   },
@@ -82,7 +97,7 @@ export const controlStyles = {
   },
   callout: {
     minWidth: 320,
-    maxwidth: 320,
+    maxWidth: 320,
   },
   dropdownItem: {
     height: 'auto',
@@ -92,22 +107,25 @@ export const controlStyles = {
   },
   dropdownItems: {
     selectors: {
-      "@media(min-width: 640px)": {
-        maxHeight: 450
-      }
-    }
-  }
+      '@media(min-width: 640px)': {
+        maxHeight: 450,
+      },
+    },
+  },
 };
 
-export const selectedControlStyles = {
+export const selectedControlStyles: FrameworkStyles & { title: CSSProperties } = {
   ...controlStyles,
   title: {
     borderBottomColor: '#0F6CBD',
     borderBottomWidth: '2px',
-  }
+  },
 };
 
-export const styles = mergeStyleSets({
+export const styles: IProcessedStyleSet<{
+  selectedTitle: CSSProperties;
+  optionHeader: CSSProperties;
+}> = mergeStyleSets({
   selectedTitle: {
     color: '#0F6CBD',
   },

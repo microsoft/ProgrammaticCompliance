@@ -1,20 +1,33 @@
-import React from 'react';
-import { getTheme, Modal, initializeIcons } from '@fluentui/react';
+import { getTheme, IButtonStyles, IIconProps, initializeIcons, Modal } from '@fluentui/react';
 import { IconButton } from '@fluentui/react/lib/Button';
+import { FC } from 'react';
 import "../../styles/Modal.css";
 
 initializeIcons();
 
 const theme = getTheme();
 
-const ACFModal = ({ isOpen, onClose, rowData }) => {
-  const formattedDetails = rowData.details
-    ? rowData.details.replace(/\*/g, '•').replace(/\n/g, '<br>')
+interface ACFModalProps {
+  isOpen: boolean;
+  onClose: () => void;
+  rowData: {
+    control: string;
+    acfID: string;
+    description: string;
+    details: string;
+  };
+}
+
+const ACFModal: FC<ACFModalProps> = ({ isOpen, onClose, rowData }) => {
+  const { control, acfID, description, details } = rowData;
+
+  const formattedDetails = details
+    ? details.replace(/\*/g, '•').replace(/\n/g, '<br>')
     : '';
 
-  const iconProps = { iconName: 'Cancel' };
+  const iconProps: IIconProps = { iconName: 'Cancel' };
 
-  const iconButtonStyles = {
+  const iconButtonStyles: IButtonStyles = {
     root: {
       color: theme.palette.neutralPrimary,
       marginTop: '4px',
@@ -32,9 +45,9 @@ const ACFModal = ({ isOpen, onClose, rowData }) => {
         <IconButton iconProps={iconProps} ariaLabel="Close" onClick={onClose} styles={iconButtonStyles} />
       </div>
       <div className={"contentBody"}>
-        <p className={"firstChild"}><b>{rowData.control}</b></p>
-        <p><b>Azure Control Framework ID:</b> {rowData.acfID}</p>
-        <p><b>Description</b> <br></br> {rowData.description}</p>
+        <p className={"firstChild"}><b>{control}</b></p>
+        <p><b>Azure Control Framework ID:</b> {acfID}</p>
+        <p><b>Description</b> <br /> {description}</p>
         <p><b>Details</b>
           <div dangerouslySetInnerHTML={{ __html: formattedDetails }} />
         </p>
