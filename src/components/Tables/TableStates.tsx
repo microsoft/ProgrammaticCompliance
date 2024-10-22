@@ -1,6 +1,6 @@
 import { Icon, Link, Spinner, SpinnerSize, Stack, Text } from "@fluentui/react";
 import { FC, useEffect, useState } from "react";
-import { tableText } from "../../static/staticStrings.js";
+import { tableText } from "../../static/staticStrings";
 import "../../styles/Tables.css";
 
 export interface TableStatesProps {

@@ -18,7 +18,7 @@ import { useEffect, useState } from "react";
 import ACFModal from "../Modals/ACFModal.jsx";
 import TableStates from "./TableStates.tsx";
 
-import { tableText } from "../../static/staticStrings.js";
+import { tableText } from "../../static/staticStrings";
 import "../../styles/Tables.css";
 import {
   classNames,

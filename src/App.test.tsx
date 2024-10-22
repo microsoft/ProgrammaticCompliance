@@ -5,7 +5,7 @@ import MainApp from './App';
 import { useIsAuthenticated, useMsal } from '@azure/msal-react';
 import { useAuthorizeUser } from './hooks/getAzureToken.js';
 import { InteractionStatus, IPublicClientApplication, AccountInfo, Logger, LogLevel } from '@azure/msal-browser';
-import { appText } from './static/staticStrings.js';
+import { appText } from './static/staticStrings';
 import { reloadPage } from './utils/reloadPage';
 
 vi.mock('@azure/msal-react', () => ({

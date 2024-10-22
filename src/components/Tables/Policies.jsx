@@ -18,7 +18,7 @@ import { useEffect, useState } from "react";
 import PoliciesModal from "../Modals/PoliciesModal.jsx";
 import TableStates from "./TableStates.tsx";
 
-import { tableText } from "../../static/staticStrings.js";
+import { tableText } from "../../static/staticStrings";
 import "../../styles/Tables.css";
 import {
   classNames,
