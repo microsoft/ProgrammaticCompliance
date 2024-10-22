@@ -1,6 +1,6 @@
+import { describe, it, expect, vi } from 'vitest';
 import React from 'react';
 import ReactDOM from 'react-dom';
-import { describe, it, expect, vi } from 'vitest';
 import { renderApp } from './main';
 
 // Mock ReactDOM.render

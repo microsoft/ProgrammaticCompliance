@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
 import { reloadPage } from './reloadPage';
 
@@ -6,10 +5,14 @@ describe('reloadPage', () => {
     const originalLocation = window.location;
 
     beforeEach(() => {
-        delete (window as any).location;
-        (window as any).location = {
+        const location: Location = {
+            ...window.location,
             reload: vi.fn(),
         };
+        Object.defineProperty(window, 'location', {
+            value: location,
+            writable: true,
+        });
     });
 
     afterEach(() => {
