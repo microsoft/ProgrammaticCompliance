@@ -19,6 +19,11 @@ interface ACFModalProps {
 }
 
 const ACFModal: FC<ACFModalProps> = ({ isOpen, onClose, rowData }) => {
+
+  if (!rowData) {
+    return <></>; // or return a fallback UI
+  }
+
   const { control, acfID, description, details } = rowData;
 
   const formattedDetails = details

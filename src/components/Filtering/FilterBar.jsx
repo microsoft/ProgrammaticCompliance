@@ -28,7 +28,7 @@ import {
   sanitizeControlID
 } from "../../utils/filterUtils.js";
 import ExportButton from "../ExportButton.jsx";
-import ACF from "../Tables/ACF.jsx";
+import ACF from "../Tables/ACF.tsx";
 import MCSB from "../Tables/MCSB.jsx";
 import Policies from "../Tables/Policies.jsx";
 import TableStates from "../Tables/TableStates.tsx";
