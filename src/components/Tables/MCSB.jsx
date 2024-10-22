@@ -24,7 +24,7 @@ import {
   classNames,
   focusZoneProps,
   gridStyles,
-} from "../../styles/TablesStyles.js";
+} from "../../styles/TablesStyles";
 import { sanitizeControlID } from "../../utils/controlIdUtils.ts";
 import { groupAndSortRows, sortRows } from "../../utils/tableSortUtils.js";
 
