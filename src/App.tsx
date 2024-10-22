@@ -47,6 +47,14 @@ function MainApp() {
     }
   };
 
+  /**
+   * UNCOMMENT BELOW TO PRINT AZ ACCESS TOKEN
+   */
+
+  // useEffect(() => {
+  //   console.log('AZURE TOKEN: ', azureToken);
+  // }, [azureToken])
+
   useEffect(() => {
     const getUserTokenIfAuthenticated = async () => {
       if (isAuthenticated && inProgress === InteractionStatus.None) {
