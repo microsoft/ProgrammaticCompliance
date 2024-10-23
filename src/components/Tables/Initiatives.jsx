@@ -24,7 +24,7 @@ import {
   classNames,
   focusZoneProps,
   gridStyles,
-} from "../../styles/TablesStyles.js";
+} from "../../styles/TablesStyles";
 
 initializeIcons();
 
