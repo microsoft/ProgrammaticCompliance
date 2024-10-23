@@ -13,7 +13,7 @@ import {
   appText,
   frameworks,
   frameworkStrategyMapping,
-} from "../../static/staticStrings.js";
+} from "../../static/staticStrings";
 import {
   controlStyles,
   frameworkStyles,

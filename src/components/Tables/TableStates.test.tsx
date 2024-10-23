@@ -1,7 +1,7 @@
 import '@testing-library/jest-dom';
 import { render } from '@testing-library/react';
 import { describe, expect, it } from 'vitest';
-import { tableText } from '../../static/staticStrings.js';
+import { tableText } from '../../static/staticStrings';
 import TableStates from './TableStates.tsx';
 
 describe('TableStates Component', () => {

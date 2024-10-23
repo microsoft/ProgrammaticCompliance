@@ -1,4 +1,4 @@
-// import { describe, it, expect } from 'vitest';
+import { describe, it, expect } from 'vitest';
 import { sanitizeControlID } from './controlIdUtils.ts';
 
 describe('sanitizeControlID', () => {
