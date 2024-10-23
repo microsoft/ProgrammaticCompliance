@@ -1,7 +1,7 @@
 import { fireEvent, render, screen, waitFor, within } from '@testing-library/react';
 import { describe, expect, it } from 'vitest';
 import { tableText } from '../../static/staticStrings';
-import ACF from './ACF';
+import ACF from './ACF.tsx';
 
 describe('ACF Component', () => {
   const mockData = [

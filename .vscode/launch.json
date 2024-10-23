@@ -12,6 +12,13 @@
         "uriFormat": "%s",
         "action": "debugWithChrome"
       }
-    }
+    },
+    {
+      "type": "msedge",
+      "request": "launch",
+      "name": "Launch Edge against localhost",
+      "url": "http://localhost:5173",
+      "webRoot": "${workspaceFolder}"
+    },
   ]
 }

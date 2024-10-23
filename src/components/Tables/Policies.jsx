@@ -15,7 +15,7 @@ import {
 } from "@fluentui/react";
 import { useEffect, useState } from "react";
 
-import PoliciesModal from "../Modals/PoliciesModal.jsx";
+import PoliciesModal from "../Modals/PoliciesModal.tsx";
 import TableStates from "./TableStates.tsx";
 
 import { tableText } from "../../static/staticStrings";

@@ -2,8 +2,12 @@ import {
   ConstrainMode,
   DetailsList,
   DetailsListLayoutMode,
+  IColumn,
   Icon,
   IconButton,
+  IDetailsHeaderProps,
+  IDetailsRowProps,
+  IGroup,
   initializeIcons,
   SelectionMode,
   Stack,
@@ -12,11 +16,10 @@ import {
   Text,
   TooltipHost,
 } from "@fluentui/react";
-import { useId } from "@fluentui/react-hooks";
-import { useEffect, useState } from "react";
+import { FC, useEffect, useState } from "react";
 
-import ACFModal from "../Modals/ACFModal.jsx";
-import TableStates from "./TableStates.tsx";
+import ACFModal from "../Modals/ACFModal";
+import TableStates from "./TableStates";
 
 import { tableText } from "../../static/staticStrings";
 import "../../styles/Tables.css";
@@ -25,15 +28,30 @@ import {
   focusZoneProps,
   gridStyles,
 } from "../../styles/TablesStyles";
-import { sanitizeControlID } from "../../utils/controlIdUtils.ts";
-import { groupAndSortRows, sortRows } from "../../utils/tableSortUtils.js";
+import { sanitizeControlID } from "../../utils/controlIdUtils";
+import { generateUniqueId } from "../../utils/generateUniqueId.ts";
+import { groupAndSortRows, sortRows } from "../../utils/tableSortUtils";
 
 initializeIcons();
 
-const ACF = (props) => {
-  const controlIDSet = new Set(props.controls);
+interface ACFProps {
+  controls: string[];
+  data: unknown[];
+  framework: string;
+  mapState: Map<string, string>;
+}
 
-  const onItemInvoked = (item) => {
+interface Item {
+  control: string;
+  acfID: string;
+  description: string;
+  details: string;
+}
+
+const ACF: FC<ACFProps> = ({ controls, data, framework, mapState }) => {
+  const controlIDSet = new Set(controls);
+
+  const onItemInvoked = (item: Item) => {
     setModalData(item);
     setIsModalOpen(true);
   };
@@ -42,23 +60,23 @@ const ACF = (props) => {
     setIsModalOpen(false);
   };
 
-  const [items, setItems] = useState([]);
-  const [groupedItems, setGroupedItems] = useState([]);
+  const [items, setItems] = useState<Item[]>([]);
+  const [groupedItems, setGroupedItems] = useState<IGroup[]>([]);
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [modalData, setModalData] = useState({});
+  const [modalData, setModalData] = useState<Item | null>(null);
   const [isTableExpanded, setIsTableExpanded] = useState(true);
   const [isControlDescending, setIsControlDescending] = useState(true);
   const [isACFDescending, setIsACFDescending] = useState(true);
   const [isSmallScreen, setIsSmallScreen] = useState(window.innerWidth <= 1300);
 
-  const columns = [
+  const columns: IColumn[] = [
     {
       key: "expand",
       name: "",
       fieldName: "expand",
       minWidth: 12,
       maxWidth: 12,
-      onRender: (item) => (
+      onRender: (item: Item) => (
         <div>
           <Icon
             aria-label="Expand fullscreen"
@@ -76,11 +94,19 @@ const ACF = (props) => {
     },
     {
       key: "control",
-      name: (
-        <>
+      name: "Control ID",
+      fieldName: "control",
+      minWidth: 105,
+      maxWidth: 105,
+      isResizable: true,
+      isSorted: true,
+      isSortedDescending: isControlDescending,
+      // isSortable: true,
+      onRenderHeader: () => (
+        <div>
           Control ID
           <TooltipHost
-            id={useId("tooltip")}
+            id={generateUniqueId("tooltipACF")}
             content="Identifier for specific control within the selected regulatory framework"
             closeDelay={1000}
           >
@@ -90,23 +116,24 @@ const ACF = (props) => {
               aria-label="Tooltip"
             />
           </TooltipHost>
-        </>
+        </div>
       ),
-      fieldName: "control",
-      minWidth: 105,
-      maxWidth: 105,
-      isResizable: true,
-      isSorted: true,
-      isSortedDescending: isControlDescending,
-      isSortable: true,
     },
     {
       key: "acfID",
-      name: (
+      name: "Azure Control Framework ID",
+      fieldName: "acfID",
+      minWidth: 125,
+      maxWidth: 125,
+      isResizable: true,
+      isSorted: true,
+      isSortedDescending: isACFDescending,
+      // isSortable: true,
+      onRenderHeader: () => (
         <>
           Azure Control Framework ID
           <TooltipHost
-            id={useId("tooltip")}
+            id={generateUniqueId("tooltipACF")}
             content="Identifier for specific control within Azure Control Framework"
             closeDelay={1000}
           >
@@ -118,21 +145,19 @@ const ACF = (props) => {
           </TooltipHost>
         </>
       ),
-      fieldName: "acfID",
-      minWidth: 125,
-      maxWidth: 125,
-      isResizable: true,
-      isSorted: true,
-      isSortedDescending: isACFDescending,
-      isSortable: true,
     },
     {
       key: "description",
-      name: (
+      name: "Microsoft Managed Actions - Description",
+      fieldName: "description",
+      minWidth: 200,
+      maxWidth: 600,
+      isResizable: true,
+      onRenderHeader: () => (
         <>
           Microsoft Managed Actions - Description
           <TooltipHost
-            id={useId("tooltip")}
+            id={generateUniqueId("tooltipACF")}
             content="Summary of the actions Microsoft takes to help fulfill its compliance responsibilities when developing and operating the Microsoft Cloud"
             closeDelay={1000}
           >
@@ -144,18 +169,19 @@ const ACF = (props) => {
           </TooltipHost>
         </>
       ),
-      fieldName: "description",
-      minWidth: 200,
-      maxWidth: 600,
-      isResizable: true,
     },
     {
       key: "details",
-      name: (
+      name: "Microsoft Managed Actions - Details",
+      fieldName: "details",
+      minWidth: 200,
+      maxWidth: 600,
+      isResizable: true,
+      onRenderHeader: () => (
         <>
           Microsoft Managed Actions - Details
           <TooltipHost
-            id={useId("tooltip")}
+            id={generateUniqueId("tooltipACF")}
             content="Additional details about the actions Microsoft takes to help fulfill its compliance responsibilities when developing and operating the Microsoft Cloud"
             closeDelay={1000}
           >
@@ -167,27 +193,25 @@ const ACF = (props) => {
           </TooltipHost>
         </>
       ),
-      fieldName: "details",
-      minWidth: 200,
-      maxWidth: 600,
-      isResizable: true,
     },
   ];
 
-  const onColumnClick = (ev, column) => {
+  const onColumnClick = (_ev?: React.MouseEvent<HTMLElement>, column?: IColumn) => {
+    if (!column) return;
+
     let groupedArray;
     const sortableColumn = column;
     if (sortableColumn.key === "control") {
       setIsControlDescending(!isControlDescending);
       const reversedItems = items.reverse();
-      let sortedItems = sortRows(items, props.framework);
+      let sortedItems = sortRows(items, framework);
       if (isControlDescending) {
         sortedItems = sortedItems.reverse();
       }
       groupedArray = groupAndSortRows(
         sortedItems,
         isControlDescending,
-        props.framework
+        framework
       );
       setItems(reversedItems);
       setGroupedItems(groupedArray);
@@ -195,8 +219,8 @@ const ACF = (props) => {
     if (sortableColumn.key === "acfID") {
       setIsACFDescending(!isACFDescending);
       let sortedItems = items.sort((a, b) => {
-        const numA = parseInt(a.acfID.match(/\d+/g), 10);
-        const numB = parseInt(b.acfID.match(/\d+/g), 10);
+        const numA = parseInt(a.acfID.match(/\d+/g)![0], 10);
+        const numB = parseInt(b.acfID.match(/\d+/g)![0], 10);
         return numA - numB;
       });
       if (isACFDescending) {
@@ -212,7 +236,10 @@ const ACF = (props) => {
     }
   };
 
-  const onRenderDetailsHeader = (headerProps, defaultRender) => {
+  const onRenderDetailsHeader = (
+    headerProps?: IDetailsHeaderProps,
+    defaultRender?: (props?: IDetailsHeaderProps) => JSX.Element | null
+  ): JSX.Element | null => {
     if (!headerProps || !defaultRender) {
       return null;
     }
@@ -242,9 +269,9 @@ const ACF = (props) => {
     );
   };
 
-  const onRenderColumn = (item, index, column) => {
+  const onRenderColumn = (item?: Item, _index?: number, column?: IColumn) => {
     const value =
-      item && column && column.fieldName ? item[column.fieldName] || "" : "";
+      item && column && column.fieldName ? item[column.fieldName as keyof Item] || "" : "";
 
     return <div data-is-focusable={true}>{value}</div>;
   };
@@ -257,38 +284,38 @@ const ACF = (props) => {
     window.addEventListener("resize", handleResize);
 
     return () => {
-      <div className={isSmallScreen ? classNames.scrollable : ""}></div>;
       window.removeEventListener("resize", handleResize);
     };
   }, []);
 
-  const initTableLoad = (flattenedData) => {
-    const sortedItems = sortRows(flattenedData, props.framework);
+  const initTableLoad = (flattenedData: Item[]) => {
+    const sortedItems = sortRows(flattenedData, framework);
     setItems(sortedItems);
-    setGroupedItems(groupAndSortRows(sortedItems, false, props.framework));
+    setGroupedItems(groupAndSortRows(sortedItems, false, framework));
   };
 
   // ENTRY POINT
   useEffect(() => {
-    const flattenedData = flattenData(props.data);
+    const flattenedData = flattenData(data);
     initTableLoad(flattenedData);
-  }, [props.data]);
+  }, [data]);
 
-  function flattenData(dataset) {
-    const temp = [];
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  function flattenData(dataset: any[]): Item[] {
+    const temp: Item[] = [];
     dataset.forEach((row) => {
       const rowControls = row.properties.metadata.frameworkControlsMappings;
 
       // if there are user-selected control IDs, then only show those controls
       // this filters out rows that do not have any user-selected IDs in their controls array
       if (controlIDSet && controlIDSet.size > 0) {
-        rowControls.forEach((control) => {
+        rowControls.forEach((control: string) => {
           const controlID = control.split("_").pop();
-          const mappedControl = props.mapState.get(
-            sanitizeControlID(controlID)
+          const mappedControl = mapState.get(
+            sanitizeControlID(controlID!)
           );
 
-          if (controlIDSet.has(controlID) && mappedControl !== undefined) {
+          if (controlIDSet.has(controlID!) && mappedControl !== undefined) {
             temp.push({
               control: `${controlID}: ${mappedControl}`,
               acfID: row.name,
@@ -300,11 +327,11 @@ const ACF = (props) => {
       } else {
         // otherwise, since the user didn't limit any controls,
         // find all of the rows that have our chosen framework instead and show them all
-        rowControls.forEach((control) => {
-          if (control.includes(props.framework)) {
+        rowControls.forEach((control: string) => {
+          if (control.includes(framework)) {
             const controlID = control.split("_").pop();
-            const mappedControl = props.mapState.get(
-              sanitizeControlID(controlID)
+            const mappedControl = mapState.get(
+              sanitizeControlID(controlID!)
             );
 
             if (mappedControl !== undefined) {
@@ -358,7 +385,7 @@ const ACF = (props) => {
                 onItemInvoked={onItemInvoked}
                 onRenderItemColumn={onRenderColumn}
                 onRenderDetailsHeader={onRenderDetailsHeader}
-                onRenderRow={(props, defaultRender) => {
+                onRenderRow={(props?: IDetailsRowProps, defaultRender?: (props?: IDetailsRowProps) => JSX.Element | null) => {
                   if (!props) return null;
 
                   props.styles = {
@@ -401,7 +428,7 @@ const ACF = (props) => {
                 onItemInvoked={onItemInvoked}
                 onRenderItemColumn={onRenderColumn}
                 onRenderDetailsHeader={onRenderDetailsHeader}
-                onRenderRow={(props, defaultRender) => {
+                onRenderRow={(props?: IDetailsRowProps, defaultRender?: (props?: IDetailsRowProps) => JSX.Element | null) => {
                   if (!props) return null;
 
                   props.styles = {
@@ -439,10 +466,10 @@ const ACF = (props) => {
       ) : null}
 
       <ACFModal
-        isLightDismiss
+        // isLightDismiss
         isOpen={isModalOpen}
         onClose={closeModal}
-        rowData={modalData}
+        rowData={modalData as Item}
       />
     </div>
   );

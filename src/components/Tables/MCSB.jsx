@@ -15,7 +15,7 @@ import {
 } from "@fluentui/react";
 import { useEffect, useState } from "react";
 
-import MCSBModal from "../Modals/MCSBModal.jsx";
+import MCSBModal from "../Modals/MCSBModal.tsx";
 import TableStates from "./TableStates.tsx";
 
 import { tableText } from "../../static/staticStrings";

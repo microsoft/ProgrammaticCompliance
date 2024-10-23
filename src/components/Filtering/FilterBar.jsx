@@ -22,18 +22,18 @@ import {
   selectedServiceStyles,
   serviceStyles,
   styles,
-} from "../../styles/DropdownStyles.js";
+} from "../../styles/DropdownStyles.ts";
 import {
   prefixExtractor,
   sanitizeControlID
 } from "../../utils/filterUtils.js";
 import ExportButton from "../ExportButton.jsx";
-import ACF from "../Tables/ACF.jsx";
+import ACF from "../Tables/ACF.tsx";
 import MCSB from "../Tables/MCSB.jsx";
 import Policies from "../Tables/Policies.jsx";
 import TableStates from "../Tables/TableStates.tsx";
-import FilterBadgesContainer from "./FilterBadgesContainer.jsx";
-import Frameworks from "./Frameworks.jsx";
+import FilterBadgesContainer from "./FilterBadgesContainer.tsx";
+import Frameworks from './Frameworks';
 import SearchableDropdown from "./SearchableDropdown.tsx";
 
 import "../../styles/FilterBar.css";

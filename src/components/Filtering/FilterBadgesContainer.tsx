@@ -1,15 +1,21 @@
 import { ActionButton } from '@fluentui/react';
-import { useLayoutEffect, useState } from 'react';
+import { FC, useLayoutEffect, useState } from 'react';
 import FilterBadges from './FilterBadges';
 
-const CustomSeparator = () => (
+interface FilterBadgesContainerProps {
+  selectedServices: string[];
+  selectedControls: string[];
+  removeFilter: (filter: string, type: 'service' | 'control') => void;
+  handleClear: () => void;
+}
+
+const CustomSeparator: FC = () => (
   <span style={{ fontSize: '18px', paddingLeft: '10px', paddingTop: '4px', color: '#9C9C9C' }}>|</span>
 );
 
-const FilterBadgesContainer = (props) => {
-  const { selectedServices, selectedControls, removeFilter, handleClear } = props;
+const FilterBadgesContainer: FC<FilterBadgesContainerProps> = ({ selectedServices, selectedControls, removeFilter, handleClear }) => {
 
-  const sortSelectedItems = (selectedItems) => {
+  const sortSelectedItems = (selectedItems: string[]): string[] => {
     return selectedItems.slice().sort((a, b) => {
       const firstCharA = a.charAt(0).toLowerCase();
       const firstCharB = b.charAt(0).toLowerCase();
@@ -58,7 +64,7 @@ const FilterBadgesContainer = (props) => {
               <FilterBadges
                 filterItems={sortedSelectedServices}
                 filterType="service"
-                onRemoveFilter={removeFilter}
+                onRemoveFilter={(filter) => removeFilter(filter, 'service')}
               />
               {sortedSelectedControls.length > 0 && sortedSelectedServices.length > 0 && (
                 <CustomSeparator />
@@ -66,7 +72,7 @@ const FilterBadgesContainer = (props) => {
               <FilterBadges
                 filterItems={sortedSelectedControls}
                 filterType="control"
-                onRemoveFilter={removeFilter}
+                onRemoveFilter={(filter) => removeFilter(filter, 'control')}
               />
               <CustomSeparator />
               <ActionButton onClick={handleClear} className="clear-button"
@@ -107,7 +113,7 @@ const FilterBadgesContainer = (props) => {
               <FilterBadges
                 filterItems={sortedSelectedServices}
                 filterType="service"
-                onRemoveFilter={removeFilter}
+                onRemoveFilter={(filter) => removeFilter(filter, 'service')}
               />
               {sortedSelectedControls.length > 0 && sortedSelectedServices.length > 0 && (
                 <CustomSeparator />
@@ -115,7 +121,7 @@ const FilterBadgesContainer = (props) => {
               <FilterBadges
                 filterItems={sortedSelectedControls}
                 filterType="control"
-                onRemoveFilter={removeFilter}
+                onRemoveFilter={(filter) => removeFilter(filter, 'control')}
               />
               <CustomSeparator />
               <ActionButton onClick={handleClear} className="clear-button"
