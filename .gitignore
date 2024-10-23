@@ -408,4 +408,9 @@ FodyWeavers.xsd
 *.zip
 build/
 node_modules/
-package-lock.json
+dist/
+coverage/
+
+*storybook.log
+stories/
+.storybook/
