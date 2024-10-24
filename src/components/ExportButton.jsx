@@ -326,13 +326,13 @@ const ExportButton = ({
         iconProps: { iconName: "GridViewSmall" },
         onClick: handleExportCSV,
       },
-      // {
-      //     key: 'initiative',
-      //     text: 'Custom Initiative',
-      //     iconProps: { iconName: 'CustomList' },
-      //     onClick: handleExportInitiative,
-      //     disabled: services.length == 0 || controlIDs.length > 0 // only allows exporting to initiative if services are selected without controls
-      // },
+      {
+          key: 'initiative',
+          text: 'Custom Initiative',
+          iconProps: { iconName: 'CustomList' },
+          onClick: handleExportInitiative,
+          disabled: services.length == 0 || controlIDs.length > 0 // only allows exporting to initiative if services are selected without controls
+      },
     ],
   };
 
