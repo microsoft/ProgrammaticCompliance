@@ -95,4 +95,19 @@ describe('MCSB Component', () => {
         render(<MCSB {...mockProps} data={[]} />);
         expect(screen.getByText('No results')).toBeInTheDocument();
     });
+
+    it('displays all relevant data when no controls are selected (controlIDSet.size === 0)', () => {
+        const propsWithEmptyControls = {
+            ...mockProps,
+            controls: [],
+        };
+        render(<MCSB {...propsWithEmptyControls} />);
+
+        const rows = screen.getAllByRole('row');
+        expect(rows.length).toBeGreaterThan(1);
+
+        expect(screen.getByText('1.1.1: Control 1')).toBeInTheDocument();
+        expect(screen.getByText('2.1.1: Control 2')).toBeInTheDocument();
+        expect(screen.getByText('3.1.1: Control 3')).toBeInTheDocument();
+    });
 });
