@@ -18,4 +18,9 @@ export default defineConfig({
       ],
     },
   },
+  define: {
+    'import.meta.env.VITE_APP_CLIENT_ID': JSON.stringify('mock-client-id'),
+    'import.meta.env.VITE_APP_TENANT_ID': JSON.stringify('mock-tenant-id'),
+    'import.meta.env.VITE_WEBAPP_URL': JSON.stringify('http://example.com'),
+  },
 });
